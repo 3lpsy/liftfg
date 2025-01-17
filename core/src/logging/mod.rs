@@ -1,5 +1,4 @@
 use std::path::PathBuf;
-use tracing::{error, info, warn, Level};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
