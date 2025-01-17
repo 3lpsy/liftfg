@@ -1,0 +1,43 @@
+[workspace]
+# members = ["shell", "ui"]
+resolver = "2"
+members = ["shell", "ui", "cli", "db", "core"]
+default-members = ["cli"]
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+anyhow = { version = "1.0.95" }
+serde_json = { version = "1.0.135" }
+sea-orm = { version = "1.1.0", features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+    "macros",
+] }
+sea-orm-migration = { version = "1.1.4", features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+] }
+tokio = { version = "1.43.0", features = ["rt-multi-thread", "macros"] }
+tauri = { version = "2", features = [] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = [
+    "std",
+    "fmt",
+    "time",
+    "registry",
+    "env-filter",
+] }
+tracing-appender = "0.2"
+time = { version = "0.3", features = ["formatting"] }
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

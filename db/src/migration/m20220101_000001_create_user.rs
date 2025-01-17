@@ -1,0 +1,37 @@
+use super::common::TableWithTimestamps;
+use sea_orm_migration::{prelude::*, schema::*}; // Import the trait
+
+#[derive(DeriveMigrationName)]
+pub struct Migration;
+
+#[async_trait::async_trait]
+impl MigrationTrait for Migration {
+    async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        manager
+            .create_table(
+                Table::create()
+                    .table(User::Table)
+                    .if_not_exists()
+                    .col(pk_auto(User::Id))
+                    .col(string(User::Email))
+                    .col(string(User::Name))
+                    .add_timestamps()
+                    .to_owned(),
+            )
+            .await
+    }
+
+    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        manager
+            .drop_table(Table::drop().table(User::Table).to_owned())
+            .await
+    }
+}
+
+#[derive(DeriveIden)]
+pub enum User {
+    Table,
+    Id,
+    Email,
+    Name,
+}
