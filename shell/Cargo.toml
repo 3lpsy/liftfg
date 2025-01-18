@@ -19,16 +19,22 @@ tauri-build = { version = "2", features = [] }
 
 [dependencies]
 db = { path = "../db" }
-core = { path = "../core" }
+fg-core = { path = "../core" }
 tauri = { workspace = true }
 tauri-plugin-opener = "2"
 tauri-plugin-cli = "2"
+tauri-plugin-fs = "2"
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 sea-orm = { workspace = true }
 sea-orm-migration = { workspace = true }
 tokio = { workspace = true }
+tracing = { workspace = true }
 
-[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
-tauri-plugin-cli = "2"
+# [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+# tauri-plugin-cli = "2"
+
+# [target.x86_64-unknown-linux-gnu]
+# linker = "clang"
+# rustflags = ["-C", "link-arg=-fuse-ld=/usr/bin/mold"]

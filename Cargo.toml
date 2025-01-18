@@ -30,8 +30,17 @@ tracing-subscriber = { version = "0.3.18", features = [
 tracing-appender = "0.2"
 time = { version = "0.3", features = ["formatting"] }
 
+# Performance
 [profile]
 
+[profile.dev]
+incremental = true
+# opt-level = 1
+
+# [profile.dev.package."*"]
+# opt-level = 3
+
+# Dioxus
 [profile.wasm-dev]
 inherits = "dev"
 opt-level = 1

@@ -5,3 +5,4 @@
 **/*.rs.bk
 node_modules/
 .env
+*.db

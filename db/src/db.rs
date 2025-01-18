@@ -15,7 +15,7 @@ fn touch(path: &String) -> Result<()> {
 
 pub async fn migrate(db_path: Option<&String>) -> Result<()> {
     let db = get_db(db_path).await?;
-    let r = migration::Migrator::up(&db, Some(1)).await?;
+    let r = migration::Migrator::up(&db, None).await?;
     info!("Database migrated");
     return Ok(r);
 }
@@ -39,5 +39,6 @@ pub async fn get_db(db_path: Option<&String>) -> Result<DatabaseConnection> {
     }
     touch(&db_url)?;
     db_url = format!("sqlite://{}", db_url);
+    info!("Connecting: {}", db_url);
     Ok(Database::connect(db_url).await?)
 }

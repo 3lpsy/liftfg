@@ -1,9 +1,11 @@
+use anyhow::{Error, Result};
 use std::path::PathBuf;
+use tracing::{error, info, warn, Level};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
-pub fn setup(log_dir: PathBuf) -> Result<(), Box<dyn std::error::Error>> {
+pub fn setup(log_dir: &PathBuf) -> Result<(), Error> {
     std::fs::create_dir_all(&log_dir)?;
 
     // Setup file appender - will create daily rotating logs

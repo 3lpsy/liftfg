@@ -7,7 +7,6 @@ const VERSION: &str = env!("CARGO_PKG_VERSION");
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 
 // use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
-use sea_orm_migration::MigratorTrait;
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = parse();
