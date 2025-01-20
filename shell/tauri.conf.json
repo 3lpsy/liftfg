@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "identifier": "org.liftfg.app",
   "build": {
-    "beforeDevCommand": "",
-    "devUrl": "http://127.0.0.1:1420",
+    "beforeDevCommand": "dx serve --port 1420 -i false",
+    "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "dx build --release",
     "frontendDist": "../dist"
   },
@@ -36,6 +36,18 @@
           "short": "d",
           "takesValue": true,
           "description": "database path"
+        },
+        {
+          "name": "logs",
+          "short": "l",
+          "takesValue": true,
+          "description": "logs path"
+        },
+        {
+          "name": "devtoools",
+          "short": "t",
+          "takesValue": false,
+          "description": "use dev tools"
         }
       ]
     }

@@ -1,3 +1,6 @@
+use std::path::PathBuf;
+use std::str::FromStr;
+
 use anyhow::Result;
 use clap::{Arg, ArgMatches, Command};
 use db::db::migrate;
@@ -16,12 +19,16 @@ async fn main() -> Result<()> {
             Some(("migrate", _sargs)) => {
                 println!("Migrate!");
                 let db = args.get_one::<String>("db");
-                migrate(db).await?
+                if db.is_some() {
+                    migrate(&PathBuf::from_str(db.unwrap()).unwrap()).await?
+                }
             }
             Some(("rollback", _sargs)) => {
                 println!("Rollback!");
                 let db = args.get_one::<String>("db");
-                rollback(db).await?
+                if db.is_some() {
+                    rollback(&PathBuf::from_str(db.unwrap()).unwrap()).await?
+                }
             }
             _ => unreachable!("No more subcommands"),
         },
