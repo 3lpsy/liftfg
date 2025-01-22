@@ -5,6 +5,7 @@ mod bindings;
 mod invoke;
 mod log;
 use log::info;
+use tracing::Level;
 use wasm_bindgen::JsValue;
 
 fn main() {

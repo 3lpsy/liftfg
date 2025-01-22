@@ -19,6 +19,7 @@ pub async fn migrate(db_path: &PathBuf) -> Result<()> {
     info!("Database migrated");
     return Ok(r);
 }
+
 pub async fn rollback(db_path: &PathBuf) -> Result<()> {
     let db = get_db(db_path).await?;
     let r = migration::Migrator::down(&db, Some(1)).await?;

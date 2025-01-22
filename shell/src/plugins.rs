@@ -6,11 +6,13 @@ pub fn setup(mut builder: Builder<Wry>) -> Builder<Wry> {
         .clear_targets()
         .target(Target::new(TargetKind::Stdout))
         .level(log::LevelFilter::Info)
-        .level_for("tauri::plugin", log::LevelFilter::Warn)
-        .level_for("tauri::app", log::LevelFilter::Warn)
-        .level_for("tauri::manager", log::LevelFilter::Warn)
+        // .level_for("tauri::plugin", log::LevelFilter::Warn)
+        // .level_for("tauri::app", log::LevelFilter::Warn)
+        // .level_for("tauri::manager", log::LevelFilter::Warn)
+        // .level_for("app::setup", log::LevelFilter::Warn)
         .build();
-    builder = builder.plugin(logging).plugin(tauri_plugin_opener::init());
+    builder = builder.plugin(logging);
+    builder = builder.plugin(tauri_plugin_opener::init());
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     {
         builder = builder

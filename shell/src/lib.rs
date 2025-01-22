@@ -14,29 +14,31 @@ mod plugins;
 async fn get_user() -> Result<(), String> {
     Ok(())
 }
+
+#[tracing::instrument(skip_all, parent = None)]
 fn setup(app: &mut App, log_handle: logging::LogHandle) -> Result<()> {
     let rt = tauri::async_runtime::handle();
     rt.block_on(async {
         config::setup(app).await?;
 
         let config = app.state::<AppConfig>();
-        dbg!(&config);
+        info!("App Config: {:?}", config);
         logging::setup_fs(&config.logs_dir, log_handle)?;
         info!("File tracing initialized");
-
         db::migrate(&config.db_path).await?;
         Ok::<(), anyhow::Error>(()) // Explicitly specify the Ok type here
     })?;
     info!("App setup complete");
     Ok(())
 }
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let log_handle = match logging::setup() {
         Ok(handle) => {
             info!("Console tracing initialized");
             handle
-        },
+        }
         Err(e) => {
             panic!("Error setting up logging: {:?}", e);
         }
