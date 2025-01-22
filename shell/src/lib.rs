@@ -4,8 +4,7 @@ use anyhow::Result;
 use config::AppConfig;
 use db::db;
 use fg_core::logging;
-use std::env;
-use tauri::Manager;
+use tauri::{App, Manager};
 use tracing::info;
 
 mod config;
@@ -15,34 +14,36 @@ mod plugins;
 async fn get_user() -> Result<(), String> {
     Ok(())
 }
+fn setup(app: &mut App, log_handle: logging::LogHandle) -> Result<()> {
+    let rt = tauri::async_runtime::handle();
+    rt.block_on(async {
+        config::setup(app).await?;
 
+        let config = app.state::<AppConfig>();
+        dbg!(&config);
+        logging::setup_fs(&config.logs_dir, log_handle)?;
+        info!("File tracing initialized");
+
+        db::migrate(&config.db_path).await?;
+        Ok::<(), anyhow::Error>(()) // Explicitly specify the Ok type here
+    })?;
+    info!("App setup complete");
+    Ok(())
+}
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let log_handle = match logging::setup() {
+        Ok(handle) => {
+            info!("Console tracing initialized");
+            handle
+        },
+        Err(e) => {
+            panic!("Error setting up logging: {:?}", e);
+        }
+    };
     let mut builder = tauri::Builder::default();
     builder = plugins::setup(builder);
-
-    builder = builder.setup(|app| {
-        let rt = tauri::async_runtime::handle();
-        let r = rt.block_on(async {
-            if let Err(e) = config::setup(app).await {
-                eprintln!("Failed to set up config: {:?}", e);
-            }
-
-            let config = app.state::<AppConfig>();
-            dbg!(&config);
-            if let Err(e) = logging::setup(&config.logs_dir) {
-                eprintln!("Failed to set up logging: {:?}", e);
-            }
-
-            if let Err(e) = db::migrate(&config.db_path).await {
-                eprintln!("Failed to migrate database: {:?}", e);
-            }
-            Ok(())
-        });
-        info!("App setup complete");
-        return r;
-    });
-
+    builder = builder.setup(|app| Ok(setup(app, log_handle)?));
     builder = builder.invoke_handler(tauri::generate_handler![get_user]);
 
     builder.run(tauri::generate_context!()).unwrap_or_else(|e| {

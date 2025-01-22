@@ -9,3 +9,4 @@ tracing-subscriber = { workspace = true }
 tracing-appender = { workspace = true }
 time = { workspace = true }
 anyhow = { workspace = true }
+lazy_static = "1.5.0"

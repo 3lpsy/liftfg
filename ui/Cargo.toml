@@ -13,7 +13,8 @@ web-sys = "0.3"
 js-sys = "0.3"
 serde = { workspace = true }
 serde-wasm-bindgen = "0.6"
-
+tracing = { workspace = true }
+log = { workspace = true }
 [features]
 default = ["web"]
 web = ["dioxus/web"]

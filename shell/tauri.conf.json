@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "org.liftfg.app",
   "build": {
-    "beforeDevCommand": "dx serve --port 1420 -i false",
+    "beforeDevCommand": "cd ui && dx serve --port 1420 --addr 0.0.0.0 --hot-reload false -i false",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "dx build --release",
     "frontendDist": "../dist"

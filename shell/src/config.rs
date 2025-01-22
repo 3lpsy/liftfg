@@ -35,7 +35,7 @@ impl AppConfig {
     pub fn load(&mut self, matches: HashMap<String, Value>) {
         let logs: Option<String> = get_arg(&matches, "logs", "LOGS_PATH");
         if logs.is_some() {
-            self.db_path = PathBuf::from_str(&logs.unwrap()).unwrap()
+            self.logs_dir = PathBuf::from_str(&logs.unwrap()).unwrap()
         }
         let db: Option<String> = get_arg(&matches, "db", "DATABASE_PATH");
         if db.is_some() {
