@@ -44,10 +44,14 @@
           "description": "logs path"
         },
         {
-          "name": "devtoools",
-          "short": "t",
+          "name": "env",
+          "takesValue": true,
+          "description": "environment type"
+        },
+        {
+          "name": "skip-dotenv",
           "takesValue": false,
-          "description": "use dev tools"
+          "description": "Do not load .env file"
         }
       ]
     }

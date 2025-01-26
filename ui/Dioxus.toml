@@ -1,5 +1,5 @@
 [application]
-name = "liftfg-ui"
+name = "liftfgui"
 default_platform = "web"
 out_dir = "dist"
 asset_dir = "assets"
@@ -10,7 +10,7 @@ title = "Tauri + Dioxus App"
 [web.watcher]
 reload_html = true
 watch_path = ["src", "assets"]
-
+index_on_404 = true
 # include `assets` in web platform
 [web.resource]
 # Additional CSS style files

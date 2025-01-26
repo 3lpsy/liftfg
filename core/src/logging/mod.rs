@@ -16,35 +16,38 @@ pub type LogHandle = Handle<
     Layered<EnvFilter, Registry>,
 >;
 
-pub fn setup() -> Result<LogHandle> {
-    let layers = default_layers()?;
-    let (layers, reload_handle) = reload::Layer::new(layers);
-    let env_filter_ = env_filter();
+pub type LayersHandle = Handle<
+    Vec<Box<dyn Layer<Layered<reload::Layer<EnvFilter, Registry>, Registry>> + Send + Sync>>,
+    Layered<reload::Layer<EnvFilter, Registry>, Registry>,
+>;
+
+pub type FilterHandle = Handle<EnvFilter, Registry>;
+
+pub fn setup() -> Result<(LayersHandle, FilterHandle)> {
+    let (layers, layers_handle) = reload::Layer::new(vec![console_layer()?]);
+    let (filter_layer, filter_handle) = reload::Layer::new(env_filter());
     let subscriber = tracing_subscriber::registry()
-        .with(env_filter_)
+        .with(filter_layer)
         .with(layers);
+
     match tracing::subscriber::set_global_default(subscriber) {
-        Ok(_) => Ok(reload_handle),
+        Ok(_) => Ok((layers_handle, filter_handle)),
         Err(_e) => Err(Error::msg("Tracing subscriber already registered.")),
     }
 }
-pub fn setup_fs(log_dir: &PathBuf, handle: LogHandle) -> Result<()> {
-    // let mut layers = default_layers()?;
-    // let fs_layer_ = fs_layer(log_dir)?;
+pub fn reload_filter(handle: FilterHandle) -> Result<()> {
+    handle.modify(|filter| {
+        *filter = env_filter();
+    })?;
+    Ok(())
+}
+pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
     handle.modify(|filter| {
         (*filter).push(fs_layer(log_dir).unwrap());
     })?;
     Ok(())
 }
 
-fn default_layers<S>() -> Result<Vec<Box<dyn Layer<S> + Send + Sync + 'static>>>
-where
-    S: Subscriber,
-    for<'a> S: LookupSpan<'a>,
-{
-    let console_error_ = console_layer()?;
-    Ok(vec![console_error_])
-}
 fn env_filter() -> EnvFilter {
     let f = match EnvFilter::try_from_default_env() {
         Ok(f) => {
@@ -62,7 +65,7 @@ fn env_filter() -> EnvFilter {
             EnvFilter::default().add_directive(LevelFilter::INFO.into())
         }
     };
-    // f.add_directive("app::emit::filter=error".parse().unwrap());
+    // f.add_directive("app::emit=trace".parse().unwrap());
     f
 }
 
@@ -71,9 +74,9 @@ where
     S: Subscriber,
     for<'a> S: LookupSpan<'a>,
 {
-    let timer = UtcTime::rfc_3339();
+    // let timer = UtcTime::rfc_3339();
     Ok(fmt::layer()
-        .with_timer(timer)
+        // .with_timer(timer)
         .with_thread_ids(true)
         .with_target(true)
         .compact()
@@ -90,7 +93,6 @@ where
     }
     let file_appender = RollingFileAppender::new(Rotation::DAILY, log_dir, "app.log");
     let timer = UtcTime::rfc_3339();
-    // let env_filter = env_filter();
 
     Ok(fmt::layer()
         .with_writer(file_appender)

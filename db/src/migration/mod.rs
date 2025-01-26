@@ -6,6 +6,7 @@ pub mod m20250115_171424_create_gym;
 pub mod m20250115_173443_create_target_muscle;
 pub mod m20250115_175632_create_exercise;
 pub mod m20250115_192036_create_workout;
+pub mod m20250125_202800_seed;
 
 pub struct Migrator;
 
@@ -19,6 +20,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250115_173443_create_target_muscle::Migration),
             Box::new(m20250115_175632_create_exercise::Migration),
             Box::new(m20250115_192036_create_workout::Migration),
+            Box::new(m20250125_202800_seed::Migration),
         ]
     }
 }

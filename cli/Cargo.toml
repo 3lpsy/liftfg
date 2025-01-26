@@ -1,17 +1,21 @@
 [package]
-name = "cli"
+name = "fgcli"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tauri = { workspace = true }
-
 db = { path = "../db" }
 tokio = { workspace = true }
 anyhow = { workspace = true }
 sea-orm = { workspace = true }
 clap = { version = "4.5.26", features = ["cargo"] }
 sea-orm-migration = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tracing-appender = { workspace = true }
+time = { workspace = true }
+fgcore = { path = "../core" }
+
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-cli = "2.2.0"

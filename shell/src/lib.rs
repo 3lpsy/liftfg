@@ -1,43 +1,22 @@
 #![feature(stmt_expr_attributes)]
 
-use anyhow::Result;
-use config::AppConfig;
-use db::db;
-use fg_core::logging;
-use tauri::{App, Manager};
+use fgcore::logging;
 use tracing::info;
 
 mod config;
+pub mod handlers;
 mod plugins;
-
-#[tauri::command]
-async fn get_user() -> Result<(), String> {
-    Ok(())
-}
-
-#[tracing::instrument(skip_all, parent = None)]
-fn setup(app: &mut App, log_handle: logging::LogHandle) -> Result<()> {
-    let rt = tauri::async_runtime::handle();
-    rt.block_on(async {
-        config::setup(app).await?;
-
-        let config = app.state::<AppConfig>();
-        info!("App Config: {:?}", config);
-        logging::setup_fs(&config.logs_dir, log_handle)?;
-        info!("File tracing initialized");
-        db::migrate(&config.db_path).await?;
-        Ok::<(), anyhow::Error>(()) // Explicitly specify the Ok type here
-    })?;
-    info!("App setup complete");
-    Ok(())
-}
+mod setup;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let log_handle = match logging::setup() {
-        Ok(handle) => {
+    // Only env that should be read before setup is RUST_LOG
+    // Revisit if there are tauri runtime variables needed
+
+    let log_handles = match logging::setup() {
+        Ok(handles) => {
             info!("Console tracing initialized");
-            handle
+            handles
         }
         Err(e) => {
             panic!("Error setting up logging: {:?}", e);
@@ -45,8 +24,9 @@ pub fn run() {
     };
     let mut builder = tauri::Builder::default();
     builder = plugins::setup(builder);
-    builder = builder.setup(|app| Ok(setup(app, log_handle)?));
-    builder = builder.invoke_handler(tauri::generate_handler![get_user]);
+    // Setup Callback
+    builder = builder.setup(|app| Ok(setup::setup(app, log_handles)?));
+    builder = builder.invoke_handler(handlers::generate());
 
     builder.run(tauri::generate_context!()).unwrap_or_else(|e| {
         eprintln!("Error while running Tauri application: {:?}", e);

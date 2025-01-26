@@ -1,45 +1,35 @@
 use dioxus::prelude::*;
 
 // mod state;
-mod bindings;
-mod invoke;
-mod log;
-use log::info;
-use tracing::Level;
-use wasm_bindgen::JsValue;
+// mod bindings;
+// mod invoke;
+// mod jslog;
+mod components;
+mod router;
+mod views;
+// dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
 
 fn main() {
-    info("Launching App");
+    // jslog::info("Launching App");
     dioxus::launch(App);
 }
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
-const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+// const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 
 #[component]
 fn App() -> Element {
+    // First we want to query the local db (directly or via Tauri) and see if we have a user
     // let app_state = use_context_provider(ipc::fetch_user);
-    info("Rendering App");
+    // jslog::info("Rendering App");
     rsx! {
+        // automatically set UTF and viewport
         document::Stylesheet { href: MAIN_CSS }
-        document::Stylesheet { href: TAILWIND_CSS }
+        // document::Meta {
+        //     name: "test2",
+        //     content: "Test3"
+        // }
+        Router::<router::Route> {}
 
-        div { id: "title",
-            h1 { "HotDog! 🌭" }
-        }
-        div { id: "dogview",
-            img { src: "https://images.dog.ceo/breeds/pitbull/dog-3981540_1280.jpg" }
-        }
-        div { id: "buttons",
-            button { id: "skip", "skip2 " }
-            button { id: "save", "save4" }
-        }
-    }
-}
-
-#[component]
-fn DogApp(breed: String) -> Element {
-    rsx! {
-        "Breed2: {breed}"
     }
 }
