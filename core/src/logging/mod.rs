@@ -36,8 +36,10 @@ pub fn setup() -> Result<(LayersHandle, FilterHandle)> {
     }
 }
 pub fn reload_filter(handle: FilterHandle) -> Result<()> {
-    handle.modify(|filter| {
-        *filter = env_filter();
+    // This will hange env_filter() is called in modify
+    let f = env_filter();
+    handle.modify(move |filter| {
+        *filter = f;
     })?;
     Ok(())
 }
