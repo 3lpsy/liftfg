@@ -31,7 +31,8 @@ impl AppConfig {
     pub fn new<R: Runtime>(app: &App<R>) -> Result<Self, Error> {
         let mut config = AppConfig::default(app);
         let matches = AppConfig::matches(app);
-        config.load(matches)?; // apply matches or load from env
+        config.load(matches)?;
+        config.skip_dotenv = Self::should_skip_dotenv(app); // apply matches or load from env
         Ok(config)
     }
 
@@ -67,11 +68,11 @@ impl AppConfig {
         Ok(())
     }
 
-    #[cfg(any(target_os = "ios", target_os = "android"))]
+    #[cfg(any(target_os = "ios", target_os = "android", test))]
     pub fn matches<R: Runtime>(_app: &App<R>) -> HashMap<String, Value> {
         HashMap::new()
     }
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(not(any(target_os = "ios", target_os = "android", test)))]
     pub fn matches<R: Runtime>(app: &App<R>) -> HashMap<String, Value> {
         app.cli()
             .matches()

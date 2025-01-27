@@ -37,8 +37,8 @@ dx-prod:
 shell: shell-dev
 
 shell-dev:
-	@echo "Running: cargo  run -p liftfg-shell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)"
-	@cargo run -p liftfg-shell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)
+	@echo "Running: cargo  run -p fgshell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)"
+	@cargo run -p fgshell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)
 
 shell-prod:
 	@echo "Running: cargo build"

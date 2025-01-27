@@ -2,7 +2,7 @@ use anyhow::{Error, Result};
 use std::env;
 use std::path::PathBuf;
 use tracing::level_filters::LevelFilter;
-use tracing::Subscriber;
+use tracing::{info, warn, Subscriber};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::layer::Layered;
@@ -36,9 +36,9 @@ pub fn setup() -> Result<(LayersHandle, FilterHandle)> {
     }
 }
 pub fn reload_filter(handle: FilterHandle) -> Result<()> {
-    handle.modify(|filter| {
-        *filter = env_filter();
-    })?;
+    // handle.modify(|filter| {
+    //     *filter = env_filter();
+    // })?;
     Ok(())
 }
 pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
@@ -51,14 +51,14 @@ pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
 fn env_filter() -> EnvFilter {
     let f = match EnvFilter::try_from_default_env() {
         Ok(f) => {
-            eprintln!(
-                "Logging environment configuration:{:?}",
+            info!(
+                "RUST_LOG: {:?}",
                 env::var("RUST_LOG").unwrap_or("".to_owned())
             );
             f
         }
         Err(e) => {
-            eprintln!(
+            warn!(
                 "Creating default info filter. Could not parse RUST_LOG: {:?}",
                 e
             );

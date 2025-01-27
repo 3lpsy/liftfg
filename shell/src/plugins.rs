@@ -1,7 +1,7 @@
-use tauri::{Builder, Wry};
+use tauri::{Builder, Runtime};
 use tauri_plugin_log::{Target, TargetKind};
 
-pub fn setup(mut builder: Builder<Wry>) -> Builder<Wry> {
+pub fn setup<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
     let logging = tauri_plugin_log::Builder::new()
         .clear_targets()
         .target(Target::new(TargetKind::Stdout))
@@ -13,7 +13,7 @@ pub fn setup(mut builder: Builder<Wry>) -> Builder<Wry> {
         .build();
     builder = builder.plugin(logging);
     builder = builder.plugin(tauri_plugin_opener::init());
-    #[cfg(not(any(target_os = "ios", target_os = "android")))]
+    #[cfg(not(any(target_os = "ios", target_os = "android", test)))]
     {
         builder = builder
             .plugin(tauri_plugin_cli::init())
