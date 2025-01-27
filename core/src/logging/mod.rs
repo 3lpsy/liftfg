@@ -36,9 +36,9 @@ pub fn setup() -> Result<(LayersHandle, FilterHandle)> {
     }
 }
 pub fn reload_filter(handle: FilterHandle) -> Result<()> {
-    // handle.modify(|filter| {
-    //     *filter = env_filter();
-    // })?;
+    handle.modify(|filter| {
+        *filter = env_filter();
+    })?;
     Ok(())
 }
 pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {

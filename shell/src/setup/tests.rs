@@ -12,13 +12,13 @@ mod tests {
     use sea_orm::ConnectionTrait;
     use sea_orm::QueryResult;
     use sea_orm_migration::MigratorTrait;
-    use std::path::PathBuf;
+    // use std::path::PathBuf;
     use tauri::test::mock_context;
     use tauri::test::noop_assets;
     use tauri::test::{mock_builder, MockRuntime};
     use tauri::Manager;
-    use tempfile::tempdir;
-    use tracing::info;
+    // use tempfile::tempdir;
+    // use tracing::info;
 
     async fn create_test_app() -> tauri::App<MockRuntime> {
         std::env::set_var("APP_ENV", "test");
@@ -37,8 +37,6 @@ mod tests {
     async fn it_setups() {
         let log_handles = logging::setup().unwrap();
         let mut app = create_test_app().await;
-        // before setup is called, env needs to be setup
-
         setup::setup_async(&mut app, log_handles).await.unwrap();
         let config = app.state::<AppConfig>();
         assert!(config.db_path.exists());

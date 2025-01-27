@@ -19,9 +19,8 @@ pub async fn setup_async<R: Runtime>(
     } else {
         info!("Skipping dotenv loading");
     }
-
-    logging::reload_filter(log_handles.1)?;
-
+    // this hangs
+    // logging::reload_filter(log_handles.1)?;
     config::setup(app).await?;
 
     let config = app.state::<AppConfig>();

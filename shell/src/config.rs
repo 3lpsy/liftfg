@@ -9,7 +9,7 @@ use std::str::FromStr;
 use std::{collections::HashMap, path::PathBuf};
 use tauri::{App, Manager, Runtime};
 
-#[cfg(not(any(target_os = "ios", target_os = "android")))]
+#[cfg(not(any(target_os = "ios", target_os = "android", test)))]
 use tauri_plugin_cli::CliExt;
 
 pub async fn setup<R: Runtime>(app: &mut App<R>) -> Result<(), Error> {
@@ -31,8 +31,8 @@ impl AppConfig {
     pub fn new<R: Runtime>(app: &App<R>) -> Result<Self, Error> {
         let mut config = AppConfig::default(app);
         let matches = AppConfig::matches(app);
-        config.load(matches)?;
-        config.skip_dotenv = Self::should_skip_dotenv(app); // apply matches or load from env
+        config.load(matches)?; // apply matches or load from env
+        config.skip_dotenv = Self::should_skip_dotenv(app);
         Ok(config)
     }
 
