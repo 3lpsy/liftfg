@@ -12,6 +12,12 @@ fn touch(path: &PathBuf) -> Result<()> {
     }
     Ok(())
 }
+pub async fn seed(db_path: &PathBuf) -> Result<()> {
+    let db = get_dbc(db_path).await?;
+    // unimplemented!();
+    info!("Database seeded");
+    return Ok(());
+}
 
 pub async fn migrate(db_path: &PathBuf) -> Result<()> {
     let db = get_dbc(db_path).await?;

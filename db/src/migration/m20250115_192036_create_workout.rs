@@ -26,7 +26,7 @@ impl MigrationTrait for Migration {
                     .col(pk_auto(Set::Id))
                     .col(integer(Set::Reps))
                     .col(integer(Set::Weight))
-                    .col(integer(Set::WorkoutId))
+                    .col(integer(Set::WorkoutId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_set_workout")
@@ -35,7 +35,7 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(integer(Set::ExerciseId))
+                    .col(integer(Set::ExerciseId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_set_exercise")

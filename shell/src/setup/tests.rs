@@ -23,7 +23,7 @@ mod tests {
     async fn create_test_app() -> tauri::App<MockRuntime> {
         std::env::set_var("APP_ENV", "test");
         std::env::set_var("DATABASE_PATH", "test.db");
-        std::env::set_var("SKIP_DOTENV", "true");
+        std::env::set_var("NO_DOTENV", "true");
         let mut builder = mock_builder();
         builder = plugins::setup(builder);
         builder

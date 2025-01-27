@@ -11,7 +11,7 @@ pub async fn setup_async<R: Runtime>(
     app: &mut App<R>,
     log_handles: (logging::LayersHandle, logging::FilterHandle),
 ) -> Result<()> {
-    if !AppConfig::should_skip_dotenv(app) {
+    if !AppConfig::should_no_dotenv(app) {
         utils::load_dotenvs(vec![
             utils::cwd().join(".env"),
             app.path().app_data_dir().unwrap().join("environment"),
@@ -29,7 +29,10 @@ pub async fn setup_async<R: Runtime>(
     logging::setup_fs(&config.logs_dir, log_handles.0)?;
     info!("File tracing initialized");
 
-    db::migrate(&config.db_path).await?;
+    if !config.no_migrate {
+        db::migrate(&config.db_path).await?;
+    }
+
     info!("App setup complete");
 
     Ok(())

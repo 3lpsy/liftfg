@@ -24,7 +24,8 @@ pub struct AppConfig {
     pub app_env: Environment,
     pub db_path: PathBuf,
     pub logs_dir: PathBuf,
-    pub skip_dotenv: bool,
+    pub no_dotenv: bool,
+    pub no_migrate: bool,
 }
 
 impl AppConfig {
@@ -32,7 +33,7 @@ impl AppConfig {
         let mut config = AppConfig::default(app);
         let matches = AppConfig::matches(app);
         config.load(matches)?; // apply matches or load from env
-        config.skip_dotenv = Self::should_skip_dotenv(app);
+        config.no_dotenv = Self::should_no_dotenv(app);
         Ok(config)
     }
 
@@ -43,13 +44,13 @@ impl AppConfig {
             app_env: Environment::default(),
             db_path: data_dir.join("app.db"),
             logs_dir: data_dir.join("logs"),
-            skip_dotenv: false,
+            ..Default::default()
         }
     }
 
-    pub fn should_skip_dotenv<R: Runtime>(app: &App<R>) -> bool {
+    pub fn should_no_dotenv<R: Runtime>(app: &App<R>) -> bool {
         let matches = Self::matches(app);
-        if let Some(skipval) = AppConfig::get_arg::<bool>(&matches, "skip-dotenv", "SKIP_DOTENV") {
+        if let Some(skipval) = AppConfig::get_arg::<bool>(&matches, "skip-dotenv", "NO_DOTENV") {
             return skipval;
         }
         return false;
@@ -64,6 +65,9 @@ impl AppConfig {
         }
         if let Some(val) = Self::get_arg::<String>(&matches, "env", "APP_ENV") {
             self.app_env = Environment::from_str(&val)?;
+        }
+        if let Some(val) = Self::get_arg::<bool>(&matches, "_", "NO_MIGRATE") {
+            self.no_migrate = val
         }
         Ok(())
     }

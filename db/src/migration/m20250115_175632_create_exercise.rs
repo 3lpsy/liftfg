@@ -13,7 +13,7 @@ impl MigrationTrait for Migration {
                     .table(Muscle::Table)
                     .if_not_exists()
                     .col(pk_auto(Muscle::Id))
-                    .col(string(Muscle::Name))
+                    .col(string(Muscle::Name).not_null())
                     .add_timestamps()
                     .to_owned(),
             )
@@ -24,7 +24,7 @@ impl MigrationTrait for Migration {
                     .table(Exercise::Table)
                     .if_not_exists()
                     .col(pk_auto(Exercise::Id))
-                    .col(string(Exercise::Name))
+                    .col(string(Exercise::Name).not_null())
                     .add_timestamps()
                     .to_owned(),
             )
@@ -35,8 +35,8 @@ impl MigrationTrait for Migration {
                     .table(ExerciseMuscle::Table)
                     .if_not_exists()
                     .col(pk_auto(ExerciseMuscle::Id))
-                    .col(integer(ExerciseMuscle::Effectiveness))
-                    .col(integer(ExerciseMuscle::ExerciseId))
+                    .col(integer(ExerciseMuscle::Effectiveness).not_null())
+                    .col(integer(ExerciseMuscle::ExerciseId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_exercise_muscle_exercise")
@@ -45,7 +45,7 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(integer(ExerciseMuscle::MuscleId))
+                    .col(integer(ExerciseMuscle::MuscleId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_exercise_muscle_muscle")
@@ -53,6 +53,14 @@ impl MigrationTrait for Migration {
                             .to(Muscle::Table, Muscle::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .index(
+                        Index::create()
+                            .name("idx_exercise_muscle")
+                            .table(ExerciseMuscle::Table)
+                            .col(ExerciseMuscle::MuscleId)
+                            .col(ExerciseMuscle::ExerciseId)
+                            .unique(),
                     )
                     .add_timestamps()
                     .to_owned(),

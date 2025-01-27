@@ -16,7 +16,8 @@ impl MigrationTrait for Migration {
                     .table(Seed::Table)
                     .if_not_exists()
                     .col(pk_auto(Seed::Id))
-                    .col(string(Seed::Status))
+                    .col(string(Seed::Name).not_null().unique_key())
+                    .col(string(Seed::Status).not_null())
                     .add_timestamps()
                     .to_owned(),
             )
@@ -34,5 +35,6 @@ impl MigrationTrait for Migration {
 enum Seed {
     Table,
     Id,
+    Name,
     Status,
 }

@@ -25,8 +25,8 @@ impl MigrationTrait for Migration {
                     .table(ProgramTargetMuscle::Table)
                     .if_not_exists()
                     .col(pk_auto(ProgramTargetMuscle::Id))
-                    .col(integer(ProgramTargetMuscle::Sets))
-                    .col(integer(ProgramTargetMuscle::ProgramId))
+                    .col(integer(ProgramTargetMuscle::Sets).not_null())
+                    .col(integer(ProgramTargetMuscle::ProgramId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_program_target_muscle_program") // Name of the foreign key constraint
@@ -35,7 +35,7 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade), // To the user table, id column
                     )
-                    .col(integer(ProgramTargetMuscle::TargetMuscleId))
+                    .col(integer(ProgramTargetMuscle::TargetMuscleId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_program_target_muscle_target_muscle") // Name of the foreign key constraint
@@ -46,6 +46,14 @@ impl MigrationTrait for Migration {
                             .to(TargetMuscle::Table, TargetMuscle::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade), // To the user table, id column
+                    )
+                    .index(
+                        Index::create()
+                            .name("idx_program_target_muscle_unique")
+                            .table(ProgramTargetMuscle::Table)
+                            .col(ProgramTargetMuscle::TargetMuscleId)
+                            .col(ProgramTargetMuscle::ProgramId)
+                            .unique(),
                     )
                     .add_timestamps()
                     .to_owned(),

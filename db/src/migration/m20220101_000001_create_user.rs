@@ -13,8 +13,8 @@ impl MigrationTrait for Migration {
                     .table(User::Table)
                     .if_not_exists()
                     .col(pk_auto(User::Id))
-                    .col(string(User::Email))
-                    .col(string(User::Name))
+                    .col(string(User::Email).not_null().unique_key())
+                    .col(string(User::Name).not_null())
                     .add_timestamps()
                     .to_owned(),
             )

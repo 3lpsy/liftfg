@@ -15,7 +15,7 @@ impl MigrationTrait for Migration {
                     .table(Gym::Table)
                     .if_not_exists()
                     .col(pk_auto(Gym::Id))
-                    .col(string(Gym::Name))
+                    .col(string(Gym::Name).unique_key())
                     .add_timestamps()
                     .to_owned(),
             )
@@ -26,7 +26,7 @@ impl MigrationTrait for Migration {
                     .table(GymUser::Table)
                     .if_not_exists()
                     .col(pk_auto(GymUser::Id))
-                    .col(integer(GymUser::UserId))
+                    .col(integer(GymUser::UserId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_gym_user_user") // Name of the foreign key constraint
@@ -35,7 +35,7 @@ impl MigrationTrait for Migration {
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(integer(GymUser::GymId))
+                    .col(integer(GymUser::GymId).not_null())
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_gym_user_gym")
@@ -45,6 +45,14 @@ impl MigrationTrait for Migration {
                             .on_update(ForeignKeyAction::Cascade),
                     )
                     .add_timestamps()
+                    .index(
+                        Index::create()
+                            .name("idx_gym_user_unique")
+                            .table(GymUser::Table)
+                            .col(GymUser::UserId)
+                            .col(GymUser::GymId)
+                            .unique(),
+                    )
                     .to_owned(),
             )
             .await

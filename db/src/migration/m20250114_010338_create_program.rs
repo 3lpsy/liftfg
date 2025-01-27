@@ -15,8 +15,8 @@ impl MigrationTrait for Migration {
                     .table(Program::Table)
                     .if_not_exists()
                     .col(pk_auto(Program::Id))
-                    .col(string(Program::Name))
-                    .col(integer(Program::UserId)) // Add the foreign key column
+                    .col(string(Program::Name).not_null().unique_key())
+                    .col(integer(Program::UserId).not_null()) // Add the foreign key column
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_program_user") // Name of the foreign key constraint
