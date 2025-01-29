@@ -18,6 +18,8 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(has_many = "super::gym_user::Entity")]
     GymUser,
+    #[sea_orm(has_many = "super::gym::Entity")]
+    Gym,
     #[sea_orm(has_many = "super::program::Entity")]
     Program,
 }
@@ -31,6 +33,19 @@ impl Related<super::gym_user::Entity> for Entity {
 impl Related<super::program::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Program.def()
+    }
+}
+
+impl Related<super::gym::Entity> for Entity {
+    // The final relation is Cake -> CakeFilling -> Filling
+    fn to() -> RelationDef {
+        super::gym_user::Relation::Gym.def()
+    }
+
+    fn via() -> Option<RelationDef> {
+        // The original relation is CakeFilling -> Cake,
+        // after `rev` it becomes Cake -> CakeFilling
+        Some(super::gym_user::Relation::User.def().rev())
     }
 }
 

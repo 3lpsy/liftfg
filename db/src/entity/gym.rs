@@ -17,11 +17,24 @@ pub struct Model {
 pub enum Relation {
     #[sea_orm(has_many = "super::gym_user::Entity")]
     GymUser,
+    #[sea_orm(has_many = "super::user::Entity")]
+    User,
 }
 
 impl Related<super::gym_user::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::GymUser.def()
+    }
+}
+
+impl Related<super::user::Entity> for Entity {
+    // The final relation is Cake -> CakeFilling -> Filling
+    fn to() -> RelationDef {
+        super::gym_user::Relation::User.def()
+    }
+
+    fn via() -> Option<RelationDef> {
+        Some(super::gym_user::Relation::Gym.def().rev())
     }
 }
 
