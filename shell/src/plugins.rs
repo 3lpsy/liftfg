@@ -1,7 +1,8 @@
 use tauri::{Builder, Runtime};
 use tauri_plugin_log::{Target, TargetKind};
+use tracing::debug;
 
-pub fn setup<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
+pub fn load<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
     let logging = tauri_plugin_log::Builder::new()
         .clear_targets()
         .target(Target::new(TargetKind::Stdout))
@@ -11,13 +12,13 @@ pub fn setup<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
         // .level_for("tauri::manager", log::LevelFilter::Warn)
         // .level_for("app::setup", log::LevelFilter::Warn)
         .build();
+    debug!("Loading plugins...");
     builder = builder.plugin(logging);
     builder = builder.plugin(tauri_plugin_opener::init());
-    #[cfg(not(any(target_os = "ios", target_os = "android", test)))]
+    builder = builder.plugin(tauri_plugin_fs::init());
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     {
-        builder = builder
-            .plugin(tauri_plugin_cli::init())
-            .plugin(tauri_plugin_fs::init());
+        builder = builder.plugin(tauri_plugin_cli::init());
     }
     builder // No need for return and semicolon
 }

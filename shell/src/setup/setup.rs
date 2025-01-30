@@ -21,7 +21,7 @@ pub async fn setup_async<R: Runtime>(
     }
     // this hangs
     logging::reload_filter(log_handles.1)?;
-    config::setup(app).await?;
+    config::manage(app).await?;
 
     let config = app.state::<AppConfig>();
     info!("App Config: {:?}", config);

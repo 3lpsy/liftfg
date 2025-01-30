@@ -9,10 +9,10 @@ use std::str::FromStr;
 use std::{collections::HashMap, path::PathBuf};
 use tauri::{App, Manager, Runtime};
 
-#[cfg(not(any(target_os = "ios", target_os = "android", test)))]
+#[cfg(not(any(target_os = "ios", target_os = "android")))]
 use tauri_plugin_cli::CliExt;
 
-pub async fn setup<R: Runtime>(app: &mut App<R>) -> Result<(), Error> {
+pub async fn manage<R: Runtime>(app: &mut App<R>) -> Result<(), Error> {
     let config = AppConfig::new(app)?;
     app.manage(config);
     Ok(())
@@ -72,15 +72,15 @@ impl AppConfig {
         Ok(())
     }
 
-    #[cfg(any(target_os = "ios", target_os = "android", test))]
+    #[cfg(any(target_os = "ios", target_os = "android"))]
     pub fn matches<R: Runtime>(_app: &App<R>) -> HashMap<String, Value> {
         HashMap::new()
     }
-    #[cfg(not(any(target_os = "ios", target_os = "android", test)))]
+    #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn matches<R: Runtime>(app: &App<R>) -> HashMap<String, Value> {
         app.cli()
             .matches()
-            .unwrap()
+            .expect("Failed to get matches from cli plugin")
             .args
             .iter()
             .map(|(key, arg_data)| (key.clone(), arg_data.value.clone()))

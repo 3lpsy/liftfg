@@ -13,30 +13,16 @@ mod tests {
     use sea_orm::QueryResult;
     use sea_orm_migration::MigratorTrait;
     // use std::path::PathBuf;
+    use crate::testutils;
     use tauri::test::mock_context;
     use tauri::test::noop_assets;
     use tauri::test::{mock_builder, MockRuntime};
     use tauri::Manager;
-    // use tempfile::tempdir;
-    // use tracing::info;
-
-    async fn create_test_app() -> tauri::App<MockRuntime> {
-        std::env::set_var("APP_ENV", "test");
-        std::env::set_var("DATABASE_PATH", "test.db");
-        std::env::set_var("NO_DOTENV", "true");
-        let mut builder = mock_builder();
-        builder = plugins::setup(builder);
-        builder
-            .setup(|_app| Ok(()))
-            .invoke_handler(handlers::generate())
-            .build(mock_context(noop_assets()))
-            .unwrap()
-    }
 
     #[tokio::test]
     async fn it_setups() {
-        let log_handles = logging::setup().unwrap();
-        let mut app = create_test_app().await;
+        let log_handles = logging::init().unwrap();
+        let mut app = testutils::create_app().expect("Could not create test app");
         setup::setup_async(&mut app, log_handles).await.unwrap();
         let config = app.state::<AppConfig>();
         assert!(config.db_path.exists());
@@ -57,3 +43,32 @@ mod tests {
 // [dev-dependencies]
 // tempfile = "3.8"
 // tokio = { version = "1", features = ["full", "test-util"] }
+
+// use tempfile::tempdir;
+// use tracing::info;
+//
+// if !AppConfig::should_no_dotenv(app) {
+//     utils::load_dotenvs(vec![
+//         utils::cwd().join(".env"),
+//         app.path().app_data_dir().unwrap().join("environment"),
+//     ])?
+// } else {
+//     info!("Skipping dotenv loading");
+// }
+// // this hangs
+// logging::reload_filter(log_handles.1)?;
+// config::from_app(app).await?;
+
+// let config = app.state::<AppConfig>();
+// info!("App Config: {:?}", config);
+
+// logging::setup_fs(&config.logs_dir, log_handles.0)?;
+// info!("File tracing initialized");
+
+// if !config.no_migrate {
+//     db::migrate(&config.db_path).await?;
+// }
+
+// info!("App setup complete");
+
+// Ok(())
