@@ -48,7 +48,6 @@ pub mod testutils {
 
     // TOOD: create testing json file and just load that
     pub fn create_context<R: Runtime>() -> Context<R> {
-        let mut config = Config::default();
         let mut plugins_config = HashMap::new();
         let cli_config = json!({
             "description": "Test CLI",
