@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-db = { path = "../db" }
+fgdb = { path = "../db" }
 tokio = { workspace = true }
 anyhow = { workspace = true }
 sea-orm = { workspace = true }
@@ -15,6 +15,7 @@ tracing-subscriber = { workspace = true }
 tracing-appender = { workspace = true }
 time = { workspace = true }
 fgcore = { path = "../core" }
+tracing-log = "0.2.0"
 
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]

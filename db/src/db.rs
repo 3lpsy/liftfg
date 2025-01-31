@@ -1,23 +1,10 @@
 use crate::migration;
 use anyhow::Result;
+use fgcore::utils::touch;
 use sea_orm::{Database, DatabaseConnection};
 use sea_orm_migration::MigratorTrait;
-use std::fs::OpenOptions;
 use std::path::PathBuf;
 use tracing::{debug, info};
-
-fn touch(path: &PathBuf) -> Result<()> {
-    if !path.exists() {
-        OpenOptions::new().create(true).write(true).open(path)?;
-    }
-    Ok(())
-}
-pub async fn seed(db_path: &PathBuf) -> Result<()> {
-    let _db = get_dbc(db_path).await?;
-    // unimplemented!();
-    info!("Database seeded");
-    return Ok(());
-}
 
 pub async fn migrate(db_path: &PathBuf) -> Result<()> {
     let db = get_dbc(db_path).await?;

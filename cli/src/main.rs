@@ -3,9 +3,9 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use clap::{Arg, ArgMatches, Command};
-use db::db::migrate;
-use db::db::rollback;
 use fgcore::logging;
+use fgdb::db::migrate;
+use fgdb::db::rollback;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 const PKG_NAME: &str = env!("CARGO_PKG_NAME");

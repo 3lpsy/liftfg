@@ -1,10 +1,12 @@
 [package]
-name = "db"
+name = "fgdb"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [dependencies]
+fgcore = { path = "../core" }
+
 tokio = { workspace = true }
 anyhow = { workspace = true }
 sea-orm-migration = { workspace = true }

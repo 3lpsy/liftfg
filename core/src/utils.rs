@@ -1,7 +1,15 @@
 use anyhow::Result;
 use std::env;
+use std::fs::OpenOptions;
 use std::path::{Path, PathBuf};
 use tracing::info;
+
+pub fn touch(path: &PathBuf) -> Result<()> {
+    if !path.exists() {
+        OpenOptions::new().create(true).write(true).open(path)?;
+    }
+    Ok(())
+}
 
 pub fn load_dotenvs(dotenvs: Vec<PathBuf>) -> Result<()> {
     for dotenv in dotenvs {

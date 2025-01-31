@@ -4,17 +4,13 @@ use std::path::PathBuf;
 use tracing::level_filters::LevelFilter;
 use tracing::{debug, info, warn, Subscriber};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
+use tracing_log;
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::layer::Layered;
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::reload::Handle;
 use tracing_subscriber::{fmt, layer::SubscriberExt, EnvFilter};
 use tracing_subscriber::{reload, Layer, Registry};
-
-pub type LogHandle = Handle<
-    Vec<Box<dyn Layer<Layered<EnvFilter, Registry>> + Send + Sync>>,
-    Layered<EnvFilter, Registry>,
->;
 
 pub type LayersHandle = Handle<
     Vec<Box<dyn Layer<Layered<reload::Layer<EnvFilter, Registry>, Registry>> + Send + Sync>>,
@@ -33,6 +29,7 @@ pub fn init() -> Result<(LayersHandle, FilterHandle)> {
     match tracing::subscriber::set_global_default(subscriber) {
         Ok(_) => {
             debug!("Default logging layer initialized...");
+            tracing_log::LogTracer::init()?;
             Ok((layers_handle, filter_handle))
         }
         Err(_e) => Err(Error::msg("Tracing subscriber already registered.")),
@@ -51,7 +48,7 @@ pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
     handle.modify(|filter| {
         (*filter).push(fs_layer(log_dir).unwrap());
     })?;
-    debug!("Filesyste logging initialized...");
+    debug!("Filesystem logging initialized...");
     Ok(())
 }
 

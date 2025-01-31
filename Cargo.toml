@@ -27,6 +27,7 @@ tracing-subscriber = { version = "0.3.18", features = [
     "registry",
     "env-filter",
 ] }
+tracing-log = "0.2"
 log = "0.4"
 tracing-appender = "0.2"
 time = { version = "0.3", features = ["formatting"] }

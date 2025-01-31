@@ -12,9 +12,14 @@ use tauri::{App, Manager, Runtime};
 #[cfg(not(any(target_os = "ios", target_os = "android")))]
 use tauri_plugin_cli::CliExt;
 
-pub async fn manage<R: Runtime>(app: &mut App<R>) -> Result<(), Error> {
-    let config = AppConfig::new(app)?;
-    app.manage(config);
+pub async fn manage<R: Runtime>(app: &mut App<R>, config: Option<AppConfig>) -> Result<(), Error> {
+    let conf: AppConfig;
+    if config.is_none() {
+        conf = AppConfig::from_app(app)?;
+    } else {
+        conf = config.unwrap();
+    }
+    app.manage(conf);
     Ok(())
 }
 
@@ -22,28 +27,40 @@ pub async fn manage<R: Runtime>(app: &mut App<R>) -> Result<(), Error> {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct AppConfig {
     pub app_env: Environment,
+    pub data_dir: PathBuf,
     pub db_path: PathBuf,
     pub logs_dir: PathBuf,
     pub no_dotenv: bool,
     pub no_migrate: bool,
+    pub no_fs_logging: bool,
+    pub should_seed_dev: bool,
+    pub no_logging_filer_reload: bool,
 }
 
 impl AppConfig {
-    pub fn new<R: Runtime>(app: &App<R>) -> Result<Self, Error> {
-        let mut config = AppConfig::default(app);
+    pub fn from_app<R: Runtime>(app: &App<R>) -> Result<Self, Error> {
+        let mut config = AppConfig::default_from_app(app);
         let matches = AppConfig::matches(app);
         config.load(matches)?; // apply matches or load from env
         config.no_dotenv = Self::should_no_dotenv(app);
         Ok(config)
     }
 
-    pub fn default<R: Runtime>(app: &App<R>) -> Self {
+    pub fn default_from_app<R: Runtime>(app: &App<R>) -> Self {
         // should be absolute
-        let data_dir = app.path().app_data_dir().unwrap();
+        let data_dir = app
+            .path()
+            .app_data_dir()
+            .expect("Unable to determine app data dir");
+        AppConfig::default(&data_dir)
+    }
+
+    pub fn default(data_dir: &PathBuf) -> Self {
         AppConfig {
+            data_dir: data_dir.clone(),
             app_env: Environment::default(),
-            db_path: data_dir.join("app.db"),
-            logs_dir: data_dir.join("logs"),
+            db_path: data_dir.clone().join("app.db"),
+            logs_dir: data_dir.clone().join("logs"),
             ..Default::default()
         }
     }
@@ -57,7 +74,7 @@ impl AppConfig {
     }
 
     pub fn load(&mut self, matches: HashMap<String, Value>) -> Result<()> {
-        if let Some(val) = Self::get_arg::<String>(&matches, "logs", "LOGS_PATH") {
+        if let Some(val) = Self::get_arg::<String>(&matches, "logs", "LOGS_DIR") {
             self.logs_dir = resolve_path(&val);
         }
         if let Some(val) = Self::get_arg::<String>(&matches, "db", "DATABASE_PATH") {
@@ -68,6 +85,9 @@ impl AppConfig {
         }
         if let Some(val) = Self::get_arg::<bool>(&matches, "_", "NO_MIGRATE") {
             self.no_migrate = val
+        }
+        if let Some(val) = Self::get_arg::<bool>(&matches, "_", "NO_FS_LOGGING") {
+            self.no_fs_logging = val
         }
         Ok(())
     }
