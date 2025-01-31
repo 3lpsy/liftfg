@@ -58,7 +58,7 @@ pub mod testutils {
     #[ctor]
     fn init_tests() {
         INIT.get_or_init(|| {
-            let data_dir = fgcore::utils::cwd().join("tests");
+            let data_dir = fgcore::utils::cwd().join("data").join("tests");
             if !data_dir.exists() {
                 fs::create_dir_all(&data_dir).expect("Could not create testing data dir");
             }
