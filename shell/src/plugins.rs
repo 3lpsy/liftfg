@@ -17,5 +17,5 @@ pub fn load<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
     {
         builder = builder.plugin(tauri_plugin_cli::init());
     }
-    builder // No need for return and semicolon
+    builder
 }

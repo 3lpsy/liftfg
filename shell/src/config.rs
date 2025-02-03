@@ -40,9 +40,9 @@ pub struct AppConfig {
 impl AppConfig {
     pub fn from_app<R: Runtime>(app: &App<R>) -> Result<Self, Error> {
         let mut config = AppConfig::default_from_app(app);
-        let matches = AppConfig::matches(app);
+        let matches = AppConfig::matches(app)?;
         config.load(matches)?; // apply matches or load from env
-        config.no_dotenv = Self::should_no_dotenv(app);
+        config.no_dotenv = Self::should_no_dotenv(app)?;
         Ok(config)
     }
 
@@ -65,12 +65,12 @@ impl AppConfig {
         }
     }
 
-    pub fn should_no_dotenv<R: Runtime>(app: &App<R>) -> bool {
-        let matches = Self::matches(app);
+    pub fn should_no_dotenv<R: Runtime>(app: &App<R>) -> Result<bool> {
+        let matches = Self::matches(app)?;
         if let Some(skipval) = AppConfig::get_arg::<bool>(&matches, "skip-dotenv", "NO_DOTENV") {
-            return skipval;
+            return Ok(skipval);
         }
-        return false;
+        return Ok(false);
     }
 
     pub fn load(&mut self, matches: HashMap<String, Value>) -> Result<()> {
@@ -92,19 +92,32 @@ impl AppConfig {
         Ok(())
     }
 
+    // Exclude tests from CLI as it messes it'll take in cargo options
     #[cfg(any(target_os = "ios", target_os = "android"))]
-    pub fn matches<R: Runtime>(_app: &App<R>) -> HashMap<String, Value> {
-        HashMap::new()
+    pub fn matches<R: Runtime>(_app: &App<R>) -> Result<HashMap<String, Value>> {
+        Ok(HashMap::new())
     }
+
+    // Matches can fail. It relies on the cli plugin existing and is sort of strict on what it allows
+    #[allow(unused_variables)]
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
-    pub fn matches<R: Runtime>(app: &App<R>) -> HashMap<String, Value> {
-        app.cli()
-            .matches()
-            .expect("Failed to get matches from cli plugin")
-            .args
-            .iter()
-            .map(|(key, arg_data)| (key.clone(), arg_data.value.clone()))
-            .collect()
+    pub fn matches<R: Runtime>(app: &App<R>) -> Result<HashMap<String, Value>> {
+        match app.cli().matches() {
+            Ok(matches) => Ok(matches.args.iter().map(|(key, arg_data)| (key.clone(), arg_data.value.clone()))
+            .collect()),
+            Err(e) => {
+                #[cfg(test)]
+                {
+                    Ok(HashMap::new())
+                }
+                #[cfg(not(test))]
+                {
+                    Err(Error::from(e))
+
+                }
+            }
+        }
+
     }
 
     pub fn get_arg<T: FromValue>(

@@ -13,7 +13,7 @@ const PKG_NAME: &str = env!("CARGO_PKG_NAME");
 // use sea_orm::{ConnectionTrait, Database, DbBackend, DbErr, Statement};
 #[tokio::main]
 async fn main() -> Result<()> {
-    logging::setup()?;
+    logging::init()?;
     let args = parse();
 
     match args.subcommand() {

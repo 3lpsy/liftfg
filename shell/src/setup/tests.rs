@@ -1,5 +1,9 @@
 #[cfg(test)]
 mod tests {
+    use std::time::Duration;
+
+    use tokio::time;
+
     use crate::config::AppConfig;
     use crate::handlers;
     use crate::plugins;
@@ -13,6 +17,7 @@ mod tests {
     use sea_orm::ConnectionTrait;
     use sea_orm::QueryResult;
     use sea_orm_migration::MigratorTrait;
+    use tauri::Listener;
     use uuid::Uuid;
     // use std::path::PathBuf;
     use crate::testutils;
@@ -24,7 +29,6 @@ mod tests {
     #[tokio::test]
     async fn it_setups() {
         let test_id = Uuid::new_v4();
-        // todo: if no fs logging and no env reload, make handles optional in setup
         let mut app = testutils::create_app().expect("Could not create test app");
         let config = create_config(test_id);
         setup::setup_async(
@@ -73,7 +77,6 @@ mod tests {
     #[tokio::test]
     async fn it_invokes_log() {
         let test_id = Uuid::new_v4();
-        // todo: if no fs logging and no env reload, make handles optional in setup
         let mut app = testutils::create_app().expect("Could not create test app");
         setup::setup_async(
             &mut app,
@@ -82,8 +85,28 @@ mod tests {
         )
         .await
         .unwrap();
-        let handle = app.app_handle();
-        handle.in
+        let (tx, rx) = tokio::sync::oneshot::channel::<String>();
+        // Listen for log events.
+        // The tauri_plugin_log sends events on the "tauri://log" channel.
+        app.once("tauri://log", move |event| {
+            let _ = tx.send(event.payload().to_string());
+        });
+
+        // Trigger a log message. (This should be caught by the tauri log plugin.)
+        log::info!("This is a test log event");
+
+        // Wait for the event to be received (with a timeout)
+        let payload = time::timeout(Duration::from_secs(2), rx)
+            .await
+            .expect("Timed out waiting for log event")
+            .expect("Failed to receive log event");
+
+        // Option 1: Check that the payload string contains your log message.
+        assert!(
+            payload.contains("This is a test log event"),
+            "Expected payload to contain the test log message, got: {}",
+            payload
+        );
     }
 }
 

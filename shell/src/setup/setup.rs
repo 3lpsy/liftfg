@@ -14,7 +14,7 @@ pub async fn setup_async<R: Runtime>(
     log_handles: (logging::LayersHandle, logging::FilterHandle),
     conf: Option<AppConfig>,
 ) -> Result<()> {
-    if !AppConfig::should_no_dotenv(app) {
+    if !AppConfig::should_no_dotenv(app)? {
         utils::load_dotenvs(vec![
             utils::cwd().join(".env"),
             app.path().app_data_dir().unwrap().join("environment"),
