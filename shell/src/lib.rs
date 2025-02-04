@@ -47,7 +47,7 @@ pub mod testutils {
     use std::sync::OnceLock;
     use tauri::test::{mock_builder, mock_context, noop_assets, MockRuntime};
     use tauri::utils::config::PluginConfig;
-    use tauri::{App, Context, Runtime};
+    use tauri::{generate_context, App, Context, Runtime, WebviewWindow, WebviewWindowBuilder};
     use uuid::Uuid;
 
     static INIT: OnceLock<()> = OnceLock::new();
@@ -86,23 +86,27 @@ pub mod testutils {
         config
     }
 
-    // TOOD: create testing json file and just load that
-    pub fn create_context<R: Runtime>() -> Context<R> {
-        let mut plugins_config = HashMap::new();
-        let cli_config = json!({
-            "description": "Test CLI",
-            "longDescription": "Test CLI for unit tests",
-            "beforeHelp": "",
-            "afterHelp": "",
-            "args": [],
-            "subcommands": {}
-        });
-        plugins_config.insert("cli".to_string(), cli_config);
-        let mut context = mock_context(noop_assets());
-        let config = context.config_mut();
-        config.plugins = PluginConfig(plugins_config);
-        context
-    }
+    // // TOOD: create testing json file and just load that
+    // pub fn create_context<R: Runtime>() -> Context<R> {
+    //     // let mut plugins_config = HashMap::new();
+    //     // let cli_config = json!({
+    //     //     "description": "Test CLI",
+    //     //     "longDescription": "Test CLI for unit tests",
+    //     //     "beforeHelp": "",
+    //     //     "afterHelp": "",
+    //     //     "args": [],
+    //     //     "subcommands": {}
+    //     // });
+    //     // plugins_config.insert("cli".to_string(), cli_config);
+    //     // let mut context = mock_context(noop_assets());
+    //     // let config = context.config_mut();
+    //     // config.plugins = PluginConfig(plugins_config);
+    //     // context
+    //     //     .runtime_authority
+    //     //     .add_capability("log")
+    //     //     .expect("Failed to add log capability");
+    //     context
+    // }
     pub fn data_dir(test_id: Uuid) -> std::path::PathBuf {
         DATA_DIR.get().unwrap().join(test_id.to_string())
     }
@@ -112,7 +116,18 @@ pub mod testutils {
         let app = builder
             .setup(|_app| Ok(()))
             .invoke_handler(handlers::generate())
-            .build(create_context())?;
+            .build(generate_context!("test.tauri.conf.json"))?;
         Ok(app)
+    }
+
+    pub fn create_webview(app: &App<MockRuntime>) -> Result<WebviewWindow<MockRuntime>> {
+        let webview = WebviewWindowBuilder::new(app, "main", Default::default()).build()?;
+        Ok(webview)
+    }
+
+    pub fn create_app_and_webview() -> Result<(App<MockRuntime>, WebviewWindow<MockRuntime>)> {
+        let app = create_app()?;
+        let webview = create_webview(&app)?;
+        Ok((app, webview))
     }
 }

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "identifier": "test.test.test",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:4000"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Tauri App"
+      }
+    ],
+    "security": {
+      "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self'; connect-src ipc: http://ipc.localhost",
+      "headers": null,
+      "capabilities": [
+        "default",
+        {
+          "identifier": "test",
+          "description": "Capability for the main window",
+          "windows": ["main"],
+          "permissions": [
+            "log:default",
+            "allow-log",
+            "log:allow-log",
+            {
+              "identifier": "allow-log",
+              "allow": ["log"],
+              "urls": ["http://tauri.localhost/*"]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true
+  },
+  "plugins": {
+    "cli": {
+      "description": "Tauri CLI",
+      "args": []
+    }
+  }
+}

@@ -2,7 +2,7 @@ use anyhow::{Error, Result};
 use std::env;
 use std::path::PathBuf;
 use tracing::level_filters::LevelFilter;
-use tracing::{debug, info, warn, Subscriber};
+use tracing::{debug, warn, Subscriber};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_log;
 use tracing_subscriber::fmt::time::UtcTime;
@@ -21,27 +21,61 @@ pub type FilterHandle = Handle<EnvFilter, Registry>;
 
 pub fn init() -> Result<(LayersHandle, FilterHandle)> {
     let (layers, layers_handle) = reload::Layer::new(vec![console_layer()?]);
-    let (filter_layer, filter_handle) = reload::Layer::new(env_filter());
+    let mut bad_filter = false;
+    let filter = match EnvFilter::try_from_default_env() {
+        Ok(f) => f,
+        Err(_e) => {
+            bad_filter = true;
+            EnvFilter::default().add_directive(LevelFilter::INFO.into())
+        }
+    };
+    let (filter_layer, filter_handle) = reload::Layer::new(filter);
     let subscriber = tracing_subscriber::registry()
         .with(filter_layer)
         .with(layers);
 
-    match tracing::subscriber::set_global_default(subscriber) {
+    let registry = match tracing::subscriber::set_global_default(subscriber) {
         Ok(_) => {
-            debug!("Default logging layer initialized...");
+            debug!("Default logging layer initialized... ");
             tracing_log::LogTracer::init()?;
             Ok((layers_handle, filter_handle))
         }
         Err(_e) => Err(Error::msg("Tracing subscriber already registered.")),
+    };
+    if bad_filter {
+        warn!(
+            "Falling back to 'info' RUST_LOG. RUST_LOG filter could not be parsed: {:?}",
+            env::var("RUST_LOG").unwrap_or("".to_owned())
+        )
+    } else {
+        debug!(
+            "RUST_LOG: {:?}",
+            env::var("RUST_LOG").unwrap_or("".to_owned())
+        );
     }
+    registry
 }
 pub fn reload_filter(handle: FilterHandle) -> Result<()> {
-    // This will hange env_filter() is called in modify
-    let f = env_filter();
+    // This will hange if called in callback
+    let mut bad_filter = false;
+    let f = match EnvFilter::try_from_default_env() {
+        Ok(f) => f,
+        Err(_e) => {
+            bad_filter = true;
+            EnvFilter::default().add_directive(LevelFilter::INFO.into())
+        }
+    };
     handle.modify(move |filter| {
         *filter = f;
     })?;
-    debug!("Filter reloaded...");
+    if bad_filter {
+        warn!(
+            "Falling back to 'info' RUST_LOG. RUST_LOG filter could not be parsed: {:?}",
+            env::var("RUST_LOG").unwrap_or("".to_owned())
+        )
+    } else {
+        debug!("Filter reloaded...");
+    }
     Ok(())
 }
 pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
@@ -50,27 +84,6 @@ pub fn setup_fs(log_dir: &PathBuf, handle: LayersHandle) -> Result<()> {
     })?;
     debug!("Filesystem logging initialized...");
     Ok(())
-}
-
-fn env_filter() -> EnvFilter {
-    let f = match EnvFilter::try_from_default_env() {
-        Ok(f) => {
-            info!(
-                "RUST_LOG: {:?}",
-                env::var("RUST_LOG").unwrap_or("".to_owned())
-            );
-            f
-        }
-        Err(e) => {
-            warn!(
-                "Creating default info filter. Could not parse RUST_LOG: {:?}",
-                e
-            );
-            EnvFilter::default().add_directive(LevelFilter::INFO.into())
-        }
-    };
-    // f.add_directive("app::emit=trace".parse().unwrap());
-    f
 }
 
 fn console_layer<S>() -> Result<Box<dyn Layer<S> + Send + Sync + 'static>>

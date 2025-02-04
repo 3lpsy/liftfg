@@ -8,7 +8,7 @@ use fgdb::{db, seed};
 use tauri::{App, Manager, Runtime};
 use tracing::{debug, error, info};
 
-#[tracing::instrument(skip_all, parent = None)]
+#[tracing::instrument(skip_all, parent = None, target = "setup_async")]
 pub async fn setup_async<R: Runtime>(
     app: &mut App<R>,
     log_handles: (logging::LayersHandle, logging::FilterHandle),
