@@ -14,24 +14,7 @@
     "security": {
       "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self'; connect-src ipc: http://ipc.localhost",
       "headers": null,
-      "capabilities": [
-        "default",
-        {
-          "identifier": "test",
-          "description": "Capability for the main window",
-          "windows": ["main"],
-          "permissions": [
-            "log:default",
-            "allow-log",
-            "log:allow-log",
-            {
-              "identifier": "allow-log",
-              "allow": ["log"],
-              "urls": ["http://tauri.localhost/*"]
-            }
-          ]
-        }
-      ]
+      "capabilities": ["default"]
     }
   },
   "bundle": {

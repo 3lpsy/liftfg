@@ -1,10 +1,14 @@
 use std::fs;
 
-use crate::config::{self, AppConfig};
+use crate::{
+    config::{self, AppConfig},
+    state,
+};
 
 use anyhow::Result;
-use fgcore::{environment::Environment, logging, utils};
+use fgcore::{environment::Environment, logging};
 use fgdb::{db, seed};
+use fgutils;
 use tauri::{App, Manager, Runtime};
 use tracing::{debug, error, info};
 
@@ -15,8 +19,8 @@ pub async fn setup_async<R: Runtime>(
     conf: Option<AppConfig>,
 ) -> Result<()> {
     if !AppConfig::should_no_dotenv(app)? {
-        utils::load_dotenvs(vec![
-            utils::cwd().join(".env"),
+        fgutils::load_dotenvs(vec![
+            fgutils::cwd().join(".env"),
             app.path().app_data_dir().unwrap().join("environment"),
         ])?
     } else {
@@ -53,6 +57,9 @@ pub async fn setup_async<R: Runtime>(
             seed::dev::seed(dbc).await?;
         }
     }
+
+    // finally intiallize state
+    state::manage(app, None).await?;
 
     info!("App setup complete");
     Ok(())

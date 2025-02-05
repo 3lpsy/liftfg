@@ -1,6 +1,6 @@
 use crate::migration;
 use anyhow::Result;
-use fgcore::utils::touch;
+use fgutils::touch;
 use sea_orm::{Database, DatabaseConnection};
 use sea_orm_migration::MigratorTrait;
 use std::path::PathBuf;

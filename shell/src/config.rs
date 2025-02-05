@@ -1,7 +1,7 @@
 use anyhow::{Error, Result};
 
 use fgcore::environment::Environment;
-use fgcore::utils::resolve_path;
+use fgutils::resolve_path;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::env;
@@ -103,8 +103,11 @@ impl AppConfig {
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     pub fn matches<R: Runtime>(app: &App<R>) -> Result<HashMap<String, Value>> {
         match app.cli().matches() {
-            Ok(matches) => Ok(matches.args.iter().map(|(key, arg_data)| (key.clone(), arg_data.value.clone()))
-            .collect()),
+            Ok(matches) => Ok(matches
+                .args
+                .iter()
+                .map(|(key, arg_data)| (key.clone(), arg_data.value.clone()))
+                .collect()),
             Err(e) => {
                 #[cfg(test)]
                 {
@@ -113,11 +116,9 @@ impl AppConfig {
                 #[cfg(not(test))]
                 {
                     Err(Error::from(e))
-
                 }
             }
         }
-
     }
 
     pub fn get_arg<T: FromValue>(

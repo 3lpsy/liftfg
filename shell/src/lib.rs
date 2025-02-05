@@ -6,6 +6,7 @@ mod config;
 pub mod handlers;
 mod plugins;
 mod setup;
+mod state;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -36,18 +37,17 @@ pub fn run() {
 #[cfg(test)]
 pub mod testutils {
     use crate::config::AppConfig;
+    use crate::setup;
+    use fgutils;
 
     use super::{handlers, plugins};
     use anyhow::{anyhow, Result};
     use ctor::ctor;
     use fgcore::logging;
-    use serde_json::json;
-    use std::collections::HashMap;
     use std::fs;
     use std::sync::OnceLock;
-    use tauri::test::{mock_builder, mock_context, noop_assets, MockRuntime};
-    use tauri::utils::config::PluginConfig;
-    use tauri::{generate_context, App, Context, Runtime, WebviewWindow, WebviewWindowBuilder};
+    use tauri::test::{mock_builder, MockRuntime};
+    use tauri::{generate_context, App, WebviewWindow, WebviewWindowBuilder};
     use uuid::Uuid;
 
     static INIT: OnceLock<()> = OnceLock::new();
@@ -58,7 +58,7 @@ pub mod testutils {
     #[ctor]
     fn init_tests() {
         INIT.get_or_init(|| {
-            let data_dir = fgcore::utils::cwd().join("data").join("tests");
+            let data_dir = fgutils::cwd().join("data").join("tests");
             if !data_dir.exists() {
                 fs::create_dir_all(&data_dir).expect("Could not create testing data dir");
             }
@@ -129,5 +129,19 @@ pub mod testutils {
         let app = create_app()?;
         let webview = create_webview(&app)?;
         Ok((app, webview))
+    }
+
+    pub async fn default_test_setup() -> Result<(App<MockRuntime>, WebviewWindow<MockRuntime>, Uuid)>
+    {
+        let test_id = Uuid::new_v4();
+        let (mut app, webview) = create_app_and_webview().unwrap();
+        setup::setup_async(
+            &mut app,
+            LOGGING_HANDLES.get().unwrap().to_owned(),
+            Some(create_config(test_id)),
+        )
+        .await
+        .unwrap();
+        Ok((app, webview, test_id))
     }
 }

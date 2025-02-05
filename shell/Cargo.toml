@@ -20,7 +20,8 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 fgdb = { path = "../db" }
 fgcore = { path = "../core" }
-tauri = { workspace = true }
+fgutils = { path = "../utils" }
+tauri = { version = "2" }
 tauri-plugin-opener = "2"
 tauri-plugin-fs = "2"
 serde = { workspace = true }
@@ -31,6 +32,7 @@ sea-orm-migration = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-log = { workspace = true }
+validator = { workspace = true }
 
 tauri-plugin-log = { path = "../../../community/plugins-workspace/plugins/log" }
 log = { workspace = true }
@@ -40,7 +42,7 @@ tauri-plugin-cli = "2"
 
 
 [dev-dependencies]
-tauri = { workspace = true, features = ["test"] }
+tauri = { version = "2", features = ["test"] }
 tempfile = "3.8"
 ctor = "0.2.9"
 uuid = { version = "1.0", features = ["v4"] }

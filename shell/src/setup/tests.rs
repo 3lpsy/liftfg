@@ -3,7 +3,6 @@ mod tests {
     use std::time::Duration;
 
     use serde_json::json;
-    use tauri::ipc::InvokeBody;
     use tokio::time;
     use tracing::info;
     use tracing::warn;
@@ -80,8 +79,6 @@ mod tests {
     }
     #[tokio::test]
     async fn it_invokes_log() {
-        warn!("Here");
-
         let test_id = Uuid::new_v4();
         let (mut app, webview) = testutils::create_app_and_webview().unwrap();
         setup::setup_async(
@@ -91,9 +88,9 @@ mod tests {
         )
         .await
         .unwrap();
-        let payload = InvokeBody::Json(json!({
-            "level": "INFO", // or whatever LogLevel value you need
-            "message": "Sample log message"
+        let payload = tauri::ipc::InvokeBody::Json(json!({
+            "level": tauri_plugin_log::LogLevel::Debug, // wants u16
+            "message": "Test Log Message"
         }));
         let res = tauri::test::get_ipc_response(
             &webview,
@@ -101,14 +98,12 @@ mod tests {
                 cmd: "plugin:log|log".into(),
                 callback: tauri::ipc::CallbackFn(0),
                 error: tauri::ipc::CallbackFn(1),
-                url: "http://tauri.localhost".parse().unwrap(),
+                url: "tauri://localhost".parse().unwrap(),
                 body: payload,
                 headers: Default::default(),
                 invoke_key: tauri::test::INVOKE_KEY.to_string(),
             },
-        )
-        .map(|b| b.deserialize::<String>().unwrap());
-        warn!("Here");
-        warn!("{:?}", &res);
+        );
+        assert!(res.is_ok());
     }
 }

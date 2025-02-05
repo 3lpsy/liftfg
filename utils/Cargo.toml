@@ -1,0 +1,9 @@
+[package]
+name = "fgutils"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tracing = { workspace = true }
+anyhow = { workspace = true }
+dotenvy = "0.15.7"

@@ -14,3 +14,4 @@ pub mod set;
 pub mod target_muscle;
 pub mod user;
 pub mod workout;
+pub mod wrappers;
