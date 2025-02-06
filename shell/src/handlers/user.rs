@@ -16,8 +16,11 @@ pub async fn create_user(
     state: tauri::State<'_, AppState>,
 ) -> Result<ResponseData<UserResponseData>, String> {
     // load body data
-    let data = super::parse_body::<user::UserCreateData>(request.body().to_owned())?;
-    let response = user_controller::create_user(data, &state.dbc)
+    let data = super::parse_body::<user::UserCreateData>(request.body().to_owned());
+    if data.is_err() {
+        return Ok(ResponseData::new(None, Some(data.unwrap_err())));
+    }
+    let response = user_controller::create_user(data.unwrap(), &state.dbc)
         .await
         .map_err(|e| e.to_string())?;
     Ok(response)
@@ -25,9 +28,13 @@ pub async fn create_user(
 
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
+    use fgdb::entity::{user::UserResponseData, wrappers::ResponseData};
     // use fgdb::entity::{user::UserResponseData, wrappers::ResponseData};
     use serde_json::json;
-    use tracing::info;
+    use tracing::{info, warn};
+    use validator::ValidationErrors;
 
     use crate::testutils;
 
@@ -51,7 +58,9 @@ mod tests {
                 headers: Default::default(),
                 invoke_key: tauri::test::INVOKE_KEY.to_string(),
             },
-        );
+        )
+        .map(|b| b.deserialize::<ResponseData<UserResponseData>>().unwrap());
+
         assert!(res.is_ok());
         // create the same user and fail
         let res = tauri::test::get_ipc_response(
@@ -65,7 +74,31 @@ mod tests {
                 headers: Default::default(),
                 invoke_key: tauri::test::INVOKE_KEY.to_string(),
             },
-        );
-        info!("{:?}", &res)
+        )
+        .map(|b| b.deserialize::<ResponseData<UserResponseData>>().unwrap())
+        .unwrap();
+        // assert error occured
+        assert!(res.data.is_none());
+        assert!(res.errors.is_some());
+
+        let mut badpayload = HashMap::new();
+        badpayload.insert("x", "x");
+        let res = tauri::test::get_ipc_response(
+            &webview,
+            tauri::webview::InvokeRequest {
+                cmd: "create_user".into(),
+                callback: tauri::ipc::CallbackFn(0),
+                error: tauri::ipc::CallbackFn(1),
+                url: "tauri://localhost".parse().unwrap(),
+                body: tauri::ipc::InvokeBody::Json(json!(badpayload)),
+                headers: Default::default(),
+                invoke_key: tauri::test::INVOKE_KEY.to_string(),
+            },
+        )
+        .map(|b| b.deserialize::<ResponseData<UserResponseData>>().unwrap())
+        .unwrap();
+        assert!(res.data.is_none());
+        let verrors = res.errors.unwrap();
+        assert!(ValidationErrors::has_error(&Err(verrors), "email"));
     }
 }

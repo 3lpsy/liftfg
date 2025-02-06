@@ -10,7 +10,7 @@ use fgcore::{environment::Environment, logging};
 use fgdb::{db, seed};
 use fgutils;
 use tauri::{App, Manager, Runtime};
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, warn};
 
 #[tracing::instrument(skip_all, parent = None, target = "setup_async")]
 pub async fn setup_async<R: Runtime>(
@@ -60,6 +60,9 @@ pub async fn setup_async<R: Runtime>(
 
     // finally intiallize state
     state::manage(app, None).await?;
+    // if i never need the webview,
+    // null on mockruntime
+    // let mut webview = app.webview_windows().get("main").unwrap().as_ref();
 
     info!("App setup complete");
     Ok(())

@@ -41,18 +41,16 @@ where
 }
 
 pub struct DbValidationErrors(DbErr);
-
 impl From<DbErr> for DbValidationErrors {
     fn from(err: DbErr) -> Self {
         DbValidationErrors(err)
     }
 }
-
 impl From<DbValidationErrors> for ValidationErrors {
     fn from(wrapper: DbValidationErrors) -> Self {
         let mut errors = ValidationErrors::new();
         let field_error = match wrapper.0 {
-            _ => ValidationError::new("general").with_message(Cow::from("Internal server error")),
+            _ => ValidationError::new("internal").with_message(Cow::from("Internal server error")),
         };
         errors.add("data", field_error);
         errors

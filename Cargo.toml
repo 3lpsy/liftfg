@@ -1,7 +1,7 @@
 [workspace]
 # members = ["shell", "ui"]
 resolver = "2"
-members = ["shell", "ui", "cli", "db", "core"]
+members = ["shell", "ui", "cli", "db", "core", "utils"]
 default-members = ["cli"]
 
 [workspace.dependencies]
@@ -18,7 +18,6 @@ sea-orm-migration = { version = "1.1.4", features = [
     "runtime-tokio-rustls",
 ] }
 tokio = { version = "1.43.0", features = ["rt-multi-thread", "macros"] }
-tauri = { version = "2", features = ["test"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = [
     "std",
@@ -31,6 +30,7 @@ tracing-log = "0.2"
 log = "0.4"
 tracing-appender = "0.2"
 time = { version = "0.3", features = ["formatting"] }
+validator = { version = "0.20", features = ["derive"] }
 
 # Performance
 [profile]
