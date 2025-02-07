@@ -5,30 +5,30 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "user")]
+#[sea_orm(table_name = "profile")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     #[sea_orm(unique)]
-    pub email: String,
     pub name: String,
+    pub is_default: Option<bool>,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "crate::entity::gym_user::Entity")]
-    GymUser,
+    #[sea_orm(has_many = "crate::entity::gym_profile::Entity")]
+    GymProfile,
     #[sea_orm(has_many = "crate::entity::gym::Entity")]
     Gym,
     #[sea_orm(has_many = "crate::entity::program::Entity")]
     Program,
 }
 
-impl Related<crate::entity::gym_user::Entity> for Entity {
+impl Related<crate::entity::gym_profile::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::GymUser.def()
+        Relation::GymProfile.def()
     }
 }
 
@@ -41,13 +41,13 @@ impl Related<crate::entity::program::Entity> for Entity {
 impl Related<crate::entity::gym::Entity> for Entity {
     // The final relation is Cake -> CakeFilling -> Filling
     fn to() -> RelationDef {
-        crate::entity::gym_user::Relation::Gym.def()
+        crate::entity::gym_profile::Relation::Gym.def()
     }
 
     fn via() -> Option<RelationDef> {
         // The original relation is CakeFilling -> Cake,
         // after `rev` it becomes Cake -> CakeFilling
-        Some(crate::entity::gym_user::Relation::User.def().rev())
+        Some(crate::entity::gym_profile::Relation::Profile.def().rev())
     }
 }
 

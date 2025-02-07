@@ -1,5 +1,5 @@
 use super::common::TableWithTimestamps;
-use super::m20220101_000001_create_user as user;
+use super::m20220101_000001_create_profile as profile;
 
 use sea_orm_migration::{prelude::*, schema::*};
 
@@ -16,12 +16,12 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Program::Id))
                     .col(string(Program::Name).not_null().unique_key())
-                    .col(integer(Program::UserId).not_null()) // Add the foreign key column
+                    .col(integer(Program::ProfileId).not_null()) // Add the foreign key column
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_program_user") // Name of the foreign key constraint
-                            .from(Program::Table, Program::UserId)
-                            .to(user::User::Table, user::User::Id)
+                            .name("fk_program_profile") // Name of the foreign key constraint
+                            .from(Program::Table, Program::ProfileId)
+                            .to(profile::Profile::Table, profile::Profile::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -43,5 +43,5 @@ pub enum Program {
     Table,
     Id,
     Name,
-    UserId,
+    ProfileId,
 }

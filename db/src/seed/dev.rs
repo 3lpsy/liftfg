@@ -1,21 +1,20 @@
 use anyhow::Result;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, Set, TransactionTrait};
 
-use crate::entity::user;
+use crate::entity::profile;
 
 pub async fn seed(dbc: DatabaseConnection) -> Result<()> {
     let txn = dbc.begin().await?;
-    let name = "TestUser";
-    let email = "test@localhost";
-    let _user = match user::Entity::by_name(&txn, name).await? {
+    let name = "TestProfile";
+    let _profile = match profile::Entity::by_name(&txn, name).await? {
         Some(existing) => existing,
         None => {
-            let user_am = user::ActiveModel {
+            let profile_am = profile::ActiveModel {
                 name: Set(name.parse()?),
-                email: Set(email.parse()?),
+                is_default: Set(Some(true)),
                 ..Default::default()
             };
-            user_am.insert(&txn).await?
+            profile_am.insert(&txn).await?
         }
     };
     txn.commit().await?;

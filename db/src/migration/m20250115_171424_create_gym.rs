@@ -1,5 +1,5 @@
 use super::common::TableWithTimestamps;
-use super::m20220101_000001_create_user as user;
+use super::m20220101_000001_create_profile as profile;
 
 use sea_orm_migration::{prelude::*, schema::*};
 
@@ -23,23 +23,23 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(GymUser::Table)
+                    .table(GymProfile::Table)
                     .if_not_exists()
-                    .col(pk_auto(GymUser::Id))
-                    .col(integer(GymUser::UserId).not_null())
+                    .col(pk_auto(GymProfile::Id))
+                    .col(integer(GymProfile::ProfileId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_gym_user_user") // Name of the foreign key constraint
-                            .from(GymUser::Table, GymUser::UserId) // From the program table, user_id column
-                            .to(user::User::Table, user::User::Id)
+                            .name("fk_gym_profile_profile") // Name of the foreign key constraint
+                            .from(GymProfile::Table, GymProfile::ProfileId) // From the program table, profile_id column
+                            .to(profile::Profile::Table, profile::Profile::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(integer(GymUser::GymId).not_null())
+                    .col(integer(GymProfile::GymId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_gym_user_gym")
-                            .from(GymUser::Table, GymUser::GymId)
+                            .name("fk_gym_profile_gym")
+                            .from(GymProfile::Table, GymProfile::GymId)
                             .to(Gym::Table, Gym::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
@@ -47,10 +47,10 @@ impl MigrationTrait for Migration {
                     .add_timestamps()
                     .index(
                         Index::create()
-                            .name("idx_gym_user_unique")
-                            .table(GymUser::Table)
-                            .col(GymUser::UserId)
-                            .col(GymUser::GymId)
+                            .name("idx_gym_profile_unique")
+                            .table(GymProfile::Table)
+                            .col(GymProfile::ProfileId)
+                            .col(GymProfile::GymId)
                             .unique(),
                     )
                     .to_owned(),
@@ -60,7 +60,7 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(Table::drop().table(GymUser::Table).to_owned())
+            .drop_table(Table::drop().table(GymProfile::Table).to_owned())
             .await?;
         manager
             .drop_table(Table::drop().table(Gym::Table).to_owned())
@@ -76,9 +76,9 @@ enum Gym {
 }
 
 #[derive(DeriveIden)]
-enum GymUser {
+enum GymProfile {
     Table,
     Id,
-    UserId,
+    ProfileId,
     GymId,
 }

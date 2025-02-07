@@ -3,7 +3,7 @@ use std::borrow::Cow;
 use fgdb::entity::wrappers::RequestableData;
 use tauri::{self, ipc::Invoke, ipc::InvokeBody};
 use validator::{ValidationError, ValidationErrors, ValidationErrorsKind};
-pub mod user;
+pub mod profile;
 
 // error field will be request for generics (or parsed field)
 // code will be parsing
@@ -63,5 +63,5 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
 }
 
 pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync + 'static {
-    tauri::generate_handler![user::create_user]
+    tauri::generate_handler![profile::create_profile]
 }

@@ -1,16 +1,16 @@
 use anyhow::Result;
 use fgdb::entity::{
-    user::{ActiveModel, UserCreateData, UserResponseData},
+    profile::{ActiveModel, ProfileCreateData, ProfileResponseData},
     wrappers::{DbValidationErrors, ResponseData},
 };
 use sea_orm::{ActiveModelTrait, DatabaseConnection};
 use tracing::warn;
 use validator::Validate;
 
-pub async fn create_user(
-    data: UserCreateData,
+pub async fn create_profile(
+    data: ProfileCreateData,
     dbc: &DatabaseConnection,
-) -> Result<ResponseData<UserResponseData>> {
+) -> Result<ResponseData<ProfileResponseData>> {
     // structural validation
     if let Err(e) = data.validate() {
         return Ok(ResponseData::new(None, Some(e)));

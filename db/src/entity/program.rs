@@ -9,7 +9,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub name: String,
-    pub user_id: i32,
+    pub profile_id: i32,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
@@ -19,13 +19,13 @@ pub enum Relation {
     #[sea_orm(has_many = "super::program_target_muscle::Entity")]
     ProgramTargetMuscle,
     #[sea_orm(
-        belongs_to = "super::user::Entity",
-        from = "Column::UserId",
-        to = "super::user::Column::Id",
+        belongs_to = "super::profile::Entity",
+        from = "Column::ProfileId",
+        to = "super::profile::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    User,
+    Profile,
 }
 
 impl Related<super::program_target_muscle::Entity> for Entity {
@@ -34,9 +34,9 @@ impl Related<super::program_target_muscle::Entity> for Entity {
     }
 }
 
-impl Related<super::user::Entity> for Entity {
+impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::User.def()
+        Relation::Profile.def()
     }
 }
 

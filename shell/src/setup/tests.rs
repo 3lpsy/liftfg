@@ -71,7 +71,7 @@ mod tests {
         let connection = get_dbc(&config.db_path).await.unwrap();
         let query = sea_orm::Statement::from_string(
             connection.get_database_backend(),
-            "SELECT COUNT(*) as count FROM user",
+            "SELECT COUNT(*) as count FROM profile",
         );
         let result: QueryResult = connection.query_one(query).await.unwrap().unwrap();
         let count: i32 = result.try_get("", "count").unwrap();

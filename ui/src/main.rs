@@ -21,8 +21,8 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 
 #[component]
 fn App() -> Element {
-    // First we want to query the local db (directly or via Tauri) and see if we have a user
-    // let app_state = use_context_provider(ipc::fetch_user);
+    // First we want to query the local db (directly or via Tauri) and see if we have a profile
+    // let app_state = use_context_provider(ipc::fetch_profile);
     logging::info("Rendering App");
     rsx! {
         // automatically set UTF and viewport

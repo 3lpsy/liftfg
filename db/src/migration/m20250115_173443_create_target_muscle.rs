@@ -30,10 +30,10 @@ impl MigrationTrait for Migration {
                     .foreign_key(
                         ForeignKey::create()
                             .name("fk_program_target_muscle_program") // Name of the foreign key constraint
-                            .from(ProgramTargetMuscle::Table, ProgramTargetMuscle::ProgramId) // From the program table, user_id column
+                            .from(ProgramTargetMuscle::Table, ProgramTargetMuscle::ProgramId) // From the program table, profile_id column
                             .to(program::Program::Table, program::Program::Id)
                             .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade), // To the user table, id column
+                            .on_update(ForeignKeyAction::Cascade), // To the profile table, id column
                     )
                     .col(integer(ProgramTargetMuscle::TargetMuscleId).not_null())
                     .foreign_key(
@@ -42,10 +42,10 @@ impl MigrationTrait for Migration {
                             .from(
                                 ProgramTargetMuscle::Table,
                                 ProgramTargetMuscle::TargetMuscleId,
-                            ) // From the program table, user_id column
+                            ) // From the program table, profile_id column
                             .to(TargetMuscle::Table, TargetMuscle::Id)
                             .on_delete(ForeignKeyAction::Cascade)
-                            .on_update(ForeignKeyAction::Cascade), // To the user table, id column
+                            .on_update(ForeignKeyAction::Cascade), // To the profile table, id column
                     )
                     .index(
                         Index::create()

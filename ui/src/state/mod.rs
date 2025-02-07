@@ -1,11 +1,10 @@
 use dioxus::signals::Signal;
 
-pub struct User {
+pub struct Profile {
     name: String,
-    email: String,
 }
 
 #[derive(Clone, Copy)]
 pub struct AppState {
-    count: Signal<User>,
+    count: Signal<Profile>,
 }
