@@ -47,30 +47,14 @@ impl From<DbErr> for DbValidationErrors {
     }
 }
 impl From<DbValidationErrors> for ValidationErrors {
+    // field request (generic where it happened)
+    // code database (specific failure about what rule was broken, in this case a generic database rule)
     fn from(wrapper: DbValidationErrors) -> Self {
         let mut errors = ValidationErrors::new();
         let field_error = match wrapper.0 {
-            _ => ValidationError::new("internal").with_message(Cow::from("Internal server error")),
+            _ => ValidationError::new("database").with_message(Cow::from("Internal server error")),
         };
-        errors.add("data", field_error);
+        errors.add("request", field_error);
         errors
     }
 }
-
-// pub trait IntoValidationErrors {
-//     fn to_validator_errors(self) -> ValidationErrors;
-// }
-
-// impl IntoValidationErrors for DbErr {
-//     fn to_validator_errors(self) -> ValidationErrors {
-//         // field is the param name, in this case generic data
-//         // code is the rule name
-//         let mut errors = ValidationErrors::new();
-//         let field_error = match self {
-
-//             _ => ValidationError::new("general").with_message(Cow::from("Internal server error")),
-//         };
-//         errors.add("data", field_error);
-//         errors
-//     }
-// }

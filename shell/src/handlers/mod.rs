@@ -5,6 +5,8 @@ use tauri::{self, ipc::Invoke, ipc::InvokeBody};
 use validator::{ValidationError, ValidationErrors, ValidationErrorsKind};
 pub mod user;
 
+// error field will be request for generics (or parsed field)
+// code will be parsing
 pub fn parse_body<T>(body: InvokeBody) -> Result<T, ValidationErrors>
 where
     T: RequestableData,
@@ -34,7 +36,7 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
                 .split('`')
                 .nth(1)
                 .map(|s| s.to_string())
-                .unwrap_or("unknown".to_string());
+                .unwrap_or("request".to_string());
             (f.clone(), format!("missing field field: {}", f))
         }
         msg if msg.contains("unknown field") => {
@@ -42,11 +44,11 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
                 .split('`')
                 .nth(1)
                 .map(|s| s.to_string())
-                .unwrap_or("unknown".to_string());
+                .unwrap_or("request".to_string());
             (f.clone(), format!("unknown field: {}", f))
         }
         _ => (
-            "unknown".to_string(),
+            "request".to_string(),
             "Unknown JSON parsing error".to_string(),
         ),
     };

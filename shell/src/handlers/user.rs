@@ -33,7 +33,6 @@ mod tests {
     use fgdb::entity::{user::UserResponseData, wrappers::ResponseData};
     // use fgdb::entity::{user::UserResponseData, wrappers::ResponseData};
     use serde_json::json;
-    use tracing::{info, warn};
     use validator::ValidationErrors;
 
     use crate::testutils;
@@ -59,9 +58,15 @@ mod tests {
                 invoke_key: tauri::test::INVOKE_KEY.to_string(),
             },
         )
-        .map(|b| b.deserialize::<ResponseData<UserResponseData>>().unwrap());
+        .map(|b| b.deserialize::<ResponseData<UserResponseData>>().unwrap())
+        .unwrap();
 
-        assert!(res.is_ok());
+        assert!(res.data.is_some());
+        assert_eq!(
+            res.data.unwrap().email,
+            format!("{test_id}@localhost.localhost")
+        );
+
         // create the same user and fail
         let res = tauri::test::get_ipc_response(
             &webview,
@@ -80,6 +85,7 @@ mod tests {
         // assert error occured
         assert!(res.data.is_none());
         assert!(res.errors.is_some());
+        assert!(res.errors.unwrap().errors().contains_key("request"));
 
         let mut badpayload = HashMap::new();
         badpayload.insert("x", "x");
