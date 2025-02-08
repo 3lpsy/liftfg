@@ -14,7 +14,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Profile::Id))
                     .col(boolean(Profile::IsDefault).not_null().default(false))
-                    .col(string(Profile::Name).not_null())
+                    .col(string(Profile::Name).not_null().unique_key())
                     .add_timestamps()
                     .to_owned(),
             )

@@ -16,7 +16,7 @@ impl From<ProfileCreateData> for super::entity::ActiveModel {
         super::entity::ActiveModel {
             id: ActiveValue::NotSet,
             name: ActiveValue::Set(profile_data.name),
-            is_default: ActiveValue::Set(profile_data.is_default),
+            is_default: ActiveValue::Set(profile_data.is_default.unwrap_or(false)),
             created_at: ActiveValue::NotSet,
             updated_at: ActiveValue::NotSet,
         }
@@ -27,7 +27,7 @@ impl From<ProfileCreateData> for super::entity::ActiveModel {
 pub struct ProfileResponseData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
-    pub is_default: Option<bool>,
+    pub is_default: bool,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }

@@ -51,8 +51,9 @@ impl From<DbValidationErrors> for ValidationErrors {
     // code database (specific failure about what rule was broken, in this case a generic database rule)
     fn from(wrapper: DbValidationErrors) -> Self {
         let mut errors = ValidationErrors::new();
+        let debug_msg = format!("{}", wrapper.0.to_string());
         let field_error = match wrapper.0 {
-            _ => ValidationError::new("database").with_message(Cow::from("Internal server error")),
+            _ => ValidationError::new("database").with_message(Cow::from(debug_msg)),
         };
         errors.add("request", field_error);
         errors

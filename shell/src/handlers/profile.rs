@@ -33,6 +33,7 @@ mod tests {
     use fgdb::entity::{profile::ProfileResponseData, wrappers::ResponseData};
     // use fgdb::entity::{profile::ProfileResponseData, wrappers::ResponseData};
     use serde_json::json;
+    use tracing::warn;
     use validator::ValidationErrors;
 
     use crate::testutils;
@@ -67,7 +68,11 @@ mod tests {
         assert!(res.data.is_some());
         assert_eq!(res.data.unwrap().name, format!("{test_id}"));
 
-        // create the same profile and fail
+        // same name, non default fails on name collision
+        let payload = fgdb::entity::profile::ProfileCreateData {
+            name: test_id.to_string(),
+            is_default: Some(false),
+        };
         let res = tauri::test::get_ipc_response(
             &webview,
             tauri::webview::InvokeRequest {
@@ -85,11 +90,36 @@ mod tests {
                 .unwrap()
         })
         .unwrap();
-        // assert error occured
-        assert!(res.data.is_none());
-        assert!(res.errors.is_some());
+        // assert error occured due to name conflict
         assert!(res.errors.unwrap().errors().contains_key("request"));
 
+        // double default fails
+        let payload = fgdb::entity::profile::ProfileCreateData {
+            name: format!("{test_id}2"),
+            is_default: Some(true),
+        };
+        let res = tauri::test::get_ipc_response(
+            &webview,
+            tauri::webview::InvokeRequest {
+                cmd: "create_profile".into(),
+                callback: tauri::ipc::CallbackFn(0),
+                error: tauri::ipc::CallbackFn(1),
+                url: "tauri://localhost".parse().unwrap(),
+                body: tauri::ipc::InvokeBody::Json(json!(payload)),
+                headers: Default::default(),
+                invoke_key: tauri::test::INVOKE_KEY.to_string(),
+            },
+        )
+        .map(|b| {
+            b.deserialize::<ResponseData<ProfileResponseData>>()
+                .unwrap()
+        })
+        .unwrap();
+        warn!("{:?}", &res);
+        // assert error occured
+        assert!(res.errors.unwrap().errors().contains_key("request"));
+
+        // pre-validation parsing fails
         let mut badpayload = HashMap::new();
         badpayload.insert("x", "x");
         let res = tauri::test::get_ipc_response(

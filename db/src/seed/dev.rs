@@ -11,7 +11,7 @@ pub async fn seed(dbc: DatabaseConnection) -> Result<()> {
         None => {
             let profile_am = profile::ActiveModel {
                 name: Set(name.parse()?),
-                is_default: Set(Some(true)),
+                is_default: Set(true),
                 ..Default::default()
             };
             profile_am.insert(&txn).await?

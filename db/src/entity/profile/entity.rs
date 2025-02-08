@@ -11,7 +11,7 @@ pub struct Model {
     pub id: i32,
     #[sea_orm(unique)]
     pub name: String,
-    pub is_default: Option<bool>,
+    pub is_default: bool,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
