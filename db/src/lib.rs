@@ -1,3 +1,4 @@
+pub mod data;
 pub mod db;
 pub mod entity;
 pub mod migration;

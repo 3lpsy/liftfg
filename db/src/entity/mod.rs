@@ -14,4 +14,3 @@ pub mod seed;
 pub mod set;
 pub mod target_muscle;
 pub mod workout;
-pub mod wrappers;

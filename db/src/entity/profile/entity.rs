@@ -60,4 +60,13 @@ impl Entity {
     {
         Self::find().filter(Column::Name.eq(name)).one(db).await
     }
+    pub async fn by_default<C>(db: &C) -> Result<Option<Model>, DbErr>
+    where
+        C: ConnectionTrait,
+    {
+        Self::find()
+            .filter(Column::IsDefault.eq(true))
+            .one(db)
+            .await
+    }
 }

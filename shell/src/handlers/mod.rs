@@ -1,15 +1,54 @@
+pub mod profile;
 use std::borrow::Cow;
 
-use fgdb::entity::wrappers::RequestableData;
+use fgdb::data::{
+    DefaultDataType, DefaultParamsType, RequestData, RequestableData, RequestableParams,
+};
+// use fgcore::controllers::profile::create_profile;
 use tauri::{self, ipc::Invoke, ipc::InvokeBody};
 use validator::{ValidationError, ValidationErrors, ValidationErrorsKind};
-pub mod profile;
 
 // error field will be request for generics (or parsed field)
 // code will be parsing
-pub fn parse_body<T>(body: InvokeBody) -> Result<T, ValidationErrors>
+//
+pub fn parse_data<T>(body: InvokeBody) -> Result<T, ValidationErrors>
 where
     T: RequestableData,
+{
+    // will throw if data is available but invalid
+    let request: RequestData<T, DefaultParamsType> = parse_request(body)?;
+    match request.data {
+        Some(data) => Ok(data),
+        None => Err(ValidationErrors::new()
+            .with_error(
+                "data",
+                ValidationError::new("parsing")
+                    .with_message(format!("missing field field: data").into()),
+            )
+            .to_owned()),
+    }
+}
+
+pub fn parse_params<T>(body: InvokeBody) -> Result<T, ValidationErrors>
+where
+    T: RequestableParams,
+{
+    // will throw if params is available but invalid
+    let request: RequestData<DefaultDataType, T> = parse_request(body)?;
+    match request.params {
+        Some(params) => Ok(params),
+        None => Err(ValidationErrors::new().with_error(
+            "params",
+            ValidationError::new("parsing")
+                .with_message(format!("missing field field: params").into()),
+        )),
+    }
+}
+
+fn parse_request<T, P>(body: InvokeBody) -> Result<RequestData<T, P>, ValidationErrors>
+where
+    T: RequestableData,
+    P: RequestableParams,
 {
     match body {
         InvokeBody::Json(json) => serde_json::from_value(json).map_err(serde_to_validator_errors),
@@ -27,6 +66,7 @@ where
         }
     }
 }
+
 fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
     let msg = e.to_string();
 
@@ -63,5 +103,9 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
 }
 
 pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync + 'static {
-    tauri::generate_handler![profile::create_profile]
+    // It doesn't like reexports
+    tauri::generate_handler![
+        profile::create_profile::create_profile,
+        profile::get_profile::get_profile
+    ]
 }

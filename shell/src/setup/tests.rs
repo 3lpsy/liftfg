@@ -11,7 +11,6 @@ mod tests {
     use crate::handlers;
     use crate::plugins;
     use crate::setup;
-    use crate::testutils::create_config;
 
     use fgdb::db::get_dbc;
     use fgdb::migration;
@@ -23,7 +22,7 @@ mod tests {
     use tauri::Listener;
     use uuid::Uuid;
     // use std::path::PathBuf;
-    use crate::testutils;
+    use crate::utils::testutils;
     use tauri::test::mock_context;
     use tauri::test::noop_assets;
     use tauri::test::{mock_builder, MockRuntime};
@@ -33,7 +32,7 @@ mod tests {
     async fn it_setups() {
         let test_id = Uuid::new_v4();
         let mut app = testutils::create_app().expect("Could not create test app");
-        let config = create_config(test_id);
+        let config = testutils::create_config(test_id);
         setup::setup_async(
             &mut app,
             testutils::LOGGING_HANDLES.get().unwrap().to_owned(),
@@ -58,7 +57,7 @@ mod tests {
         let test_id = Uuid::new_v4();
         // todo: if no fs logging and no env reload, make handles optional in setup
         let mut app = testutils::create_app().expect("Could not create test app");
-        let mut config = create_config(test_id);
+        let mut config = testutils::create_config(test_id);
         config.should_seed_dev = true;
         setup::setup_async(
             &mut app,
@@ -84,7 +83,7 @@ mod tests {
         setup::setup_async(
             &mut app,
             testutils::LOGGING_HANDLES.get().unwrap().to_owned(),
-            Some(create_config(test_id)),
+            Some(testutils::create_config(test_id)),
         )
         .await
         .unwrap();

@@ -3,6 +3,14 @@ use std::env;
 use std::fs::OpenOptions;
 use std::path::{Path, PathBuf};
 use tracing::info;
+use validator::{ValidationError, ValidationErrors};
+
+pub fn verrors(field: &'static str, code: &'static str, message: String) -> ValidationErrors {
+    ValidationErrors::new().with_error(
+        field,
+        ValidationError::new(code).with_message(message.into()),
+    )
+}
 
 pub fn touch(path: &PathBuf) -> Result<()> {
     if !path.exists() {

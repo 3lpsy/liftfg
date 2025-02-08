@@ -7,3 +7,4 @@ edition = "2021"
 tracing = { workspace = true }
 anyhow = { workspace = true }
 dotenvy = "0.15.7"
+validator = { workspace = true }

@@ -2,7 +2,9 @@ use sea_orm::{prelude::DateTimeUtc, ActiveValue};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::entity::wrappers::{RequestableData, ResponsableData};
+use crate::data::{RequestData, ResponsableData, ResponseData};
+
+// Requests
 
 #[derive(Debug, Validate, Serialize, Deserialize)]
 pub struct ProfileCreateData {
@@ -22,7 +24,23 @@ impl From<ProfileCreateData> for super::entity::ActiveModel {
         }
     }
 }
+impl<P> From<ProfileCreateData> for RequestData<ProfileCreateData, P> {
+    fn from(data: ProfileCreateData) -> Self {
+        RequestData {
+            data: Some(data),
+            params: None,
+        }
+    }
+}
 
+#[derive(Debug, Validate, Serialize, Deserialize)]
+pub struct ProfileGetParams {
+    #[validate(range(min = 1))]
+    pub id: Option<i32>,
+    pub name: Option<String>,
+}
+
+// Responses
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ProfileResponseData {
     pub id: i32, // Using i32 since that's what's in the database
@@ -43,8 +61,15 @@ impl From<super::entity::Model> for ProfileResponseData {
         }
     }
 }
+impl From<ProfileResponseData> for ResponseData<ProfileResponseData> {
+    fn from(data: ProfileResponseData) -> Self {
+        ResponseData {
+            data: Some(data),
+            errors: None,
+        }
+    }
+}
 
-impl RequestableData for ProfileCreateData {}
 impl ResponsableData for ProfileResponseData {}
 
 #[cfg(test)]

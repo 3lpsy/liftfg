@@ -30,8 +30,10 @@ tracing-log = "0.2"
 log = "0.4"
 tracing-appender = "0.2"
 time = { version = "0.3", features = ["formatting"] }
-validator = { version = "0.20", features = ["derive"] }
-
+validator = { path = "../../community/validator/validator", features = [
+    "derive",
+] }
+lazy_static = { version = "1" }
 # Performance
 [profile]
 
