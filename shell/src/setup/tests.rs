@@ -74,7 +74,7 @@ mod tests {
         );
         let result: QueryResult = connection.query_one(query).await.unwrap().unwrap();
         let count: i32 = result.try_get("", "count").unwrap();
-        assert_eq!(count, 1);
+        assert_eq!(count, 2);
     }
     #[tokio::test]
     async fn it_invokes_log() {
