@@ -26,7 +26,7 @@ pub async fn get_profile(
 #[cfg(test)]
 mod tests {
     use fgdb::{
-        data::{RequestableData, RequestableParams},
+        data::RequestableParams,
         entity::profile::{ProfileGetParams, ProfileResponseData},
     };
     use serde_json::json;
