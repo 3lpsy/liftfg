@@ -31,7 +31,6 @@ mod tests {
     };
     use serde_json::json;
     use tauri::ipc::InvokeBody;
-    use tracing::warn;
 
     use crate::utils::testutils;
     #[tokio::test]
@@ -48,7 +47,6 @@ mod tests {
             InvokeBody::Json(json!(payload)),
         )
         .await;
-        warn!("{:?}", &res);
         assert!(res.data.is_some());
         assert_eq!(res.data.unwrap().name, format!("TestProfile"));
     }
