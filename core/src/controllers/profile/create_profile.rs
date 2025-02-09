@@ -14,11 +14,9 @@ pub async fn create(
 ) -> Result<ProfileResponseData, ValidationErrors> {
     // structural validation
     data.validate()?;
-    // logical validation (guard)
-    // no two defaults
-    // unique name clash
-    // for these two simple ones is there any reason to not just let the db handle it?
-    // handle
+    // application validation
+    // main failure scenarios: no two defaults, unique name clash
+    // is there any reason to not just let the db handle it?
     match ActiveModel::from(data).insert(dbc).await {
         Ok(u) => Ok(u.into()),
         Err(dbe) => {

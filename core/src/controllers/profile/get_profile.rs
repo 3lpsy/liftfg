@@ -5,7 +5,6 @@ use fgdb::{
 };
 use fgutils::verrors;
 use sea_orm::{DatabaseConnection, EntityTrait};
-use tracing::warn;
 use validator::ValidationErrors;
 
 // gets only accep
@@ -13,7 +12,6 @@ pub async fn get(
     params: ProfileGetParams,
     dbc: &DatabaseConnection,
 ) -> Result<ProfileResponseData, ValidationErrors> {
-    warn!("{:?}", &params);
     if let Some(name) = params.name {
         match profile::Entity::by_name(dbc, &name)
             .await
