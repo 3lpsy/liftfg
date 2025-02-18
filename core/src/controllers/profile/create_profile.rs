@@ -1,8 +1,12 @@
 use anyhow::Result;
 use fgdb::{
-    data::DbValidationErrors,
-    entity::profile::{ActiveModel, ProfileCreateData, ProfileResponseData},
+    data::{
+        profile::{ProfileCreateData, ProfileResponseData},
+        DbValidationErrors,
+    },
+    entity::profile::ActiveModel,
 };
+use fgutils::constants::VALIDATION_REQUEST_FIELD;
 use sea_orm::{ActiveModelTrait, DatabaseConnection};
 use tracing::warn;
 use validator::{Validate, ValidationErrors};
@@ -22,7 +26,7 @@ pub async fn create(
         Err(dbe) => {
             let errors: ValidationErrors = DbValidationErrors::from(dbe).into();
             // generic and unhandled, log so we know
-            if errors.errors().contains_key("request") {
+            if errors.errors().contains_key(VALIDATION_REQUEST_FIELD) {
                 warn!("{:?}", &errors);
             }
             Err(errors)

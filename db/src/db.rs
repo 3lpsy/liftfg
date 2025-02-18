@@ -1,3 +1,5 @@
+#[cfg(feature = "db")]
+// only db
 use crate::migration;
 use anyhow::Result;
 use fgutils::touch;

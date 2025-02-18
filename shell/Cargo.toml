@@ -18,7 +18,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-fgdb = { path = "../db" }
+fgdb = { path = "../db", features = ["db"] }
 fgcore = { path = "../core" }
 fgutils = { path = "../utils" }
 tauri = { version = "2", features = [] }

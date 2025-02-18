@@ -1,7 +1,11 @@
-use std::{borrow::Cow, collections::HashMap};
+pub mod profile;
 
+use fgutils::constants::VALIDATION_DATABASE_FIELD;
+use fgutils::constants::VALIDATION_REQUEST_FIELD;
+#[cfg(feature = "db")]
 use sea_orm::DbErr;
 use serde::{Deserialize, Serialize};
+use std::{borrow::Cow, collections::HashMap};
 use validator::ValidationError;
 use validator::ValidationErrors;
 
@@ -12,7 +16,7 @@ pub fn field_ref(name: &str) -> &'static str {
     FIELD_NAMES
         .iter()
         .find(|&&x| x == name)
-        .unwrap_or(&"request")
+        .unwrap_or(&VALIDATION_REQUEST_FIELD)
 }
 
 // request data
@@ -84,12 +88,15 @@ impl<T: ResponsableData> From<ValidationErrors> for ResponseData<T> {
 }
 impl ResponsableData for ValidationErrors {}
 
+#[cfg(feature = "db")]
 pub struct DbValidationErrors(DbErr);
+#[cfg(feature = "db")]
 impl From<DbErr> for DbValidationErrors {
     fn from(err: DbErr) -> Self {
         DbValidationErrors(err)
     }
 }
+#[cfg(feature = "db")]
 impl From<DbValidationErrors> for ValidationErrors {
     // field request (generic where it happened)
     // code database (specific failure about what rule was broken, in this case a generic database rule)
@@ -105,7 +112,7 @@ impl From<DbValidationErrors> for ValidationErrors {
                     .nth(1)
                     .and_then(|s| s.trim().split('.').nth(1))
                     .map(|s| s.to_string()) // Convert to owned String
-                    .unwrap_or_else(|| "request".to_string());
+                    .unwrap_or_else(|| VALIDATION_REQUEST_FIELD.to_string());
 
                 ValidationErrors::new().with_error(
                     field_ref(&field),
@@ -114,8 +121,9 @@ impl From<DbValidationErrors> for ValidationErrors {
                 )
             }
             _ => ValidationErrors::new().with_error(
-                "request",
-                ValidationError::new("database").with_message(Cow::from(default_msg)),
+                VALIDATION_REQUEST_FIELD,
+                ValidationError::new(VALIDATION_DATABASE_FIELD)
+                    .with_message(Cow::from(default_msg)),
             ),
         }
     }

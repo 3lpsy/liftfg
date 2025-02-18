@@ -2,8 +2,8 @@
 
 use fgcore::logging;
 use tracing::info;
+pub mod commands;
 mod config;
-pub mod handlers;
 mod plugins;
 mod setup;
 mod state;
@@ -27,7 +27,7 @@ pub fn run() {
 
     // Setup Callback
     builder = builder.setup(|app| Ok(setup::setup(app, log_handles, None)?));
-    builder = builder.invoke_handler(handlers::generate());
+    builder = builder.invoke_handler(commands::generate());
 
     builder.run(tauri::generate_context!()).unwrap_or_else(|e| {
         eprintln!("Error while running Tauri application: {:?}", e);

@@ -1,8 +1,14 @@
+#[cfg(feature = "db")]
 use sea_orm::{prelude::DateTimeUtc, ActiveValue};
+#[cfg(not(feature = "db"))] // Use String in WASM builds
+type DateTimeUtc = String;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::data::{RequestData, ResponsableData, ResponseData};
+use super::{RequestData, ResponsableData, ResponseData};
+
+#[cfg(feature = "db")]
+use crate::entity::profile as entity;
 
 // Requests
 
@@ -13,9 +19,10 @@ pub struct ProfileCreateData {
     pub is_default: Option<bool>,
 }
 
-impl From<ProfileCreateData> for super::entity::ActiveModel {
+#[cfg(feature = "db")]
+impl From<ProfileCreateData> for entity::ActiveModel {
     fn from(profile_data: ProfileCreateData) -> Self {
-        super::entity::ActiveModel {
+        entity::ActiveModel {
             id: ActiveValue::NotSet,
             name: ActiveValue::Set(profile_data.name),
             is_default: ActiveValue::Set(profile_data.is_default.unwrap_or(false)),
@@ -33,7 +40,7 @@ impl<P> From<ProfileCreateData> for RequestData<ProfileCreateData, P> {
     }
 }
 
-#[derive(Debug, Validate, Serialize, Deserialize)]
+#[derive(Default, Debug, Validate, Serialize, Deserialize)]
 pub struct ProfileGetParams {
     #[validate(range(min = 1))]
     pub id: Option<i32>,
@@ -50,8 +57,9 @@ pub struct ProfileResponseData {
     pub updated_at: DateTimeUtc,
 }
 
-impl From<super::entity::Model> for ProfileResponseData {
-    fn from(model: super::entity::Model) -> Self {
+#[cfg(feature = "db")]
+impl From<entity::Model> for ProfileResponseData {
+    fn from(model: entity::Model) -> Self {
         Self {
             id: model.id,
             name: model.name,

@@ -6,15 +6,26 @@ publish = false
 
 [dependencies]
 fgutils = { path = "../utils" }
-
-tokio = { workspace = true }
-anyhow = { workspace = true }
-sea-orm-migration = { workspace = true }
-sea-orm = { workspace = true }
-tracing = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-sea-schema = "0.16.1"
-sea-orm-codegen = "1.1.4"
 validator = { workspace = true }
-# lazy_static = { workspace = true }
+anyhow = { workspace = true }
+
+# Only enable database features when NOT in WASM
+tokio = { workspace = true, optional = true }
+sea-orm = { workspace = true, optional = true }
+sea-orm-migration = { workspace = true, optional = true }
+tracing = { workspace = true, optional = true }
+sea-schema = { version = "0.16.1", optional = true }
+sea-orm-codegen = { version = "1.1.4", optional = true }
+# Enable default dependencies except for WASM builds
+[features]
+default = []
+db = [
+    "tokio",
+    "sea-orm",
+    "sea-orm-migration",
+    "tracing",
+    "sea-schema",
+    "sea-orm-codegen",
+]

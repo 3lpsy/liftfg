@@ -1,3 +1,5 @@
+#[cfg(feature = "db")]
+// only db
 use anyhow::Result;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
 

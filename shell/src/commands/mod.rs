@@ -4,6 +4,10 @@ use std::borrow::Cow;
 use fgdb::data::{
     DefaultDataType, DefaultParamsType, RequestData, RequestableData, RequestableParams,
 };
+use fgutils::constants::{
+    VALIDATION_DATA_FIELD, VALIDATION_PARAMS_FIELD, VALIDATION_PARSING_CODE,
+    VALIDATION_REQUEST_FIELD,
+};
 // use fgcore::controllers::profile::create_profile;
 use tauri::{self, ipc::Invoke, ipc::InvokeBody};
 use validator::{ValidationError, ValidationErrors, ValidationErrorsKind};
@@ -21,8 +25,8 @@ where
         Some(data) => Ok(data),
         None => Err(ValidationErrors::new()
             .with_error(
-                "data",
-                ValidationError::new("parsing")
+                VALIDATION_DATA_FIELD,
+                ValidationError::new(VALIDATION_PARSING_CODE)
                     .with_message(format!("missing field field: data").into()),
             )
             .to_owned()),
@@ -38,8 +42,8 @@ where
     match request.params {
         Some(params) => Ok(params),
         None => Err(ValidationErrors::new().with_error(
-            "params",
-            ValidationError::new("parsing")
+            VALIDATION_PARAMS_FIELD,
+            ValidationError::new(VALIDATION_PARSING_CODE)
                 .with_message(format!("missing field field: params").into()),
         )),
     }
@@ -56,7 +60,7 @@ where
             let s = String::from_utf8(bytes).map_err(|_e| {
                 let mut errors = ValidationErrors::new();
                 errors.add(
-                    "request",
+                    VALIDATION_REQUEST_FIELD,
                     ValidationError::new("parsing")
                         .with_message(format!("Failed to convert raw bytes to UTF-8").into()),
                 );
@@ -76,7 +80,7 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
                 .split('`')
                 .nth(1)
                 .map(|s| s.to_string())
-                .unwrap_or("request".to_string());
+                .unwrap_or(VALIDATION_REQUEST_FIELD.to_string());
             (f.clone(), format!("missing field field: {}", f))
         }
         msg if msg.contains("unknown field") => {
@@ -84,7 +88,7 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
                 .split('`')
                 .nth(1)
                 .map(|s| s.to_string())
-                .unwrap_or("request".to_string());
+                .unwrap_or(VALIDATION_REQUEST_FIELD.to_string());
             (f.clone(), format!("unknown field: {}", f))
         }
         _ => (
@@ -96,7 +100,7 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
     errors.errors_mut().insert(
         Cow::Owned(field),
         ValidationErrorsKind::Field(vec![
-            ValidationError::new("parsing").with_message(Cow::Owned(message))
+            ValidationError::new(VALIDATION_PARSING_CODE).with_message(Cow::Owned(message))
         ]),
     );
     errors

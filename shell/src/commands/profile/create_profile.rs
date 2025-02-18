@@ -1,10 +1,10 @@
-use crate::handlers::parse_data;
+use crate::commands::parse_data;
 use crate::state::AppState;
 use anyhow::Result;
 use fgcore::controllers::profile as profile_controller;
-use fgdb::{
-    data::ResponseData,
-    entity::profile::{self, ProfileResponseData},
+use fgdb::data::{
+    profile::{ProfileCreateData, ProfileResponseData},
+    ResponseData,
 };
 use tauri::{self};
 use validator::ValidationErrors;
@@ -17,7 +17,7 @@ pub async fn create_profile(
     state: tauri::State<'_, AppState>,
 ) -> Result<ResponseData<ProfileResponseData>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
-    match parse_data::<profile::ProfileCreateData>(request.body().to_owned()) {
+    match parse_data::<ProfileCreateData>(request.body().to_owned()) {
         Ok(data) => Ok(profile_controller::create(data, &state.dbc).await?.into()),
         Err(err) => return Ok(ResponseData::new(None, Some(err))),
     }
@@ -33,9 +33,9 @@ pub async fn create_profile(
 //   - two users are default - tested
 #[cfg(test)]
 mod tests {
-    use fgdb::{
-        data::RequestableData,
-        entity::profile::{ProfileCreateData, ProfileResponseData},
+    use fgdb::data::{
+        profile::{ProfileCreateData, ProfileResponseData},
+        RequestableData,
     };
     use serde_json::json;
     use std::collections::HashMap;
@@ -62,7 +62,7 @@ mod tests {
         assert_eq!(res.data.unwrap().name, format!("{test_id}"));
 
         // same name, non default fails on name collision
-        let payload = fgdb::entity::profile::ProfileCreateData {
+        let payload = ProfileCreateData {
             name: test_id.to_string(),
             is_default: Some(false),
         }
@@ -77,7 +77,7 @@ mod tests {
         assert!(res.errors.unwrap().errors().contains_key("name"));
 
         // double default fails
-        let payload = fgdb::entity::profile::ProfileCreateData {
+        let payload = ProfileCreateData {
             name: format!("{test_id}2"),
             is_default: Some(true),
         }

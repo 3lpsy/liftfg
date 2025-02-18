@@ -7,8 +7,8 @@ mod tests {
     use tracing::info;
     use tracing::warn;
 
+    use crate::commands;
     use crate::config::AppConfig;
-    use crate::handlers;
     use crate::plugins;
     use crate::setup;
 

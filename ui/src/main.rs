@@ -1,5 +1,3 @@
-use dioxus::prelude::*;
-
 // mod state;
 mod bindings;
 // mod invoke;
@@ -7,7 +5,12 @@ mod bindings;
 mod components;
 mod logging;
 mod router;
+mod state;
 mod views;
+
+use dioxus::prelude::*;
+use state::{AppDataState, RESOURCES_RUNNING};
+// use state::AppState;
 
 // dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
 
@@ -17,21 +20,19 @@ fn main() {
 }
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
-// const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 
 #[component]
 fn App() -> Element {
-    // First we want to query the local db (directly or via Tauri) and see if we have a profile
-    // let app_state = use_context_provider(ipc::fetch_profile);
     logging::info("Rendering App");
+    let _init_state = use_resource(|| async move {
+        RESOURCES_RUNNING.write().insert("load_profile".to_string());
+        // Load profile into global state
+        AppDataState::load(None).await;
+        // Remove from global state once complete
+        RESOURCES_RUNNING.write().remove("load_profile");
+    });
     rsx! {
-        // automatically set UTF and viewport
         document::Stylesheet { href: MAIN_CSS }
-        // document::Meta {
-        //     name: "test2",
-        //     content: "Test3"
-        // }
         Router::<router::Route> {}
-
     }
 }

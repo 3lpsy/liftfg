@@ -1,3 +1,5 @@
+#[cfg(feature = "db")]
+// only db
 pub use sea_orm_migration::prelude::*;
 pub mod common;
 pub mod m20220101_000001_create_profile;

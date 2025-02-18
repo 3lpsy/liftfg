@@ -4,7 +4,7 @@ use std::fs::OpenOptions;
 use std::path::{Path, PathBuf};
 use tracing::info;
 use validator::{ValidationError, ValidationErrors};
-
+pub mod constants;
 pub fn verrors(field: &'static str, code: &'static str, message: String) -> ValidationErrors {
     ValidationErrors::new().with_error(
         field,

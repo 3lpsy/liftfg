@@ -1,7 +1,10 @@
 use anyhow::Result;
 use fgdb::{
-    data::DbValidationErrors,
-    entity::profile::{self, ProfileGetParams, ProfileResponseData},
+    data::{
+        profile::{ProfileGetParams, ProfileResponseData},
+        DbValidationErrors,
+    },
+    entity::profile::{self},
 };
 use fgutils::verrors;
 use sea_orm::{DatabaseConnection, EntityTrait};

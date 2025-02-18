@@ -6,7 +6,7 @@ pub mod testutils {
     use fgutils;
     use tauri::ipc::InvokeBody;
 
-    use crate::{handlers, plugins};
+    use crate::{commands, plugins};
     use anyhow::{anyhow, Result};
     use ctor::ctor;
     use fgcore::logging;
@@ -87,7 +87,7 @@ pub mod testutils {
         builder = plugins::load(builder);
         let app = builder
             .setup(|_app| Ok(()))
-            .invoke_handler(handlers::generate())
+            .invoke_handler(commands::generate())
             .build(generate_context!("test.tauri.conf.json"))?;
         Ok(app)
     }

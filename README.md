@@ -3,7 +3,7 @@
 A cross-platform weight lifting applicaiton written in Rust and with `Tauri` and `Dioxus`.
 
 # Status
-This project is a WIP. Very little of the UI has been built out but a lot of the backend foundation now exists to focus on the actual application and IPC calls.
+This project is a WIP. Very little of the UI has been built out but a lot of the backend foundation and tests now exists to focus on the actual application and IPC calls.
 
 # Purpose
 I needed a reason to get better at `Rust` and was bored. `Dioxus` seemed fun but I wasn't confident about its cross-platform capabilities so I wrapped it in `Tauri`.
@@ -17,9 +17,11 @@ While many applications exist to track workouts, most are proscriptive in the sp
 - `fgcore`
   - Serves as the brain of the application, makes decisions, and interacts with database. Uses `fgutils`, `fgdb`
 - `fgui`
-  - The primary interface of the applicaiton and contains `Dioxus` specific code. Interfaces with the backend (primarily `shell`) to send and receive data. Uses `fgcore`, `fgdb`, and `fgutils`
+  - The primary interface of the applicaiton and contains `Dioxus` specific code. Interfaces with the backend (primarily `shell`) to send and receive data. Uses `fgdb`, and `fgutils`
+  - For now, cannot use `fgcore` which will require `SeaOrm` with the `db` feature enabled.
 - `fgdb`
   - A `SeaOrm` based crate that holds entities, migrations, and seeders. For now, is tightly coupled with request and response like types which it is responsible for defining and determining how to convert to and from database types such as models. Uses `fgcore`, `fgutils`
+  - Most crates use `db` feature but `fgui` cannot compile `SeaOrm` to WASM so will not use it.
 - `fgutils`
   - A crate that holds utility logic that does not depend on any other crate.
 - `fgcli`
