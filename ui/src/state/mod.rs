@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use crate::{
     bindings::invoke,
     logging::{info, warn},
@@ -34,7 +32,6 @@ pub enum State {
 
 pub static APP_STATE: GlobalSignal<AppDataState> = Signal::global(|| AppDataState::default());
 pub static APP_ERRORS: GlobalSignal<Vec<ValidationErrors>> = Signal::global(|| vec![]);
-pub static RESOURCES_RUNNING: GlobalSignal<HashSet<String>> = Signal::global(|| HashSet::new());
 
 impl AppDataState {
     pub async fn load(args: Option<ProfileGetParams>) {
@@ -48,6 +45,7 @@ impl AppDataState {
                         APP_STATE.write().profile.set(Some(profile))
                     }
                     // need way to determine that no profile exists but already loaded...
+                    // how to we then redirect to welcome / profile creation
                     APP_STATE.write().state.set(State::Ready)
                 }
                 Err(e) => {

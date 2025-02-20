@@ -9,7 +9,7 @@ mod state;
 mod views;
 
 use dioxus::prelude::*;
-use state::{AppDataState, RESOURCES_RUNNING};
+use state::AppDataState;
 // use state::AppState;
 
 // dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
@@ -24,12 +24,13 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 #[component]
 fn App() -> Element {
     logging::info("Rendering App");
+    // maybe just change to use_context_provider and use_context from children?
+    // Maybe not, though there's only one parent component, use_context_provider is more
+    // for if you have multiple of the same parent compnoent
+    //
+    // maybe SuspenseBoundary?
     let _init_state = use_resource(|| async move {
-        RESOURCES_RUNNING.write().insert("load_profile".to_string());
-        // Load profile into global state
         AppDataState::load(None).await;
-        // Remove from global state once complete
-        RESOURCES_RUNNING.write().remove("load_profile");
     });
     rsx! {
         document::Stylesheet { href: MAIN_CSS }
