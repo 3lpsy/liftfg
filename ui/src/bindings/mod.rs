@@ -8,6 +8,8 @@ extern "C" {
     pub fn info(args: JsValue) -> JsValue;
     #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "log"])]
     pub fn warn(args: JsValue) -> JsValue;
+    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "log"])]
+    pub fn error(args: JsValue) -> JsValue;
 }
 
 #[wasm_bindgen]

@@ -1,6 +1,12 @@
+mod errors;
 mod home;
+mod init;
 mod layout;
 mod not_found;
+mod profile;
+pub use errors::Errors;
 pub use home::Home;
+pub use init::Init;
 pub use layout::Layout;
 pub use not_found::NotFound;
+pub use profile::ProfileCreate;

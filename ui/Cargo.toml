@@ -20,6 +20,8 @@ serde-wasm-bindgen = "0.6"
 tracing = { workspace = true }
 log = { workspace = true }
 validator = { workspace = true }
+gloo-timers = { version = "0.3", features = ["futures"] }
+
 
 [features]
 default = ["web"]

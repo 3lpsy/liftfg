@@ -10,3 +10,7 @@ pub fn warn(msg: &str) {
     tracing::warn!(msg); // logs to console via dioxus
     bindings::warn(JsValue::from_str(msg)); // logs to stdout via IPC
 }
+pub fn error(msg: &str) {
+    tracing::error!(msg); // logs to console via dioxus
+    bindings::error(JsValue::from_str(msg)); // logs to stdout via IPC
+}

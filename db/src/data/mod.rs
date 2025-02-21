@@ -1,8 +1,11 @@
 pub mod profile;
 
-use fgutils::constants::{VALIDATION_DATABASE_FIELD, VALIDATION_REQUEST_FIELD};
+#[cfg(feature = "db")]
+use fgutils::constants::VALIDATION_DATABASE_FIELD;
+use fgutils::constants::VALIDATION_REQUEST_FIELD;
 #[cfg(feature = "db")]
 use sea_orm::DbErr;
+
 use serde::{Deserialize, Serialize};
 use std::{borrow::Cow, collections::HashMap};
 use validator::{ValidationError, ValidationErrors};

@@ -3,13 +3,17 @@ mod bindings;
 // mod invoke;
 // mod jslog;
 mod components;
+mod icons;
 mod logging;
 mod router;
+mod services;
 mod state;
 mod views;
 
 use dioxus::prelude::*;
-use state::AppDataState;
+use document::Meta;
+use fgdb::data::profile::ProfileResponseData;
+use state::CurrentProfileId;
 // use state::AppState;
 
 // dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
@@ -24,16 +28,23 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 #[component]
 fn App() -> Element {
     logging::info("Rendering App");
-    // maybe just change to use_context_provider and use_context from children?
-    // Maybe not, though there's only one parent component, use_context_provider is more
-    // for if you have multiple of the same parent compnoent
-    //
-    // maybe SuspenseBoundary?
-    let _init_state = use_resource(|| async move {
-        AppDataState::load(None).await;
-    });
+
+    let current_profile_id: Signal<CurrentProfileId> = Signal::new(CurrentProfileId(None));
+    use_context_provider(|| current_profile_id.clone());
+
+    let profile: Signal<Option<ProfileResponseData>> = Signal::new(None);
+    use_context_provider(|| profile.clone());
+
+    // starts Initializing state on Init Route
+    // Init shows loading
+    // Init handles callback and redirects to /home, /profile/create, or /errors
+
     rsx! {
-        document::Stylesheet { href: MAIN_CSS }
+        document::Stylesheet { href: MAIN_CSS },
+        Meta {
+            name: "viewport",
+            content: "viewport-fit=cover"
+        },
         Router::<router::Route> {}
     }
 }

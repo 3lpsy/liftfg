@@ -48,7 +48,7 @@ pub struct ProfileGetParams {
 }
 
 // Responses
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProfileResponseData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
