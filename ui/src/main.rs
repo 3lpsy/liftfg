@@ -35,10 +35,6 @@ fn App() -> Element {
     let profile: Signal<Option<ProfileResponseData>> = Signal::new(None);
     use_context_provider(|| profile.clone());
 
-    // starts Initializing state on Init Route
-    // Init shows loading
-    // Init handles callback and redirects to /home, /profile/create, or /errors
-
     rsx! {
         document::Stylesheet { href: MAIN_CSS },
         Meta {

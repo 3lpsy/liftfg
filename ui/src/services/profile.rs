@@ -19,9 +19,8 @@ pub async fn get_profile(
     args: Option<ProfileGetParams>,
 ) -> Result<Option<ProfileResponseData>, ValidationErrors> {
     info("Loading profile");
-    sleep(Duration::from_secs(5)).await;
+    sleep(Duration::from_secs(2)).await;
     info("Post wait");
-
     let args = to_value(&args.unwrap_or(ProfileGetParams::default()))
         .expect("Failed to convert ProfileGetParams to JsValue");
     match invoke("get_profile", args).await {

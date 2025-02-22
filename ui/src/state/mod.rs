@@ -4,8 +4,8 @@ use validator::ValidationErrors;
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum State {
     #[default]
-    Initializing,
     Loading,
+    Onboarding,
     Ready,
     Borked,
 }

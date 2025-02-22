@@ -2,6 +2,6 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn Init() -> Element {
+pub fn Loading() -> Element {
     rsx! { h1 { "Loading..." } }
 }

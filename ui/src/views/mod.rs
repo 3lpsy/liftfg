@@ -1,12 +1,12 @@
+mod container;
 mod errors;
 mod home;
-mod init;
-mod layout;
+mod loading;
 mod not_found;
 mod profile;
+pub use container::Container;
 pub use errors::Errors;
 pub use home::Home;
-pub use init::Init;
-pub use layout::Layout;
+pub use loading::Loading;
 pub use not_found::NotFound;
 pub use profile::ProfileCreate;
