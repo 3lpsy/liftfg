@@ -14,6 +14,7 @@ use dioxus::prelude::*;
 use document::Meta;
 use fgdb::data::profile::ProfileResponseData;
 use state::CurrentProfileId;
+use views::Loading;
 // use state::AppState;
 
 // dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
@@ -35,12 +36,19 @@ fn App() -> Element {
     let profile: Signal<Option<ProfileResponseData>> = Signal::new(None);
     use_context_provider(|| profile.clone());
 
+    // All Routes under Container
+    // Container will query profile w/ profile id
+    // Container uses General state to determine whether to render dock/navbar
+
     rsx! {
         document::Stylesheet { href: MAIN_CSS },
         Meta {
             name: "viewport",
             content: "viewport-fit=cover"
         },
-        Router::<router::Route> {}
+        SuspenseBoundary {
+            fallback: |_| rsx!{ Loading {  }},
+            Router::<router::Route> {}
+        }
     }
 }

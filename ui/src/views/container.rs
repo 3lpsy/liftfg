@@ -1,66 +1,56 @@
 #![allow(non_snake_case)]
 use crate::logging;
 use crate::services::profile::get_profile;
-use crate::state::{CurrentProfileId, State, APP_ERRORS};
-use crate::views::Loading;
+use crate::state::{CurrentProfileId, APP_ERRORS};
 use crate::{
     components::{Dock, NavBar},
     router::Route,
-    state::APP_STATE,
 };
 use dioxus::prelude::*;
-use fgdb::data::profile::ProfileGetParams;
+use fgdb::data::profile::{ProfileGetParams, ProfileResponseData};
 
 #[component]
 pub fn Container() -> Element {
     logging::info("Rendering Container");
 
     let current_profile_id = use_context::<Signal<CurrentProfileId>>();
-
-    // depends on current profile id
+    let mut profile_ctx = use_context::<Signal<Option<ProfileResponseData>>>();
+    // value only changes when future state changes, not dep?
     let profile = use_resource(move || {
         logging::info("Loading profile resource callback");
         get_profile(Some(ProfileGetParams {
             id: (*current_profile_id.read()).0,
             name: None,
         }))
-    });
+    })
+    .suspend()?;
     let nav = use_navigator();
-    use_effect(move || match &*profile.read() {
-        Some(Ok(None)) => {
-            if let Some(err) = nav.replace(Route::ProfileCreate {}) {
-                *APP_STATE.write() = State::Borked;
-                logging::error(&format!("Navigation failed: {:?}", err));
-            } else {
-                *APP_STATE.write() = State::Onboarding;
-            }
+    // happy path, profile has resolved
+    use_hook(move || match &*profile.read() {
+        Ok(None) => {
+            nav.replace(Route::ProfileCreate {});
         }
-        Some(Err(e)) => {
+        Err(e) => {
             APP_ERRORS.write().push(e.clone());
-            if let Some(err) = nav.replace(Route::Errors {}) {
-                logging::error(&format!("Navigation failed: {:?}", err));
-            }
-            *APP_STATE.write() = State::Borked;
+            nav.replace(Route::Errors {});
         }
-        Some(Ok(_)) => {
-            if let Some(err) = nav.replace(Route::Home {}) {
-                *APP_STATE.write() = State::Borked;
-                logging::error(&format!("Navigation failed: {:?}", err));
-            } else {
-                *APP_STATE.write() = State::Ready;
-            }
+        Ok(profile) => {
+            *profile_ctx.write() = profile.clone();
         }
-        _ => {}
     });
-    rsx! {
-        if *APP_STATE.read() == State::Loading {
-            Loading {}
-        } else {
-            if *APP_STATE.read() == State::Ready {
+    let route: Route = use_route();
+
+    // i could use a protected route strategy with children
+    // do i really need and ready state
+    // at this point in the render, loading is already done via suspend
+    // Borked is handled by redirects to error page
+    match route {
+        // No navbar/dock
+        Route::ProfileCreate {} | Route::Errors {} => rsx! {Outlet::<Route> {}},
+        _ => {
+            rsx! {
                 NavBar {},
-            }
-            Outlet::<Route> {},
-            if *APP_STATE.read() == State::Ready {
+                Outlet::<Route> {},
                 Dock {}
             }
         }
