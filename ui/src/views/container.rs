@@ -46,7 +46,7 @@ pub fn Container() -> Element {
     // Borked is handled by redirects to error page
     match route {
         // No navbar/dock
-        Route::ProfileCreate {} | Route::Errors {} => rsx! {Outlet::<Route> {}},
+        Route::ProfileCreate {} => rsx! {Outlet::<Route> {}},
         _ => {
             rsx! {
                 NavBar {},
