@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use crate::bindings;
 use dioxus_logger::tracing;
 use wasm_bindgen::prelude::JsValue;

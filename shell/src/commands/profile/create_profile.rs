@@ -3,7 +3,7 @@ use crate::state::AppState;
 use anyhow::Result;
 use fgcore::controllers::profile as profile_controller;
 use fgdb::data::{
-    profile::{ProfileCreateData, ProfileResponseData},
+    profile::{ProfileCreateData, ProfileData},
     ResponseData,
 };
 use tauri::{self};
@@ -15,7 +15,7 @@ use validator::ValidationErrors;
 pub async fn create_profile(
     request: tauri::ipc::Request<'_>,
     state: tauri::State<'_, AppState>,
-) -> Result<ResponseData<ProfileResponseData>, ResponseData<ValidationErrors>> {
+) -> Result<ResponseData<ProfileData>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
     match parse_data::<ProfileCreateData>(request.body().to_owned()) {
         Ok(data) => Ok(profile_controller::create(data, &state.dbc).await?.into()),
@@ -34,7 +34,7 @@ pub async fn create_profile(
 #[cfg(test)]
 mod tests {
     use fgdb::data::{
-        profile::{ProfileCreateData, ProfileResponseData},
+        profile::{ProfileCreateData, ProfileData},
         RequestableData,
     };
     use serde_json::json;
@@ -51,8 +51,8 @@ mod tests {
             name: test_id.to_string(),
             is_default: Some(true),
         }
-        .to_request();
-        let res = testutils::invoke::<ProfileResponseData>(
+        .as_request();
+        let res = testutils::invoke::<ProfileData>(
             &webview,
             "create_profile",
             InvokeBody::Json(json!(payload)),
@@ -66,7 +66,7 @@ mod tests {
             name: test_id.to_string(),
             is_default: Some(false),
         }
-        .to_request();
+        .as_request();
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
             "create_profile",
@@ -81,7 +81,7 @@ mod tests {
             name: format!("{test_id}2"),
             is_default: Some(true),
         }
-        .to_request();
+        .as_request();
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
             "create_profile",

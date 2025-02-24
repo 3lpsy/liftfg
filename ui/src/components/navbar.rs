@@ -1,12 +1,15 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
+use fgdb::data::profile::ProfileData;
 
-use crate::router::Route;
+use crate::{icons::ProfileIcon, router::Route};
 
 // use crate::icons::DropDownIcon;
 
 #[component]
 pub fn NavBar() -> Element {
+    let profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+
     rsx! {
         div { class: "navbar bg-base-100",
             div { class: "navbar-start",
@@ -17,7 +20,13 @@ pub fn NavBar() -> Element {
             }
             div { class: "navbar-end",
                 // profile if exists
-                Link { class: "btn", to: Route::Home {}, "Button" }
+                if profile_ctx.read().is_some() {
+                    Link {
+                        class: "btn btn-square btn-ghost",
+                        to: Route::ProfileIndex {},
+                        ProfileIcon {}
+                    }
+                }
             }
         }
     }

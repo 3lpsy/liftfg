@@ -12,9 +12,13 @@ use crate::entity::profile as entity;
 
 // Requests
 
-#[derive(Debug, Validate, Serialize, Deserialize)]
+#[derive(Debug, Validate, Serialize, Deserialize, Default, Clone)]
 pub struct ProfileCreateData {
-    #[validate(length(min = 1, max = 127))]
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Name must be between 1 and 127 characters long"
+    ))]
     pub name: String,
     pub is_default: Option<bool>,
 }
@@ -49,7 +53,7 @@ pub struct ProfileGetParams {
 
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProfileResponseData {
+pub struct ProfileData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
     pub is_default: bool,
@@ -58,7 +62,7 @@ pub struct ProfileResponseData {
 }
 
 #[cfg(feature = "db")]
-impl From<entity::Model> for ProfileResponseData {
+impl From<entity::Model> for ProfileData {
     fn from(model: entity::Model) -> Self {
         Self {
             id: model.id,
@@ -69,8 +73,8 @@ impl From<entity::Model> for ProfileResponseData {
         }
     }
 }
-impl From<ProfileResponseData> for ResponseData<ProfileResponseData> {
-    fn from(data: ProfileResponseData) -> Self {
+impl From<ProfileData> for ResponseData<ProfileData> {
+    fn from(data: ProfileData) -> Self {
         ResponseData {
             data: Some(data),
             errors: None,
@@ -78,7 +82,7 @@ impl From<ProfileResponseData> for ResponseData<ProfileResponseData> {
     }
 }
 
-impl ResponsableData for ProfileResponseData {}
+impl ResponsableData for ProfileData {}
 
 #[cfg(test)]
 mod tests {

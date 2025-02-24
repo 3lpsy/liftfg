@@ -1,7 +1,7 @@
 use anyhow::Result;
 use fgdb::{
     data::{
-        profile::{ProfileGetParams, ProfileResponseData},
+        profile::{ProfileGetParams, ProfileData},
         DbValidationErrors,
     },
     entity::profile::{self},
@@ -14,7 +14,7 @@ use validator::ValidationErrors;
 pub async fn get(
     params: ProfileGetParams,
     dbc: &DatabaseConnection,
-) -> Result<ProfileResponseData, ValidationErrors> {
+) -> Result<ProfileData, ValidationErrors> {
     if let Some(name) = params.name {
         match profile::Entity::by_name(dbc, &name)
             .await

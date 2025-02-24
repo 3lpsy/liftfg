@@ -12,7 +12,7 @@ mod views;
 
 use dioxus::prelude::*;
 use document::Meta;
-use fgdb::data::profile::ProfileResponseData;
+use fgdb::data::profile::ProfileData;
 use state::CurrentProfileId;
 use views::Loading;
 // use state::AppState;
@@ -33,7 +33,7 @@ fn App() -> Element {
     let current_profile_id: Signal<CurrentProfileId> = Signal::new(CurrentProfileId(None));
     use_context_provider(|| current_profile_id.clone());
 
-    let profile: Signal<Option<ProfileResponseData>> = Signal::new(None);
+    let profile: Signal<Option<ProfileData>> = Signal::new(None);
     use_context_provider(|| profile.clone());
 
     // All Routes under Container

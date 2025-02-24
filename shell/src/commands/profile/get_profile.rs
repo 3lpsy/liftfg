@@ -5,7 +5,7 @@ use validator::ValidationErrors;
 use crate::commands::parse_params;
 use crate::state::AppState;
 use fgcore::controllers::profile as profile_controller;
-use fgdb::data::{profile::ProfileGetParams, profile::ProfileResponseData, ResponseData};
+use fgdb::data::{profile::ProfileData, profile::ProfileGetParams, ResponseData};
 use tauri::{self};
 
 // what if parsing failed on serde deserialize
@@ -13,7 +13,7 @@ use tauri::{self};
 pub async fn get_profile(
     request: tauri::ipc::Request<'_>,
     state: tauri::State<'_, AppState>,
-) -> Result<ResponseData<ProfileResponseData>, ResponseData<ValidationErrors>> {
+) -> Result<ResponseData<ProfileData>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
     match parse_params::<ProfileGetParams>(request.body().to_owned()) {
         Ok(params) => Ok(profile_controller::get(params, &state.dbc).await?.into()),
@@ -23,7 +23,7 @@ pub async fn get_profile(
 #[cfg(test)]
 mod tests {
     use fgdb::data::{
-        profile::{ProfileGetParams, ProfileResponseData},
+        profile::{ProfileData, ProfileGetParams},
         RequestableParams,
     };
     use serde_json::json;
@@ -38,7 +38,7 @@ mod tests {
             name: None,
         }
         .to_params();
-        let res = testutils::invoke::<ProfileResponseData>(
+        let res = testutils::invoke::<ProfileData>(
             &webview,
             "get_profile",
             InvokeBody::Json(json!(payload)),

@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
-use crate::views::{Container, Errors, Home, NotFound, ProfileCreate};
+use crate::views::{
+    Container, Errors, Home, NotFound, NotFoundRoot, ProfileCreate, ProfileIndex, ProgramCreate,
+};
 use dioxus::prelude::*;
 // use dioxus_router::prelude::*;
 
@@ -11,11 +13,19 @@ pub enum Route {
     #[layout(Container)]
         #[route("/")]
         Home {},
-        #[route("/profile/create")]
+        #[route("/onboard/profile/create")]
         ProfileCreate {},
+        #[route("/profile")]
+        ProfileIndex {},
+        #[route("/profile/:profile_id/program/create")]
+        ProgramCreate {
+            profile_id: usize
+        },
         #[route("/error")]
         Errors { },
+        #[route("/:..route")]
+        NotFound { route: Vec<String> },
     #[end_layout]
-    #[route("/:..route")]
-    NotFound { route: Vec<String> },
+    #[route("/_x")]
+    NotFoundRoot { route: Vec<String> },
 }

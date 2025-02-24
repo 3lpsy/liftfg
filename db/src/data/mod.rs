@@ -5,9 +5,11 @@ use fgutils::constants::VALIDATION_DATABASE_FIELD;
 use fgutils::constants::VALIDATION_REQUEST_FIELD;
 #[cfg(feature = "db")]
 use sea_orm::DbErr;
+#[cfg(feature = "db")]
+use std::borrow::Cow;
 
 use serde::{Deserialize, Serialize};
-use std::{borrow::Cow, collections::HashMap};
+use std::collections::HashMap;
 use validator::{ValidationError, ValidationErrors};
 
 // validators requires &'static str
@@ -23,7 +25,7 @@ pub fn field_ref(name: &str) -> &'static str {
 // request data
 // https://doc.rust-lang.org/nomicon/hrtb.html
 pub trait RequestableData: for<'de> Deserialize<'de> + Serialize {
-    fn to_request(self) -> RequestData<Self, DefaultParamsType> {
+    fn as_request(self) -> RequestData<Self, DefaultParamsType> {
         RequestData {
             data: Some(self),
             params: None,
