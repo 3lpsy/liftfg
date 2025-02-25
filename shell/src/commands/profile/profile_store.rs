@@ -3,7 +3,7 @@ use crate::state::AppState;
 use anyhow::Result;
 use fgcore::controllers::profile as profile_controller;
 use fgdb::data::{
-    profile::{ProfileCreateData, ProfileData},
+    profile::{ProfileData, ProfileStoreData},
     ResponseData,
 };
 use tauri::{self};
@@ -12,29 +12,21 @@ use validator::ValidationErrors;
 // controllers are really handlers
 // handlers are still mostly controllers
 #[tauri::command]
-pub async fn create_profile(
+pub async fn profile_store(
     request: tauri::ipc::Request<'_>,
     state: tauri::State<'_, AppState>,
 ) -> Result<ResponseData<ProfileData>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
-    match parse_data::<ProfileCreateData>(request.body().to_owned()) {
-        Ok(data) => Ok(profile_controller::create(data, &state.dbc).await?.into()),
-        Err(err) => return Ok(ResponseData::new(None, Some(err))),
+    match parse_data::<ProfileStoreData>(request.body().to_owned()) {
+        Ok(data) => Ok(profile_controller::store(data, &state.dbc).await?),
+        Err(err) => return Ok(ResponseData::from_errors(err)),
     }
 }
 
-// What can go wrong?
-// - Failed to preparse request - untested
-// - failed to parse body
-//   - missing data - tested
-//   - missing data.somefield - tested
-//   - utf - untested
-//   - two users w/ same name - tested
-//   - two users are default - tested
 #[cfg(test)]
 mod tests {
     use fgdb::data::{
-        profile::{ProfileCreateData, ProfileData},
+        profile::{ProfileData, ProfileStoreData},
         RequestableData,
     };
     use serde_json::json;
@@ -47,14 +39,14 @@ mod tests {
     #[tokio::test]
     async fn it_invokes_create_profile() {
         let (mut _app, webview, test_id) = testutils::default_test_setup().await.unwrap();
-        let payload = ProfileCreateData {
+        let payload = ProfileStoreData {
             name: test_id.to_string(),
             is_default: Some(true),
         }
         .as_request();
         let res = testutils::invoke::<ProfileData>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Json(json!(payload)),
         )
         .await;
@@ -62,14 +54,14 @@ mod tests {
         assert_eq!(res.data.unwrap().name, format!("{test_id}"));
 
         // same name, non default fails on name collision
-        let payload = ProfileCreateData {
+        let payload = ProfileStoreData {
             name: test_id.to_string(),
             is_default: Some(false),
         }
         .as_request();
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Json(json!(payload)),
         )
         .await;
@@ -77,14 +69,14 @@ mod tests {
         assert!(res.errors.unwrap().errors().contains_key("name"));
 
         // double default fails
-        let payload = ProfileCreateData {
+        let payload = ProfileStoreData {
             name: format!("{test_id}2"),
             is_default: Some(true),
         }
         .as_request();
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Json(json!(payload)),
         )
         .await;
@@ -94,7 +86,7 @@ mod tests {
         let mut badpayload = HashMap::new();
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Json(json!(badpayload.clone())),
         )
         .await;
@@ -105,7 +97,7 @@ mod tests {
         badpayload.insert("data", dpay);
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Json(json!(badpayload.clone())),
         )
         .await;
@@ -117,7 +109,7 @@ mod tests {
 
         let res = testutils::invoke::<ValidationErrors>(
             &webview,
-            "create_profile",
+            "profile_store",
             InvokeBody::Raw(vec![0xE2, 0x82]),
         )
         .await;

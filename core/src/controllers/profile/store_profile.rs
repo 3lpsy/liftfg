@@ -1,8 +1,8 @@
 use anyhow::Result;
 use fgdb::{
     data::{
-        profile::{ProfileCreateData, ProfileData},
-        DbValidationErrors,
+        profile::{ProfileData, ProfileStoreData},
+        DbValidationErrors, ResponseData,
     },
     entity::profile::ActiveModel,
 };
@@ -13,10 +13,10 @@ use validator::{Validate, ValidationErrors};
 
 // should posts also accept params?
 // should this create
-pub async fn create(
-    data: ProfileCreateData,
+pub async fn store(
+    data: ProfileStoreData,
     dbc: &DatabaseConnection,
-) -> Result<ProfileData, ValidationErrors> {
+) -> Result<ResponseData<ProfileData>, ValidationErrors> {
     // structural validation
     data.validate()?;
 
@@ -24,7 +24,7 @@ pub async fn create(
     // main failure scenarios: no two defaults, unique name clash
     // is there any reason to not just let the db handle it?
     match ActiveModel::from(data).insert(dbc).await {
-        Ok(u) => Ok(u.into()),
+        Ok(d) => Ok(ResponseData::from_data(d.into())),
         Err(dbe) => {
             let errors: ValidationErrors = DbValidationErrors::from(dbe).into();
             // generic and unhandled, log so we know

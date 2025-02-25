@@ -1,2 +1,3 @@
-pub mod create_profile;
-pub mod get_profile;
+pub mod profile_index;
+pub mod profile_show;
+pub mod profile_store;

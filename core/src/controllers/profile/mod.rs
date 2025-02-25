@@ -1,4 +1,6 @@
-mod create_profile;
-pub use create_profile::create;
-mod get_profile;
-pub use get_profile::get;
+mod store_profile;
+pub use store_profile::store;
+mod show_profile;
+pub use show_profile::show;
+mod index_profile;
+pub use index_profile::index;

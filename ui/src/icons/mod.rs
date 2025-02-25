@@ -65,6 +65,46 @@ pub fn ProfileIcon() -> Element {
 }
 
 #[component]
+pub fn ArrowRight() -> Element {
+    rsx! {
+            svg {
+                xmlns: "http://www.w3.org/2000/svg",
+                class: "size-6",
+                fill: "none",
+                view_box: "0 0 24 24",
+                stroke: "currentColor",
+                path {
+                    stroke_linecap: "round",
+                    stroke_linejoin: "round",
+                    stroke_width: "1.5",
+                    d: "M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                }
+            }
+
+    }
+}
+
+#[component]
+pub fn ArrowLeft() -> Element {
+    rsx! {
+            svg {
+                xmlns: "http://www.w3.org/2000/svg",
+                class: "size-6",
+                fill: "none",
+                view_box: "0 0 24 24",
+                stroke: "currentColor",
+                path {
+                    stroke_linecap: "round",
+                    stroke_linejoin: "round",
+                    stroke_width: "1.5",
+                    d: "M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                }
+            }
+
+    }
+}
+
+#[component]
 pub fn DropDownIcon() -> Element {
     rsx! {
         svg {

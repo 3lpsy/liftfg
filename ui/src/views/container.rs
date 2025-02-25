@@ -1,13 +1,12 @@
 #![allow(non_snake_case)]
-use crate::logging;
+use crate::components::dock::Dock;
+use crate::components::navbar::NavBar;
+use crate::logging::{self, info};
 use crate::services::profile::get_profile;
-use crate::state::{CurrentProfileId, APP_ERRORS};
-use crate::{
-    components::{Dock, NavBar},
-    router::Route,
-};
+use crate::state::CurrentProfileId;
+use crate::{router::Route, views::Loading};
 use dioxus::prelude::*;
-use fgdb::data::profile::{ProfileData, ProfileGetParams};
+use fgdb::data::profile::{ProfileData, ProfileShowParams};
 
 #[component]
 pub fn Container() -> Element {
@@ -16,53 +15,66 @@ pub fn Container() -> Element {
     let current_profile_id_ctx = use_context::<Signal<CurrentProfileId>>();
     let mut profile_ctx = use_context::<Signal<Option<ProfileData>>>();
     // value only changes when future state changes, not dep?
-    let profile = use_resource(move || {
+    let profile = use_resource(move || async move {
         logging::info("Loading profile resource callback");
         // implicitly use is_default if current is None, in that case, check the error
-        get_profile(Some(ProfileGetParams {
+        get_profile(Some(ProfileShowParams {
             id: (*current_profile_id_ctx.read()).0,
             name: None,
         }))
+        .await
     })
     .suspend()?;
 
     let nav = use_navigator();
     // happy path, profile has resolved
-    use_hook(move || match &*profile.read() {
+    use_effect(move || match &*profile.read() {
         Ok(profile) => {
+            info("Updating current profile in container");
             *profile_ctx.write() = Some(profile.clone());
-            return nav.replace(Route::Home {});
+            // nav.replace(Route::Home {});
+            // we don't really want to nav home do we
         }
         Err(e) => {
             let should_create_profile = e.field_errors().iter().any(|(field, errors)| {
                 field == "is_default" && errors.iter().any(|err| err.code == "exists")
             });
             if should_create_profile {
-                return nav.replace(Route::ProfileCreate {});
+                nav.replace(Route::ProfileCreate {});
             } else {
-                APP_ERRORS.write().push(e.clone());
-                return nav.replace(Route::Errors {});
+                nav.replace(Route::Errors { errors: e.clone() });
             }
         }
     });
     // this causes rerender on route change
     let route: Route = use_route();
-    // i could use a protected route strategy with children
-    // do i really need and ready state
-    // at this point in the render, loading is already done via suspend
-    // Borked is handled by redirects to error page
     rsx! {
         match route {
-            Route::ProfileCreate {} => rsx! {Outlet::<Route> {}},
+            Route::ProfileCreate {} => rsx! {
+                SuspenseBoundary {
+                    fallback: |_| rsx!{ Loading {  }},
+                    Outlet::<Route> {}
+                    "Route: {route}"
+                }
+            },
             _ => {
                 rsx! {
                     NavBar {},
-                    Outlet::<Route> {},
+                    div {
+                        class: "page container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col",
+                        SuspenseBoundary {
+                            fallback: |_| rsx!{
+                                Loading {  }
+                            },
+                            Outlet::<Route> {}
+                            "Route: {route}"
+                        }
+
+                    }
                     Dock {}
                 }
             }
         }
-        "Route: {route}",
 
     }
 }

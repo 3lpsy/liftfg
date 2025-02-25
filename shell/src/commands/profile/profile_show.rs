@@ -5,25 +5,25 @@ use validator::ValidationErrors;
 use crate::commands::parse_params;
 use crate::state::AppState;
 use fgcore::controllers::profile as profile_controller;
-use fgdb::data::{profile::ProfileData, profile::ProfileGetParams, ResponseData};
+use fgdb::data::{profile::ProfileData, profile::ProfileShowParams, ResponseData};
 use tauri::{self};
 
 // what if parsing failed on serde deserialize
 #[tauri::command]
-pub async fn get_profile(
+pub async fn profile_show(
     request: tauri::ipc::Request<'_>,
     state: tauri::State<'_, AppState>,
 ) -> Result<ResponseData<ProfileData>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
-    match parse_params::<ProfileGetParams>(request.body().to_owned()) {
-        Ok(params) => Ok(profile_controller::get(params, &state.dbc).await?.into()),
-        Err(err) => return Ok(ResponseData::new(None, Some(err))),
+    match parse_params::<ProfileShowParams>(request.body().to_owned()) {
+        Ok(params) => Ok(profile_controller::show(params, &state.dbc).await?.into()),
+        Err(err) => return Ok(ResponseData::from_errors(err)),
     }
 }
 #[cfg(test)]
 mod tests {
     use fgdb::data::{
-        profile::{ProfileData, ProfileGetParams},
+        profile::{ProfileData, ProfileShowParams},
         RequestableParams,
     };
     use serde_json::json;
@@ -31,16 +31,16 @@ mod tests {
 
     use crate::utils::testutils;
     #[tokio::test]
-    async fn it_invokes_get_profile() {
+    async fn it_invokes_profile_show() {
         let (mut _app, webview, _test_id) = testutils::seeded_test_setup().await.unwrap();
-        let payload = ProfileGetParams {
+        let payload = ProfileShowParams {
             id: None,
             name: None,
         }
-        .to_params();
+        .as_params();
         let res = testutils::invoke::<ProfileData>(
             &webview,
-            "get_profile",
+            "profile_show",
             InvokeBody::Json(json!(payload)),
         )
         .await;

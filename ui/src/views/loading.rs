@@ -6,7 +6,7 @@ pub fn Loading() -> Element {
     rsx! {
         // Full-screen container with a subtle background
         div {
-            class: "flex flex-col items-center justify-center min-h-screen bg-base-200",
+            class: "flex-1 flex flex-col items-center justify-center",
             // Container for the spinner and text
             div {
                 class: "flex flex-col items-center",

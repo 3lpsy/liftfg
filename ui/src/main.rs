@@ -30,10 +30,10 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 fn App() -> Element {
     logging::info("Rendering App");
 
-    let current_profile_id: Signal<CurrentProfileId> = Signal::new(CurrentProfileId(None));
+    let current_profile_id: Signal<CurrentProfileId> = use_signal(|| CurrentProfileId(None));
     use_context_provider(|| current_profile_id.clone());
 
-    let profile: Signal<Option<ProfileData>> = Signal::new(None);
+    let profile: Signal<Option<ProfileData>> = use_signal(|| None);
     use_context_provider(|| profile.clone());
 
     // All Routes under Container
@@ -47,7 +47,12 @@ fn App() -> Element {
             content: "viewport-fit=cover"
         },
         SuspenseBoundary {
-            fallback: |_| rsx!{ Loading {  }},
+            fallback: |_| rsx!{
+                div {
+                    class: "page container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col",
+                    Loading {}
+                }
+            },
             Router::<router::Route> {}
         }
     }

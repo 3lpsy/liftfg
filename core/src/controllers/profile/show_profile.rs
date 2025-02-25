@@ -1,26 +1,30 @@
 use anyhow::Result;
 use fgdb::{
     data::{
-        profile::{ProfileGetParams, ProfileData},
-        DbValidationErrors,
+        profile::{ProfileData, ProfileShowParams},
+        DbValidationErrors, ResponseData,
     },
     entity::profile::{self},
 };
 use fgutils::verrors;
 use sea_orm::{DatabaseConnection, EntityTrait};
-use validator::ValidationErrors;
+use validator::{Validate, ValidationErrors};
 
 // gets only accep
-pub async fn get(
-    params: ProfileGetParams,
+pub async fn show(
+    params: ProfileShowParams,
     dbc: &DatabaseConnection,
-) -> Result<ProfileData, ValidationErrors> {
+) -> Result<ResponseData<ProfileData>, ValidationErrors> {
+    params.validate()?;
+
+    let class = "text";
+
     if let Some(name) = params.name {
         match profile::Entity::by_name(dbc, &name)
             .await
             .map_err(DbValidationErrors::from)?
         {
-            Some(existing) => return Ok(existing.into()),
+            Some(existing) => return Ok(ResponseData::from_data(existing.into())),
             None => {
                 return Err(verrors(
                     "name",
@@ -35,7 +39,7 @@ pub async fn get(
             .await
             .map_err(DbValidationErrors::from)?
         {
-            Some(existing) => return Ok(existing.into()),
+            Some(existing) => return Ok(ResponseData::from_data(existing.into())),
             None => {
                 return Err(verrors(
                     "id",
@@ -49,7 +53,7 @@ pub async fn get(
             .await
             .map_err(DbValidationErrors::from)?
         {
-            Some(existing) => return Ok(existing.into()),
+            Some(existing) => return Ok(ResponseData::from_data(existing.into())),
             None => {
                 return Err(verrors(
                     "is_default",

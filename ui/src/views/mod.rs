@@ -9,6 +9,6 @@ pub use container::Container;
 pub use errors::Errors;
 pub use home::Home;
 pub use loading::Loading;
-pub use not_found::{NotFound, NotFoundRoot};
-pub use profile::{ProfileCreate, ProfileIndex};
+pub use not_found::{ResourceNotFound, NotFoundFallback, Empty};
+pub use profile::{ProfileCreate, ProfileIndex, ProfileShow};
 pub use program::ProgramCreate;

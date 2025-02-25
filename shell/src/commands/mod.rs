@@ -106,10 +106,12 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
     errors
 }
 
+// Routing names
 pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync + 'static {
     // It doesn't like reexports
     tauri::generate_handler![
-        profile::create_profile::create_profile,
-        profile::get_profile::get_profile
+        profile::profile_store::profile_store,
+        profile::profile_show::profile_show,
+        profile::profile_index::profile_index
     ]
 }

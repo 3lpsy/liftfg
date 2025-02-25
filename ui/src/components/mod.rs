@@ -1,4 +1,3 @@
-mod dock;
-mod navbar;
-pub use dock::Dock;
-pub use navbar::NavBar;
+pub mod dock;
+pub mod navbar;
+pub mod profile;

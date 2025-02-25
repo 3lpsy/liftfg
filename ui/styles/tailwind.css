@@ -34,3 +34,18 @@
     --depth: 0;
     --noise: 0;
 }
+
+:root {
+    --navbar-height: 4rem;
+    --dock-height: calc(4rem + env(safe-area-inset-bottom));
+    --full-viewport: 100vh;
+}
+
+html,
+body {
+    @apply min-h-screen h-full m-0 p-0 bg-base-200;
+}
+
+.page {
+    min-height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height));
+}

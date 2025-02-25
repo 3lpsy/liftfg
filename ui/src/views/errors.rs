@@ -1,11 +1,10 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
+use validator::ValidationErrors;
 
-use crate::state::APP_ERRORS;
 #[component]
-pub fn Errors() -> Element {
-    let app_errors = APP_ERRORS.read();
+pub fn Errors(errors: ValidationErrors) -> Element {
     rsx! {
-        code { "{app_errors:?}"}
+        code { "{errors:?}"}
     }
 }

@@ -19,7 +19,7 @@ where
     T: RequestableParams + Default,
     R: ResponsableData,
 {
-    let params = args.unwrap_or_default().to_params();
+    let params = args.unwrap_or_default().as_params();
     let args = to_value(&params).expect("Failed to convert RequestParams to JsValue");
     call::<R>(command, args).await
 }
@@ -62,15 +62,13 @@ where
         },
         Err(e) => {
             warn(&format!("Error: {:?}", &e));
-            let re =
-                from_value::<ResponseData<ValidationErrors>>(e.clone()).unwrap_or(ResponseData {
-                    data: None,
-                    errors: Some(verrors(
-                        VALIDATION_REQUEST_FIELD,
-                        VALIDATION_PARSING_CODE,
-                        format!("Error parsing request error: {:?}", e),
-                    )),
-                });
+            let re = from_value::<ResponseData<ValidationErrors>>(e.clone()).unwrap_or(
+                ResponseData::from_errors(verrors(
+                    VALIDATION_REQUEST_FIELD,
+                    VALIDATION_PARSING_CODE,
+                    format!("Error parsing request error: {:?}", e),
+                )),
+            );
             // theoretically, only errors should ever be populated
             Err(re.errors.unwrap())
         }

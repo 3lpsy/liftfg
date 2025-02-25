@@ -5,7 +5,7 @@ type DateTimeUtc = String;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use super::{RequestData, ResponsableData, ResponseData};
+use super::{RequestData, RequestableParams, ResponsableData, ResponseData};
 
 #[cfg(feature = "db")]
 use crate::entity::profile as entity;
@@ -13,7 +13,7 @@ use crate::entity::profile as entity;
 // Requests
 
 #[derive(Debug, Validate, Serialize, Deserialize, Default, Clone)]
-pub struct ProfileCreateData {
+pub struct ProfileStoreData {
     #[validate(length(
         min = 1,
         max = 127,
@@ -24,8 +24,8 @@ pub struct ProfileCreateData {
 }
 
 #[cfg(feature = "db")]
-impl From<ProfileCreateData> for entity::ActiveModel {
-    fn from(profile_data: ProfileCreateData) -> Self {
+impl From<ProfileStoreData> for entity::ActiveModel {
+    fn from(profile_data: ProfileStoreData) -> Self {
         entity::ActiveModel {
             id: ActiveValue::NotSet,
             name: ActiveValue::Set(profile_data.name),
@@ -35,24 +35,21 @@ impl From<ProfileCreateData> for entity::ActiveModel {
         }
     }
 }
-impl<P> From<ProfileCreateData> for RequestData<ProfileCreateData, P> {
-    fn from(data: ProfileCreateData) -> Self {
-        RequestData {
-            data: Some(data),
-            params: None,
-        }
+impl<P: RequestableParams> From<ProfileStoreData> for RequestData<ProfileStoreData, P> {
+    fn from(data: ProfileStoreData) -> Self {
+        RequestData::from_data(data)
     }
 }
 
 #[derive(Default, Debug, Validate, Serialize, Deserialize)]
-pub struct ProfileGetParams {
+pub struct ProfileShowParams {
     #[validate(range(min = 1))]
     pub id: Option<i32>,
     pub name: Option<String>,
 }
 
 // Responses
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ProfileData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
@@ -78,12 +75,13 @@ impl From<ProfileData> for ResponseData<ProfileData> {
         ResponseData {
             data: Some(data),
             errors: None,
+            paginator: None,
         }
     }
 }
 
 impl ResponsableData for ProfileData {}
-
+impl ResponsableData for Vec<ProfileData> {}
 #[cfg(test)]
 mod tests {
     // use tracing::info;
@@ -93,7 +91,7 @@ mod tests {
     #[tokio::test]
     async fn it_validates_profile_data() {
         // fgcore::logging::init().unwrap();
-        let create = ProfileCreateData {
+        let create = ProfileStoreData {
             name: "a".repeat(128),
             is_default: Some(false),
         };

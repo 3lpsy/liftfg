@@ -4,13 +4,19 @@ pub mod profile;
 use fgutils::constants::VALIDATION_DATABASE_FIELD;
 use fgutils::constants::VALIDATION_REQUEST_FIELD;
 #[cfg(feature = "db")]
+use sea_orm::ConnectionTrait;
+#[cfg(feature = "db")]
 use sea_orm::DbErr;
 #[cfg(feature = "db")]
-use std::borrow::Cow;
-
+use sea_orm::SelectorTrait;
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "db")]
+use std::borrow::Cow;
 use std::collections::HashMap;
-use validator::{ValidationError, ValidationErrors};
+use validator::Validate;
+#[cfg(feature = "db")]
+use validator::ValidationError;
+use validator::ValidationErrors;
 
 // validators requires &'static str
 // TODO figure this out
@@ -26,21 +32,19 @@ pub fn field_ref(name: &str) -> &'static str {
 // https://doc.rust-lang.org/nomicon/hrtb.html
 pub trait RequestableData: for<'de> Deserialize<'de> + Serialize {
     fn as_request(self) -> RequestData<Self, DefaultParamsType> {
-        RequestData {
-            data: Some(self),
-            params: None,
-        }
+        RequestData::new(Some(self), None)
     }
 }
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct DefaultDataType {}
 // seems kind of dangerous....
 impl<T> RequestableData for T where T: for<'de> serde::Deserialize<'de> + serde::Serialize {}
 
 // request params
 pub type DefaultParamsType = HashMap<String, String>;
+
 pub trait RequestableParams: for<'de> Deserialize<'de> + Serialize {
-    fn to_params(self) -> RequestData<DefaultDataType, Self> {
+    fn as_params(self) -> RequestData<DefaultDataType, Self> {
         RequestData {
             data: None,
             params: Some(self),
@@ -49,6 +53,49 @@ pub trait RequestableParams: for<'de> Deserialize<'de> + Serialize {
 }
 impl<T> RequestableParams for T where T: for<'de> Deserialize<'de> + Serialize {}
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub enum SortOrder {
+    Asc,
+    Desc,
+}
+
+#[cfg(feature = "db")]
+impl From<SortOrder> for sea_orm::Order {
+    fn from(sort_order: SortOrder) -> Self {
+        match sort_order {
+            SortOrder::Asc => sea_orm::Order::Asc,
+            SortOrder::Desc => sea_orm::Order::Desc,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Pagination {
+    pub page: i32,
+    pub size: i32,
+    pub order: SortOrder,
+}
+// fetch_page and cur_page are 0 based
+impl Default for Pagination {
+    fn default() -> Self {
+        Self {
+            page: 0,
+            size: 10,
+            order: SortOrder::Asc, // or SortOrder::Desc depending on your default preference
+        }
+    }
+}
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct DefaultPaginationParams {
+    pub pagination: Option<Pagination>,
+}
+impl DefaultPaginationParams {
+    pub fn with_page(mut self, page: i32) -> Self {
+        self.pagination = Some(self.pagination.unwrap_or_default());
+        self.pagination.as_mut().unwrap().page = page;
+        self
+    }
+}
 // together
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(bound = "T: RequestableData, P: RequestableParams")]
@@ -57,6 +104,63 @@ pub struct RequestData<T, P> {
     pub data: Option<T>,
     // query-ish data
     pub params: Option<P>,
+}
+
+impl<T, P> RequestData<T, P>
+where
+    T: RequestableData,
+    P: RequestableParams,
+{
+    pub fn new(data: Option<T>, params: Option<P>) -> RequestData<T, P> {
+        Self { data, params }
+    }
+
+    pub fn from_data(data: T) -> RequestData<T, P> {
+        RequestData::new(Some(data), None)
+    }
+
+    pub fn from_params(params: P) -> RequestData<T, P> {
+        RequestData::new(None, Some(params))
+    }
+}
+// fetch_page and cur_page are 0 based
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Paginator {
+    pub page: i32,
+    pub size: i32,
+    pub pages: i32,
+    pub total: i32,
+    pub order: SortOrder,
+}
+
+#[cfg(feature = "db")]
+impl Paginator {
+    pub async fn from_db_paginator<C, S>(
+        paginator: &sea_orm::Paginator<'_, C, S>,
+        page: i32,
+        size: i32,
+        order: SortOrder,
+    ) -> Result<Self, DbValidationErrors>
+    where
+        C: ConnectionTrait,
+        S: SelectorTrait,
+    {
+        // can't cur_page here
+        // TODO casting
+        let total_items_and_pages = paginator
+            .num_items_and_pages()
+            .await
+            .map_err(DbValidationErrors::from)?;
+        let pages = total_items_and_pages.number_of_pages as i32;
+        let total = total_items_and_pages.number_of_items as i32;
+        Ok(Paginator {
+            page,
+            size,
+            pages,
+            total,
+            order,
+        })
+    }
 }
 
 // https://doc.rust-lang.org/nomicon/hrtb.html
@@ -70,23 +174,39 @@ where
 {
     pub data: Option<T>,
     pub errors: Option<ValidationErrors>,
+    pub paginator: Option<Paginator>,
 }
 
 impl<T> ResponseData<T>
 where
     T: ResponsableData,
 {
-    pub fn new(data: Option<T>, errors: Option<ValidationErrors>) -> ResponseData<T> {
-        Self { data, errors }
+    pub fn new(
+        data: Option<T>,
+        errors: Option<ValidationErrors>,
+        paginator: Option<Paginator>,
+    ) -> ResponseData<T> {
+        Self {
+            data,
+            errors,
+            paginator,
+        }
+    }
+
+    pub fn from_errors(errors: ValidationErrors) -> ResponseData<T> {
+        ResponseData::new(None, Some(errors), None)
+    }
+    pub fn from_data(data: T) -> ResponseData<T> {
+        ResponseData::new(Some(data), None, None)
+    }
+    pub fn from_paginator(data: T, paginator: Paginator) -> ResponseData<T> {
+        ResponseData::new(Some(data), None, Some(paginator))
     }
 }
 
 impl<T: ResponsableData> From<ValidationErrors> for ResponseData<T> {
     fn from(errors: ValidationErrors) -> Self {
-        ResponseData {
-            data: None,
-            errors: Some(errors),
-        }
+        ResponseData::new(None, Some(errors), None)
     }
 }
 impl ResponsableData for ValidationErrors {}

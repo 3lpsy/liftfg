@@ -1,8 +1,10 @@
 #![allow(non_snake_case)]
 use crate::views::{
-    Container, Errors, Home, NotFound, NotFoundRoot, ProfileCreate, ProfileIndex, ProgramCreate,
+    Container, Errors, Empty, Home, ResourceNotFound, NotFoundFallback, Loading, ProfileCreate, ProfileIndex, ProfileShow,
+    ProgramCreate,
 };
 use dioxus::prelude::*;
+use validator::ValidationErrors;
 // use dioxus_router::prelude::*;
 
 /// An enum of all of the possible routes in the app.
@@ -17,15 +19,21 @@ pub enum Route {
         ProfileCreate {},
         #[route("/profile")]
         ProfileIndex {},
+        #[route("/profile/:profile_id")]
+        ProfileShow {profile_id: usize},
         #[route("/profile/:profile_id/program/create")]
         ProgramCreate {
             profile_id: usize
         },
         #[route("/error")]
-        Errors { },
+        Errors { errors: ValidationErrors },
+        #[route("/not-found")]
+        ResourceNotFound { errors: Option<ValidationErrors> },
+
         #[route("/:..route")]
-        NotFound { route: Vec<String> },
+        NotFoundFallback { route: Vec<String> },
     #[end_layout]
-    #[route("/_x")]
-    NotFoundRoot { route: Vec<String> },
+    // don't use this
+    #[route("/_empty")]
+    Empty {  },
 }
