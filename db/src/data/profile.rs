@@ -22,6 +22,35 @@ pub struct ProfileStoreData {
     pub name: String,
     pub is_default: Option<bool>,
 }
+impl From<ProfileData> for ProfileStoreData {
+    fn from(data: ProfileData) -> Self {
+        ProfileStoreData {
+            name: data.name,
+            is_default: Some(data.is_default),
+        }
+    }
+}
+#[derive(Debug, Validate, Serialize, Deserialize, Default, Clone)]
+pub struct ProfileUpdateData {
+    #[validate(range(min = 1, message = "Id must be at least greater than 1"))]
+    pub id: i32,
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Name must be between 1 and 127 characters long"
+    ))]
+    pub name: Option<String>,
+    pub is_default: Option<bool>,
+}
+impl From<ProfileData> for ProfileUpdateData {
+    fn from(data: ProfileData) -> Self {
+        ProfileUpdateData {
+            id: data.id,
+            name: Some(data.name),
+            is_default: Some(data.is_default),
+        }
+    }
+}
 
 #[cfg(feature = "db")]
 impl From<ProfileStoreData> for entity::ActiveModel {

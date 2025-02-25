@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 use crate::views::{
-    Container, Errors, Empty, Home, ResourceNotFound, NotFoundFallback, Loading, ProfileCreate, ProfileIndex, ProfileShow,
+    Container, Errors, Empty, Home, ResourceNotFound, NotFoundFallback, ProfileCreate, ProfileEdit, ProfileIndex, ProfileShow,
     ProgramCreate,
 };
 use dioxus::prelude::*;
@@ -21,6 +21,8 @@ pub enum Route {
         ProfileIndex {},
         #[route("/profile/:profile_id")]
         ProfileShow {profile_id: usize},
+        #[route("/profile/:profile_id/edit")]
+        ProfileEdit {profile_id: usize},
         #[route("/profile/:profile_id/program/create")]
         ProgramCreate {
             profile_id: usize

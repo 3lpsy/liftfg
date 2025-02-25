@@ -112,6 +112,7 @@ pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync
     tauri::generate_handler![
         profile::profile_store::profile_store,
         profile::profile_show::profile_show,
-        profile::profile_index::profile_index
+        profile::profile_index::profile_index,
+        profile::profile_update::profile_update
     ]
 }

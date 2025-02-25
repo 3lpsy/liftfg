@@ -4,3 +4,5 @@ mod show_profile;
 pub use show_profile::show;
 mod index_profile;
 pub use index_profile::index;
+mod update_profile;
+pub use update_profile::update;

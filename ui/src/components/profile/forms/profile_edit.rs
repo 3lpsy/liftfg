@@ -1,13 +1,11 @@
-use crate::{router, services::profile::create_profile, state::CurrentProfileId};
+use crate::{router, services::profile::update_profile};
 use dioxus::prelude::*;
-use fgdb::data::profile::{ProfileData, ProfileStoreData};
+use fgdb::data::profile::{ProfileData, ProfileUpdateData};
 use validator::{Validate, ValidationErrors};
 
 #[component]
-pub fn ProfileCreateForm() -> Element {
-    let mut current_profile_id_ctx = use_context::<Signal<CurrentProfileId>>();
-    let mut profile_ctx = use_context::<Signal<Option<ProfileData>>>();
-    let mut form_data = use_signal(|| ProfileStoreData::default());
+pub fn ProfileEditForm(profile: ProfileData) -> Element {
+    let mut form_data: Signal<ProfileUpdateData> = use_signal(|| profile.clone().into());
     let mut form_errors = use_signal(|| ValidationErrors::new());
     let nav = use_navigator();
     let error_messages = use_memo(move || {
@@ -33,26 +31,14 @@ pub fn ProfileCreateForm() -> Element {
             class: "card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100",
             onsubmit: move |e| async move {
                 e.prevent_default();
-                let mut data = form_data.read().clone();
+                let data = form_data.read().clone();
                 if let Err(validation_errors) = data.validate() {
                     form_errors.set(validation_errors);
                 } else {
-                    // if none, there is no default
-                    let id = (*current_profile_id_ctx.read()).0;
-                    if id.is_none() {
-                        data.is_default = Some(true);
-                    }
-                    match create_profile((data).clone()).await {
+                    match update_profile((data).clone()).await {
                         Ok(profile) => {
-                            let new_profile_id = profile.id;
-                            match id {
-                                Some(_) => {},
-                                None => {
-                                    current_profile_id_ctx.set(CurrentProfileId(Some(profile.id)));
-                                    profile_ctx.set(Some(profile));
-                                }
-                            }
-                            nav.replace(router::Route::ProgramCreate { profile_id: new_profile_id as usize });
+                            form_data.set(profile.into()); // probably unnecssary
+                            nav.replace(router::Route::ProfileIndex {  });
                         },
                         Err(e) => form_errors.set(e)
                     }
@@ -67,11 +53,11 @@ pub fn ProfileCreateForm() -> Element {
                         class: "input input-bordered",
                         r#type: "text",
                         placeholder: "Enter your name",
-                        value: "{form_data.read().name}",
+                        value: "{form_data.read().name.as_ref().map_or_else(String::new, |s| s.clone())}",
                         name: "name",
                         oninput: move |evt| {
                             form_data.with_mut(|data| {
-                                data.name = evt.value().clone();
+                                data.name = Some(evt.value().clone());
                             });
                         }
                     }
@@ -84,7 +70,7 @@ pub fn ProfileCreateForm() -> Element {
                 }
                 // Submit button
                 div { class: "form-control mt-6",
-                    button { class: "btn btn-primary", "Create Profile" }
+                    button { class: "btn btn-primary", "Update Profile" }
                 }
             }
         }

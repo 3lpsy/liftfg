@@ -10,5 +10,5 @@ pub use errors::Errors;
 pub use home::Home;
 pub use loading::Loading;
 pub use not_found::{ResourceNotFound, NotFoundFallback, Empty};
-pub use profile::{ProfileCreate, ProfileIndex, ProfileShow};
+pub use profile::{ProfileCreate, ProfileIndex, ProfileShow, ProfileEdit};
 pub use program::ProgramCreate;

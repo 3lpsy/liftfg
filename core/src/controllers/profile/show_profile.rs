@@ -16,9 +16,6 @@ pub async fn show(
     dbc: &DatabaseConnection,
 ) -> Result<ResponseData<ProfileData>, ValidationErrors> {
     params.validate()?;
-
-    let class = "text";
-
     if let Some(name) = params.name {
         match profile::Entity::by_name(dbc, &name)
             .await
@@ -64,5 +61,3 @@ pub async fn show(
         };
     }
 }
-
-// Tests done via command
