@@ -36,8 +36,8 @@ fn App() -> Element {
     let current_profile_id: Signal<CurrentProfileId> = use_signal(|| CurrentProfileId(None));
     use_context_provider(|| current_profile_id.clone());
 
-    let profile: Signal<Option<ProfileData>> = use_signal(|| None);
-    use_context_provider(|| profile.clone());
+    let current_profile: Signal<Option<ProfileData>> = use_signal(|| None);
+    use_context_provider(|| current_profile.clone());
 
     // set theme, wasm only?
     use_hook(move || {

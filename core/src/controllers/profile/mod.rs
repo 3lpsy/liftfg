@@ -6,3 +6,5 @@ mod index_profile;
 pub use index_profile::index;
 mod update_profile;
 pub use update_profile::update;
+mod delete_profile;
+pub use delete_profile::delete;

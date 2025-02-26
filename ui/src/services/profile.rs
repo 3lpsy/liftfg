@@ -1,6 +1,8 @@
 use crate::logging::info;
 use fgdb::data::{
-    profile::{ProfileData, ProfileShowParams, ProfileStoreData, ProfileUpdateData},
+    profile::{
+        ProfileData, ProfileDeleteParams, ProfileShowParams, ProfileStoreData, ProfileUpdateData,
+    },
     DefaultPaginationParams,
 };
 use gloo_timers::future::sleep;
@@ -35,4 +37,10 @@ pub async fn update_profile(args: ProfileUpdateData) -> Result<ProfileData, Vali
     info("Updating Profile");
     // sleep(Duration::from_secs(1)).await;
     post("profile_update", args).await
+}
+
+pub async fn delete_profile(args: ProfileDeleteParams) -> Result<ProfileData, ValidationErrors> {
+    info("Deleting Profile");
+    sleep(Duration::from_secs(1)).await;
+    get("profile_delete", Some(args)).await
 }

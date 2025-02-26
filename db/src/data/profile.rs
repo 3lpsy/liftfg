@@ -78,6 +78,12 @@ pub struct ProfileShowParams {
     pub name: Option<String>,
 }
 
+#[derive(Default, Debug, Validate, Serialize, Deserialize)]
+pub struct ProfileDeleteParams {
+    #[validate(range(min = 1))]
+    pub id: i32,
+}
+
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ProfileData {

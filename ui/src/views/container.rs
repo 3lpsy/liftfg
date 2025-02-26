@@ -13,7 +13,7 @@ pub fn Container() -> Element {
     logging::info("Rendering Container");
 
     let current_profile_id_ctx = use_context::<Signal<CurrentProfileId>>();
-    let mut profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+    let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
     // value only changes when future state changes, not dep?
     let profile = use_resource(move || async move {
         logging::info("Loading profile resource callback");
@@ -31,7 +31,7 @@ pub fn Container() -> Element {
     use_effect(move || match &*profile.read() {
         Ok(profile) => {
             info("Updating current profile in container");
-            *profile_ctx.write() = Some(profile.clone());
+            *current_profile_ctx.write() = Some(profile.clone());
             // nav.replace(Route::Home {});
             // we don't really want to nav home do we
         }

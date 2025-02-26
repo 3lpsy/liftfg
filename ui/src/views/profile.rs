@@ -1,18 +1,23 @@
 #![allow(non_snake_case)]
 use crate::components::profile::ProfileList;
 use crate::components::profile::{ProfileCreateForm, ProfileEditForm};
+use crate::logging::warn;
 use crate::router;
-use crate::services::profile::get_profile;
+use crate::services::profile::{delete_profile, get_profile};
+use crate::state::CurrentProfileId;
 use crate::views::Loading;
 use chrono_tz::Tz;
 use dioxus::prelude::*;
-use fgdb::data::profile::ProfileData;
 use fgdb::data::profile::ProfileShowParams;
+use fgdb::data::profile::{ProfileData, ProfileDeleteParams};
 use fgutils::dt_human;
 
 #[component]
 pub fn ProfileShow(profile_id: usize) -> Element {
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
+    let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+    let mut current_profile_id_ctx = use_context::<Signal<CurrentProfileId>>();
+
     let profile = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {
             id: Some(profile_id as i32),
@@ -68,6 +73,40 @@ pub fn ProfileShow(profile_id: usize) -> Element {
                                 to: router::Route::ProfileEdit { profile_id: profile.id as usize },
                                 class: "btn btn-primary w-full",
                                 "Edit"
+                            }
+                            button {
+                                class: "btn btn-warning w-full",
+                                onclick: move |e| async move {
+                                    // TODO cast
+                                    match delete_profile(ProfileDeleteParams {id: profile_id as i32}).await {
+                                        Ok(deleted) => {
+                                            let current_profile = current_profile_ctx.read().clone();
+                                            match current_profile {
+                                                Some(p) => {
+                                                    if p.id == deleted.id {
+                                                        current_profile_ctx.set(None);
+                                                    }
+                                                },
+                                                None => {}
+                                            }
+                                            let current_profile_id = current_profile_id_ctx.read().clone();
+                                            match current_profile_id.0 {
+                                                Some(pid) => {
+                                                    if pid == deleted.id {
+                                                        current_profile_id_ctx.set(CurrentProfileId(None));
+                                                    }
+                                                }
+                                                None => {}
+                                            }
+                                            nav.replace(router::Route::ProfileIndex {  });
+                                        },
+                                        Err(e) => {
+                                            // TODO error handling
+                                            warn(&format!("{e:?}"));
+                                        }
+                                    }
+                                },
+                                "Delete"
                             }
                             {if !profile.is_default {
                                 rsx!(
