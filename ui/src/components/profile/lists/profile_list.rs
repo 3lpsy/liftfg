@@ -26,7 +26,7 @@ pub fn ProfileList() -> Element {
     });
 
     rsx! {
-        ul { class: "list bg-base-100 rounded-box shadow-md ",
+        ul { class: "list bg-base-100 rounded-box shadow-md",
             for profile in &*profiles_ctx.read() {
                 ProfileListItem {profile: profile.clone() }
             }

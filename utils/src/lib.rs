@@ -1,10 +1,18 @@
 use anyhow::Result;
+use chrono::{DateTime, Utc};
+use chrono_tz::Tz;
 use std::env;
 use std::fs::OpenOptions;
 use std::path::{Path, PathBuf};
 use tracing::info;
 use validator::{ValidationError, ValidationErrors};
 pub mod constants;
+
+pub fn dt_human(timestamp: DateTime<Utc>, timezone: &Tz) -> String {
+    let dt_local = timestamp.with_timezone(timezone);
+    dt_local.format("%B %d, %Y at %I:%M %p").to_string() // Ad
+}
+
 pub fn verrors(field: &'static str, code: &'static str, message: String) -> ValidationErrors {
     ValidationErrors::new().with_error(
         field,

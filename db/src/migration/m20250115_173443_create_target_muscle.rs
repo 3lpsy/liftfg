@@ -1,4 +1,4 @@
-use super::common::TableWithTimestamps;
+use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20250114_010338_create_program as program;
 
 use sea_orm_migration::{prelude::*, schema::*};
@@ -18,6 +18,8 @@ impl MigrationTrait for Migration {
                     .add_timestamps()
                     .to_owned(),
             )
+            .await?;
+        self.create_timestamp_trigger(manager, TargetMuscle::Table.to_string())
             .await?;
         manager
             .create_table(
@@ -58,10 +60,17 @@ impl MigrationTrait for Migration {
                     .add_timestamps()
                     .to_owned(),
             )
-            .await
+            .await?;
+        self.create_timestamp_trigger(manager, ProgramTargetMuscle::Table.to_string())
+            .await?;
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        self.drop_timestamp_trigger(manager, TargetMuscle::Table.to_string())
+            .await?;
+        self.drop_timestamp_trigger(manager, ProgramTargetMuscle::Table.to_string())
+            .await?;
         manager
             .drop_table(Table::drop().table(ProgramTargetMuscle::Table).to_owned())
             .await?;

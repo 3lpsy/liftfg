@@ -1,7 +1,8 @@
 #[cfg(feature = "db")]
-use sea_orm::{prelude::DateTimeUtc, ActiveValue};
-#[cfg(not(feature = "db"))] // Use String in WASM builds
-type DateTimeUtc = String;
+use sea_orm::ActiveValue;
+
+use chrono::{DateTime, Utc};
+
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -83,8 +84,8 @@ pub struct ProfileData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
     pub is_default: bool,
-    pub created_at: DateTimeUtc,
-    pub updated_at: DateTimeUtc,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
 }
 
 #[cfg(feature = "db")]

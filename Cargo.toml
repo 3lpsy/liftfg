@@ -1,7 +1,7 @@
 [workspace]
 # members = ["shell", "ui"]
 resolver = "2"
-members = ["shell", "ui", "cli", "db", "core", "utils"]
+members = ["shell", "ui", "cli", "db", "core", "utils", "scripts/docgen"]
 default-members = ["cli"]
 
 [workspace.dependencies]
@@ -34,6 +34,9 @@ validator = { path = "../../community/validator/validator", features = [
     "derive",
 ] }
 lazy_static = { version = "1" }
+chrono = { version = "0.4", features = ["serde"] }
+chrono-tz = "0.10.1"
+
 # Performance
 [profile]
 

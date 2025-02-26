@@ -1,4 +1,4 @@
-use super::common::TableWithTimestamps;
+use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use sea_orm_migration::{prelude::*, schema::*}; // Import the trait
 
 #[derive(DeriveMigrationName)]
@@ -29,10 +29,14 @@ impl MigrationTrait for Migration {
                         "#,
             )
             .await?;
+        self.create_timestamp_trigger(manager, Profile::Table.to_string())
+            .await?;
         Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        self.drop_timestamp_trigger(manager, Profile::Table.to_string())
+            .await?;
         manager
             .get_connection()
             .execute_unprepared("DROP INDEX IF EXISTS unique_default_profile;")

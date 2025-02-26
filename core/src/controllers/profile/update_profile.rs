@@ -4,11 +4,10 @@ use fgdb::{
         profile::{ProfileData, ProfileUpdateData},
         DbValidationErrors, ResponseData,
     },
-    entity::profile::{self, ActiveModel},
+    entity::profile::{self},
 };
-use fgutils::{constants::VALIDATION_REQUEST_FIELD, verrors};
+use fgutils::verrors;
 use sea_orm::{ActiveModelTrait, DatabaseConnection, EntityTrait, Set};
-use tracing::warn;
 use validator::{Validate, ValidationErrors};
 
 // should posts also accept params?
@@ -28,7 +27,6 @@ pub async fn update(
     match profile {
         Some(profile) => {
             let mut profile: profile::ActiveModel = profile.into();
-
             if let Some(name) = data.name {
                 profile.name = Set(name);
             }

@@ -1,4 +1,4 @@
-use super::common::TableWithTimestamps;
+use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20220101_000001_create_profile as profile;
 
 use sea_orm_migration::{prelude::*, schema::*};
@@ -28,10 +28,15 @@ impl MigrationTrait for Migration {
                     .add_timestamps()
                     .to_owned(),
             )
-            .await
+            .await?;
+        self.create_timestamp_trigger(manager, Program::Table.to_string())
+            .await?;
+        Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        self.drop_timestamp_trigger(manager, Program::Table.to_string())
+            .await?;
         manager
             .drop_table(Table::drop().table(Program::Table).to_owned())
             .await

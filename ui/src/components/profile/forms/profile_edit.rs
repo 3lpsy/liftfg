@@ -62,12 +62,16 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                         }
                     }
                 }
-                for (field, messages) in error_messages.read().iter() {
-                    li {
-                        span { class: "font-semibold", "{field}: " }
-                        span { "{messages}" }
+                div {
+                    class: "w-full break-words",
+                    for (field, messages) in error_messages.read().iter() {
+                        li {
+                            span { class: "font-semibold", "{field}: " }
+                            span { "{messages}" }
+                        }
                     }
                 }
+
                 // Submit button
                 div { class: "form-control mt-6",
                     button { class: "btn btn-primary", "Update Profile" }

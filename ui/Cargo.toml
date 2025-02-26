@@ -21,7 +21,8 @@ tracing = { workspace = true }
 log = { workspace = true }
 validator = { workspace = true }
 gloo-timers = { version = "0.3", features = ["futures"] }
-
+chrono = { workspace = true }
+chrono-tz = { workspace = true }
 
 [features]
 default = ["web"]

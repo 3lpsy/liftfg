@@ -4,9 +4,11 @@ use crate::components::profile::{ProfileCreateForm, ProfileEditForm};
 use crate::router;
 use crate::services::profile::get_profile;
 use crate::views::Loading;
+use chrono_tz::Tz;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
 use fgdb::data::profile::ProfileShowParams;
+use fgutils::dt_human;
 
 #[component]
 pub fn ProfileShow(profile_id: usize) -> Element {
@@ -30,54 +32,57 @@ pub fn ProfileShow(profile_id: usize) -> Element {
             });
         }
     });
-
+    let timezone = use_context::<Signal<Tz>>();
     rsx! {
-        SuspenseBoundary {
-            fallback: |_| rsx! { Loading {  }},
-            match &*profile_sig.read() {
-                None => rsx! { Loading {  }},
-                Some(profile) => {
-                    rsx! {
-                        div {
-                            class: "card bg-base-100 shadow-md rounded-lg p-6",
-                            h1 {
-                                class: "text-2xl font-bold mb-4 text-base-content",
-                                "{profile.name}"
-                            }
-                            p {
-                                class: "text-sm text-base-content mb-2",
-                                "Created at: {profile.created_at}"
-                            }
-                            // Default status information
-                            p {
-                                class: "text-sm text-base-content mb-4",
-                                if profile.is_default {
-                                    "Default Profile: Yes"
-                                } else {
-                                    "Default Profile: No"
-                                }
-                            }
-                            div {
-                                class: "flex flex-col space-y-2",
-                                Link {
-                                    to: router::Route::ProfileEdit { profile_id: profile.id as usize },
-                                    class: "btn btn-primary w-full",
-                                    "Edit"
-                                }
-                                {if !profile.is_default {
-                                    rsx!(
-                                        button {
-                                            class: "btn btn-secondary w-full",
-                                            "Activate"
-                                        }
-                                    )
-                                } else { rsx!() } }
+        match &*profile_sig.read() {
+            None => rsx! { Loading {  }},
+            Some(profile) => {
+                rsx! {
+                    div {
+                        class: "card bg-base-100 shadow-md rounded-lg p-6",
+                        h1 {
+                            class: "text-2xl font-bold mb-4 text-base-content",
+                            "{profile.name}"
+                        }
+                        p {
+                            class: "text-sm text-base-content mb-2",
+                            "Created at: {dt_human(profile.created_at, &(*timezone.read()))}"
+                        }
+                        p {
+                            class: "text-sm text-base-content mb-2",
+                            {}
+                            "Updated at: {dt_human(profile.updated_at, &(*timezone.read()))}"
+                        }
+                        // Default status information
+                        p {
+                            class: "text-sm text-base-content mb-4",
+                            if profile.is_default {
+                                "Default Profile: Yes"
+                            } else {
+                                "Default Profile: No"
                             }
                         }
-
+                        div {
+                            class: "flex flex-col space-y-2",
+                            Link {
+                                to: router::Route::ProfileEdit { profile_id: profile.id as usize },
+                                class: "btn btn-primary w-full",
+                                "Edit"
+                            }
+                            {if !profile.is_default {
+                                rsx!(
+                                    button {
+                                        class: "btn btn-secondary w-full",
+                                        "Activate"
+                                    }
+                                )
+                            } else { rsx!() } }
+                        }
                     }
+
                 }
             }
+
         }
     }
 }
@@ -87,14 +92,11 @@ pub fn ProfileIndex() -> Element {
     let profiles_ctx: Signal<Vec<ProfileData>> = use_signal(|| vec![]);
     use_context_provider(|| profiles_ctx.clone());
     rsx! {
-        SuspenseBoundary {
-            fallback: |_| rsx!{ Loading {  }},
-            h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Profiles" },
-            div {
-                class: "divider"
-            }
-            ProfileList{}
+        h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Profiles" },
+        div {
+            class: "divider"
         }
+        ProfileList{}
     }
 }
 

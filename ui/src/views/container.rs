@@ -61,13 +61,20 @@ pub fn Container() -> Element {
                 rsx! {
                     NavBar {},
                     div {
-                        class: "page container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col",
+                        class: "page container mx-auto flex flex-col",
                         SuspenseBoundary {
                             fallback: |_| rsx!{
-                                Loading {  }
+                                div {
+                                    class: "flex items-center justify-center flex-1",
+                                    Loading {  }
+                                }
                             },
-                            Outlet::<Route> {}
-                            "Route: {route}"
+                            div {
+                                class: "mx-4 my-2",
+                                Outlet::<Route> {}
+                                "Route: {route}"
+                            }
+
                         }
 
                     }

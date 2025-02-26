@@ -9,12 +9,11 @@ pub fn ProfileListItem(profile: ProfileData) -> Element {
         li {
             class: "list-row",
             div {
-                class: "text-4xl font-thin opacity-30 tabular-nums",
+                class: "text-4xl tabular-nums",
                 "{profile.id}"
             }
-
             div {
-                class: "flex-1 text-lg sm:text-xl font-semibold opacity-80 text-center uppercase",
+                class: "flex-1 text-lg sm:text-xl font-semibold opacity-80 text-center uppercase self-center",
                 if profile.is_default {
                     "{profile.name} (DEFAULT)"
                 } else {
