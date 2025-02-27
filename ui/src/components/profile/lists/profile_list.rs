@@ -1,5 +1,6 @@
 use dioxus::prelude::*;
 use fgdb::data::{profile::ProfileData, DefaultPaginationParams};
+use validator::ValidationErrors;
 
 use super::profile_list_item::ProfileListItem;
 use crate::{router, services::profile::get_profiles};
@@ -21,7 +22,9 @@ pub fn ProfileList() -> Element {
             *profiles_ctx.write() = profiles.clone();
         }
         Err(e) => {
-            nav.replace(router::Route::Errors { errors: e.clone() });
+            let mut app_errors = use_context::<Signal<ValidationErrors>>();
+            app_errors.set(e.clone());
+            nav.replace(router::Route::Errors {});
         }
     });
 

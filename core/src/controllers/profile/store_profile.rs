@@ -4,10 +4,11 @@ use fgdb::{
         profile::{ProfileData, ProfileStoreData},
         DbValidationErrors, ResponseData,
     },
-    entity::profile::ActiveModel,
+    entity::profile::{self, ActiveModel},
 };
 use fgutils::constants::VALIDATION_REQUEST_FIELD;
-use sea_orm::{ActiveModelTrait, DatabaseConnection};
+use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
+use sea_orm::{DbErr, TransactionTrait};
 use tracing::warn;
 use validator::{Validate, ValidationErrors};
 
@@ -19,11 +20,26 @@ pub async fn store(
 ) -> Result<ResponseData<ProfileData>, ValidationErrors> {
     // structural validation
     data.validate()?;
+    // <Fn, A, B> -> Result<A, B>
+    let inserted = dbc
+        .transaction::<_, _, DbErr>(|txn| {
+            Box::pin(async move {
+                if let Some(is_default) = data.is_default {
+                    if is_default {
+                        if let Some(existing) = profile::Entity::by_default(txn).await? {
+                            let mut am: ActiveModel = existing.into();
+                            am.is_default = Set(false);
+                            am.update(txn).await?;
+                        }
+                    }
+                }
+                let row = ActiveModel::from(data).insert(txn).await?;
+                Ok(row)
+            })
+        })
+        .await;
 
-    // application validation
-    // main failure scenarios: no two defaults, unique name clash
-    // is there any reason to not just let the db handle it?
-    match ActiveModel::from(data).insert(dbc).await {
+    match inserted {
         Ok(d) => Ok(ResponseData::from_data(d.into())),
         Err(dbe) => {
             let errors: ValidationErrors = DbValidationErrors::from(dbe).into();

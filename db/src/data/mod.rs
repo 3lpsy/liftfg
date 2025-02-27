@@ -9,6 +9,8 @@ use sea_orm::ConnectionTrait;
 use sea_orm::DbErr;
 #[cfg(feature = "db")]
 use sea_orm::SelectorTrait;
+#[cfg(feature = "db")]
+use sea_orm::TransactionError;
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "db")]
 use std::borrow::Cow;
@@ -217,6 +219,15 @@ pub struct DbValidationErrors(DbErr);
 impl From<DbErr> for DbValidationErrors {
     fn from(err: DbErr) -> Self {
         DbValidationErrors(err)
+    }
+}
+#[cfg(feature = "db")]
+impl From<TransactionError<DbErr>> for DbValidationErrors {
+    fn from(err: TransactionError<DbErr>) -> Self {
+        match err {
+            TransactionError::Connection(e) => DbValidationErrors(e),
+            TransactionError::Transaction(e) => DbValidationErrors(e),
+        }
     }
 }
 #[cfg(feature = "db")]

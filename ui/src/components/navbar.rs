@@ -31,7 +31,7 @@ pub fn NavBar() -> Element {
                 if profile_ctx.read().is_some() {
                     Link {
                         class: "btn btn-square btn-ghost",
-                        to: Route::ProfileIndex {},
+                        to: Route::ProfileIndexView {},
                         ProfileIcon {}
                     }
                 }

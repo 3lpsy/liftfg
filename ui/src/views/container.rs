@@ -2,24 +2,22 @@
 use crate::components::dock::Dock;
 use crate::components::navbar::NavBar;
 use crate::logging::{self, info};
+use crate::router;
 use crate::services::profile::get_profile;
-use crate::state::CurrentProfileId;
 use crate::{router::Route, views::Loading};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileShowParams};
+use validator::ValidationErrors;
 
 #[component]
 pub fn Container() -> Element {
     logging::info("Rendering Container");
 
-    let current_profile_id_ctx = use_context::<Signal<CurrentProfileId>>();
-    let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
-    // value only changes when future state changes, not dep?
-    let profile = use_resource(move || async move {
+    let profile_res = use_resource(move || async move {
         logging::info("Loading profile resource callback");
         // implicitly use is_default if current is None, in that case, check the error
         get_profile(Some(ProfileShowParams {
-            id: (*current_profile_id_ctx.read()).0,
+            id: None,
             name: None,
         }))
         .await
@@ -27,22 +25,22 @@ pub fn Container() -> Element {
     .suspend()?;
 
     let nav = use_navigator();
-    // happy path, profile has resolved
-    use_effect(move || match &*profile.read() {
+    let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+    use_effect(move || match &*profile_res.read() {
         Ok(profile) => {
             info("Updating current profile in container");
             *current_profile_ctx.write() = Some(profile.clone());
-            // nav.replace(Route::Home {});
-            // we don't really want to nav home do we
         }
         Err(e) => {
             let should_create_profile = e.field_errors().iter().any(|(field, errors)| {
                 field == "is_default" && errors.iter().any(|err| err.code == "exists")
             });
             if should_create_profile {
-                nav.replace(Route::ProfileCreate {});
+                nav.replace(router::Route::ProfileCreateOnboardView {});
             } else {
-                nav.replace(Route::Errors { errors: e.clone() });
+                let mut app_errors = use_context::<Signal<ValidationErrors>>();
+                app_errors.set(e.clone());
+                nav.replace(router::Route::Errors {});
             }
         }
     });
@@ -50,7 +48,7 @@ pub fn Container() -> Element {
     let route: Route = use_route();
     rsx! {
         match route {
-            Route::ProfileCreate {} => rsx! {
+            Route::ProfileCreateOnboardView {} => rsx! {
                 SuspenseBoundary {
                     fallback: |_| rsx!{ Loading {  }},
                     Outlet::<Route> {}
@@ -72,9 +70,8 @@ pub fn Container() -> Element {
                             div {
                                 class: "mx-4 my-2",
                                 Outlet::<Route> {}
-                                "Route: {route}"
                             }
-
+                            div { class: "mx-4 my-2", p {"Route: {route}"} }
                         }
 
                     }

@@ -5,8 +5,8 @@ use fgdb::data::{
     },
     DefaultPaginationParams,
 };
-use gloo_timers::future::sleep;
-use std::time::Duration;
+// use gloo_timers::future::sleep;
+// use std::time::Duration;
 use validator::ValidationErrors;
 
 use super::{get, post};
@@ -41,6 +41,6 @@ pub async fn update_profile(args: ProfileUpdateData) -> Result<ProfileData, Vali
 
 pub async fn delete_profile(args: ProfileDeleteParams) -> Result<ProfileData, ValidationErrors> {
     info("Deleting Profile");
-    sleep(Duration::from_secs(1)).await;
+    // sleep(Duration::from_secs(1)).await;
     get("profile_delete", Some(args)).await
 }

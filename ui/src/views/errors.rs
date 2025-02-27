@@ -3,8 +3,10 @@ use dioxus::prelude::*;
 use validator::ValidationErrors;
 
 #[component]
-pub fn Errors(errors: ValidationErrors) -> Element {
+pub fn Errors() -> Element {
+    let mut app_errors = use_context::<Signal<ValidationErrors>>();
+    use_drop(move || app_errors.set(ValidationErrors::new()));
     rsx! {
-        code { "{errors:?}"}
+        code { "{app_errors.read():?}"}
     }
 }

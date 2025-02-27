@@ -15,13 +15,13 @@ pub fn ProfileListItem(profile: ProfileData) -> Element {
             div {
                 class: "flex-1 text-lg sm:text-xl font-semibold opacity-80 text-center uppercase self-center",
                 if profile.is_default {
-                    "{profile.name} (DEFAULT)"
+                    "{profile.name} (ACTIVE)"
                 } else {
                     "{profile.name}"
                 }
             }
             Link {
-                to: router::Route::ProfileShow { profile_id: profile.id as usize },
+                to: router::Route::ProfileShowView { profile_id: profile.id as usize },
                 class: "btn btn-square btn-ghost",
                 ArrowRight {}
             }

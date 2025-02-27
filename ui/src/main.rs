@@ -7,16 +7,14 @@ mod icons;
 mod logging;
 mod router;
 mod services;
-mod state;
 mod views;
 
 use std::str::FromStr;
 
 use chrono_tz::Tz;
 use dioxus::prelude::*;
-use document::Meta;
 use fgdb::data::profile::ProfileData;
-use state::CurrentProfileId;
+use validator::ValidationErrors;
 use views::Loading;
 // use state::AppState;
 
@@ -32,12 +30,11 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 #[component]
 fn App() -> Element {
     logging::info("Rendering App");
-
-    let current_profile_id: Signal<CurrentProfileId> = use_signal(|| CurrentProfileId(None));
-    use_context_provider(|| current_profile_id.clone());
-
     let current_profile: Signal<Option<ProfileData>> = use_signal(|| None);
     use_context_provider(|| current_profile.clone());
+
+    let app_errors: Signal<ValidationErrors> = use_signal(|| ValidationErrors::new());
+    use_context_provider(|| app_errors.clone());
 
     // set theme, wasm only?
     use_hook(move || {
@@ -50,8 +47,7 @@ fn App() -> Element {
             .expect("no document element");
         let _ = html.set_attribute("data-theme", "light");
     });
-    // does this need to be signal?
-    // set timezone
+
     let mut timezone: Signal<Tz> = use_signal(|| Tz::America__Chicago);
     use_context_provider(|| timezone.clone());
 
@@ -65,10 +61,7 @@ fn App() -> Element {
                     if let Some(tz_str) = value.as_str() {
                         // Extract &str from serde_json::Value
                         match Tz::from_str(tz_str) {
-                            Ok(valid_tz) => {
-                                logging::info(&format!("{valid_tz:?}"));
-                                timezone.set(valid_tz)
-                            }
+                            Ok(valid_tz) => timezone.set(valid_tz),
                             Err(_) => logging::info(&format!("Invalid timezone: {}", tz_str)),
                         }
                     } else {

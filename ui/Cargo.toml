@@ -16,6 +16,7 @@ wasm-bindgen-futures = "0.4"
 web-sys = "0.3"
 js-sys = "0.3"
 serde = { workspace = true }
+serde_json = { workspace = true }
 serde-wasm-bindgen = "0.6"
 tracing = { workspace = true }
 log = { workspace = true }

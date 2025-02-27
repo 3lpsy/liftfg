@@ -1,15 +1,20 @@
 use dioxus::prelude::*;
 
-use crate::{icons::{GearIcon, HomeIcon, InboxIcon}, router};
+use crate::{
+    icons::{GearIcon, HomeIcon, InboxIcon},
+    router,
+};
 use router::Route;
 
 #[component]
 pub fn Dock() -> Element {
     let route: Route = use_route();
     let active_tab = match route {
-        Route::ProfileIndex {..}  | Route::ProfileShow {..}  | Route::ProfileCreate {..}=> "settings",
-        Route::ProgramCreate {.. } => "programs",
-        _ => "home"
+        Route::ProfileIndexView { .. }
+        | Route::ProfileShowView { .. }
+        | Route::ProfileCreateView { .. } => "settings",
+        Route::ProgramCreate { .. } => "programs",
+        _ => "home",
     };
     rsx! {
         div { class: "dock bg-base-300",

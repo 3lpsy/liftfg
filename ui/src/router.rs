@@ -1,11 +1,13 @@
 #![allow(non_snake_case)]
+
 use crate::views::{
-    Container, Errors, Empty, Home, ResourceNotFound, NotFoundFallback, ProfileCreate, ProfileEdit, ProfileIndex, ProfileShow,
-    ProgramCreate,
+    Container, Empty, Errors, Home, NotFoundFallback, ProfileCreateOnboardView, ProfileCreateView,
+    ProfileEditView, ProfileIndexView, ProfileShowView, ProgramCreate,
 };
 use dioxus::prelude::*;
-use validator::ValidationErrors;
+
 // use dioxus_router::prelude::*;
+//
 
 /// An enum of all of the possible routes in the app.
 #[derive(Routable, Clone)]
@@ -15,23 +17,22 @@ pub enum Route {
     #[layout(Container)]
         #[route("/")]
         Home {},
-        #[route("/onboard/profile/create")]
-        ProfileCreate {},
+        #[route("/profile/create/onboard")]
+        ProfileCreateOnboardView {},
         #[route("/profile")]
-        ProfileIndex {},
+        ProfileIndexView {},
+        #[route("/profile/create")]
+        ProfileCreateView {},
         #[route("/profile/:profile_id")]
-        ProfileShow {profile_id: usize},
+        ProfileShowView {profile_id: usize},
         #[route("/profile/:profile_id/edit")]
-        ProfileEdit {profile_id: usize},
+        ProfileEditView {profile_id: usize},
         #[route("/profile/:profile_id/program/create")]
         ProgramCreate {
             profile_id: usize
         },
-        #[route("/error")]
-        Errors { errors: ValidationErrors },
-        #[route("/not-found")]
-        ResourceNotFound { errors: Option<ValidationErrors> },
-
+        #[route("/errors")]
+        Errors { },
         #[route("/:..route")]
         NotFoundFallback { route: Vec<String> },
     #[end_layout]

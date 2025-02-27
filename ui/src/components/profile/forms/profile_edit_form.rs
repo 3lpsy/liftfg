@@ -27,30 +27,33 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
             .collect::<Vec<_>>()
     });
     rsx! {
-        form {
-            class: "card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100",
-            onsubmit: move |e| async move {
-                e.prevent_default();
-                let data = form_data.read().clone();
-                if let Err(validation_errors) = data.validate() {
-                    form_errors.set(validation_errors);
-                } else {
-                    match update_profile((data).clone()).await {
-                        Ok(profile) => {
-                            form_data.set(profile.into()); // probably unnecssary
-                            nav.replace(router::Route::ProfileIndex {  });
-                        },
-                        Err(e) => form_errors.set(e)
+        div {
+            class: "card w-full bg-base-100",
+            form {
+                class: "card-body",
+                onsubmit: move |e| async move {
+                    e.prevent_default();
+                    let data = form_data.read().clone();
+                    if let Err(validation_errors) = data.validate() {
+                        form_errors.set(validation_errors);
+                    } else {
+                        match update_profile((data).clone()).await {
+                            Ok(profile) => {
+                                form_data.set(profile.into()); // probably unnecssary
+                                nav.replace(router::Route::ProfileIndexView {  });
+                            },
+                            Err(e) => form_errors.set(e)
+                        }
                     }
-                }
-            },
-            div { class: "card-body",
-                div { class: "form-control",
-                    label { class: "label",
-                        span { class: "label-text", "Name" }
+                },
+                fieldset {
+                    class: "fieldset",
+                    // legend { class: "fieldset-legend", "Details"}
+                    label { class: "fieldset-label",
+                        "Name"
                     }
                     input {
-                        class: "input input-bordered",
+                        class: "input w-full",
                         r#type: "text",
                         placeholder: "Enter your name",
                         value: "{form_data.read().name.as_ref().map_or_else(String::new, |s| s.clone())}",
@@ -62,21 +65,18 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                         }
                     }
                 }
-                div {
-                    class: "w-full break-words",
-                    for (field, messages) in error_messages.read().iter() {
-                        li {
-                            span { class: "font-semibold", "{field}: " }
-                            span { "{messages}" }
-                        }
+                for (field, messages) in error_messages.read().iter() {
+                    p {
+                        class: "fieldset-label",
+                        span { class: "font-semibold", "{field}: " }
+                        span { "{messages}" }
                     }
                 }
-
-                // Submit button
-                div { class: "form-control mt-6",
-                    button { class: "btn btn-primary", "Update Profile" }
-                }
+                button { class: "mt-2 btn btn-primary w-full", "Update Profile" }
             }
+
+
+
         }
     }
 }
