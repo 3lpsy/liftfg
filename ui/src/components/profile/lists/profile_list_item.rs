@@ -34,11 +34,17 @@ pub fn ProfileListItem(profile: ProfileData) -> Element {
                     class:"modal-action",
                     form {
                         method:"dialog",
-                        class: "modal-backdrop",
                         button {
                             class:"btn", "Close"
                         }
                     }
+                }
+            }
+            form {
+                method:"dialog",
+                class: "modal-backdrop",
+                onclick: move |_| {
+                    modal().expect("modal signal").close();
                 }
             }
         }
