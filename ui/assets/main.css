@@ -2651,6 +2651,9 @@
   .bg-base-300 {
     background-color: var(--color-base-300);
   }
+  .bg-warning {
+    background-color: var(--color-warning);
+  }
   .p-2 {
     padding: calc(var(--spacing) * 2);
   }
@@ -2812,6 +2815,10 @@
   .btn-error {
     --btn-color: var(--color-error);
     --btn-fg: var(--color-error-content);
+  }
+  .btn-info {
+    --btn-color: var(--color-info);
+    --btn-fg: var(--color-info-content);
   }
   .btn-outline {
     &:not(.btn-active, :hover, :active:focus, :focus-visible, :disabled, [disabled], .btn-disabled) {
