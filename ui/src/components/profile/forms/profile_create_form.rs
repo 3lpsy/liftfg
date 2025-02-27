@@ -57,6 +57,7 @@ pub fn ProfileCreateForm() -> Element {
                             Err(e) => form_errors.set(e)
                         }
                     }
+                    Ok(())
                 },
                 fieldset {
                     class: "fieldset",
@@ -88,7 +89,6 @@ pub fn ProfileCreateForm() -> Element {
                                 oninput: move |evt| {
                                     let v = evt.value().parse::<bool>()?;
                                     form_data.write().is_default = Some(v);
-
                                     Ok(())
                                 }
                             },

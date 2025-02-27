@@ -11,6 +11,7 @@ use validator::ValidationErrors;
 #[component]
 pub fn ProfileEditView(profile_id: usize) -> Element {
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
     let profile = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {

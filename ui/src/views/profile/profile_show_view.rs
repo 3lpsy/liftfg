@@ -90,7 +90,6 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                                                     let mut app_errors = use_context::<Signal<ValidationErrors>>();
                                                     app_errors.set(e.clone());
                                                     nav.replace(router::Route::Errors {  });
-
                                                 }
                                             }
                                         },

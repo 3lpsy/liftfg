@@ -26,6 +26,8 @@ pub fn Container() -> Element {
 
     let nav = use_navigator();
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
+
+    // mostly non reactive
     use_effect(move || match &*profile_res.read() {
         Ok(profile) => {
             info("Updating current profile in container");

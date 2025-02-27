@@ -4,12 +4,28 @@ use chrono::{DateTime, Utc};
 use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
+#[sea_orm(rs_type = "String", db_type = "String(StringLen::N(1))")]
+pub enum EquipmentType {
+    #[sea_orm(string_value = "CABLE")]
+    Cable,
+    #[sea_orm(string_value = "MACHINE")]
+    Machine,
+    #[sea_orm(string_value = "DUMBBELL")]
+    Dumbbell,
+    #[sea_orm(string_value = "BARBELL")]
+    Barbell,
+    #[sea_orm(string_value = "OTHER")]
+    Other,
+}
+
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
 #[sea_orm(table_name = "exercise")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub name: String,
+    pub equipment_type: EquipmentType,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

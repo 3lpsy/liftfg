@@ -2037,6 +2037,18 @@
   .isolate {
     isolation: isolate;
   }
+  .modal-backdrop {
+    grid-column-start: 1;
+    grid-row-start: 1;
+    display: grid;
+    align-self: stretch;
+    justify-self: stretch;
+    color: transparent;
+    z-index: -1;
+    button {
+      cursor: pointer;
+    }
+  }
   .modal-box {
     grid-column-start: 1;
     grid-row-start: 1;
@@ -2211,6 +2223,12 @@
       margin-inline-start: calc(var(--border, 1px) * -1);
       margin-block-start: 0;
     }
+  }
+  .modal-action {
+    margin-top: calc(0.25rem * 6);
+    display: flex;
+    justify-content: flex-end;
+    gap: calc(0.25rem * 2);
   }
   .validator-hint {
     margin-top: calc(0.25rem * 2);
@@ -2449,6 +2467,21 @@
   }
   .table {
     display: table;
+  }
+  .modal-bottom {
+    place-items: end;
+    :where(.modal-box) {
+      height: auto;
+      width: 100%;
+      max-width: none;
+      max-height: calc(100vh - 5em);
+      translate: 0 100%;
+      scale: 1;
+      --modal-tl: var(--radius-box);
+      --modal-tr: var(--radius-box);
+      --modal-bl: 0;
+      --modal-br: 0;
+    }
   }
   .btn-square {
     padding-inline: calc(0.25rem * 0);
@@ -2800,6 +2833,23 @@
   .btn-warning {
     --btn-color: var(--color-warning);
     --btn-fg: var(--color-warning-content);
+  }
+  .sm\:modal-middle {
+    @media (width >= 40rem) {
+      place-items: center;
+      :where(.modal-box) {
+        height: auto;
+        width: calc(11/12 * 100%);
+        max-width: 32rem;
+        max-height: calc(100vh - 5em);
+        translate: 0 2%;
+        scale: 98%;
+        --modal-tl: var(--radius-box);
+        --modal-tr: var(--radius-box);
+        --modal-bl: var(--radius-box);
+        --modal-br: var(--radius-box);
+      }
+    }
   }
   .sm\:px-6 {
     @media (width >= 40rem) {

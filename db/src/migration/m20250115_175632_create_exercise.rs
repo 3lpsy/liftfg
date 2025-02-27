@@ -27,6 +27,7 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Exercise::Id))
                     .col(string(Exercise::Name).not_null())
+                    .col(string(Exercise::EquipmentType).not_null().default("OTHER"))
                     .add_timestamps()
                     .to_owned(),
             )
@@ -99,6 +100,7 @@ pub enum Exercise {
     Table,
     Id,
     Name,
+    EquipmentType,
 }
 #[derive(DeriveIden)]
 pub enum Muscle {
