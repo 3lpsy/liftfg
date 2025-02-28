@@ -15,7 +15,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
-    let profile = use_resource(move || async move {
+    let profile_res = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {
             id: Some(profile_id as i32),
             name: None,
@@ -24,7 +24,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
     })
     .suspend()?;
     let nav = use_navigator();
-    use_effect(move || match &*profile.read() {
+    use_effect(move || match profile_res() {
         Ok(profile) => {
             profile_sig.set(Some(profile.clone()));
         }
@@ -36,7 +36,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
     });
     let timezone = use_context::<Signal<Tz>>();
     rsx! {
-        match &*profile_sig.read() {
+        match profile_sig() {
             None => rsx! { Loading {  }},
             Some(profile) => {
                 rsx! {
@@ -48,12 +48,12 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                         }
                         p {
                             class: "text-sm text-base-content mb-2",
-                            "Created at: {dt_human(profile.created_at, &(*timezone.read()))}"
+                            "Created at: {dt_human(profile.created_at, &timezone())}"
                         }
                         p {
                             class: "text-sm text-base-content mb-2",
                             {}
-                            "Updated at: {dt_human(profile.updated_at, &(*timezone.read()))}"
+                            "Updated at: {dt_human(profile.updated_at, &timezone())}"
                         }
                         // Default status information
                         p {

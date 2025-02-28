@@ -13,7 +13,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
-    let profile = use_resource(move || async move {
+    let profile_res = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {
             id: Some(profile_id as i32),
             name: None,
@@ -22,7 +22,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
     })
     .suspend()?;
     let nav = use_navigator();
-    use_effect(move || match &*profile.read() {
+    use_effect(move || match profile_res() {
         Ok(profile) => {
             profile_sig.set(Some(profile.clone()));
         }
@@ -35,7 +35,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
     rsx! {
         SuspenseBoundary {
             fallback: |_| rsx! { Loading {  }},
-            match &*profile_sig.read() {
+            match profile_sig() {
                 None => rsx! { Loading {}},
                 Some(profile) => {
                     rsx! {

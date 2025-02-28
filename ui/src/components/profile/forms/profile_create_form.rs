@@ -10,8 +10,7 @@ pub fn ProfileCreateForm() -> Element {
     let mut form_errors = use_signal(|| ValidationErrors::new());
     let nav = use_navigator();
     let error_messages = use_memo(move || {
-        form_errors
-            .read()
+        form_errors()
             .field_errors()
             .iter()
             .map(|(field, errors)| {
@@ -34,15 +33,14 @@ pub fn ProfileCreateForm() -> Element {
                 class: "card-body",
                 onsubmit: move |e| async move {
                     e.prevent_default();
-                    let mut data = form_data.read().clone();
-                    if let Err(validation_errors) = data.validate() {
+                    if let Err(validation_errors) = form_data().validate() {
                         form_errors.set(validation_errors);
                     } else {
                         let current_profile = current_profile_ctx();
                         if current_profile.is_none() {
-                            data.is_default = Some(true);
+                            form_data().is_default = Some(true);
                         }
-                        match create_profile((data).clone()).await {
+                        match create_profile(form_data()).await {
                             Ok(profile) => {
                                 let new_profile_id = profile.id;
                                 // if there was no previous current profile, set it
@@ -70,7 +68,7 @@ pub fn ProfileCreateForm() -> Element {
                         class: "input w-full",
                         r#type: "text",
                         placeholder: "Enter your name",
-                        value: "{form_data.read().name}",
+                        value: "{form_data().name}",
                         name: "name",
                         oninput: move |evt| {
                             form_data.with_mut(|data| {
@@ -95,7 +93,7 @@ pub fn ProfileCreateForm() -> Element {
                         }
 
                     }
-                    for (field, messages) in error_messages.read().iter() {
+                    for (field, messages) in error_messages().iter() {
                         li {
                             span { class: "font-semibold", "{field}: " }
                             span { "{messages}" }

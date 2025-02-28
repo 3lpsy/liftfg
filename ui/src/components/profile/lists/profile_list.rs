@@ -9,15 +9,15 @@ use crate::{router, services::profile::get_profiles};
 pub fn ProfileList() -> Element {
     let mut profiles_ctx = use_context::<Signal<Vec<ProfileData>>>();
     let pagination = use_signal(|| DefaultPaginationParams::default());
-
-    let profiles = use_resource(move || async move {
-        let p = (*pagination.read()).clone();
-        get_profiles(Some(p)).await
+    let profiles_reload_trigger = use_signal(|| 0);
+    let profiles_res = use_resource(move || async move {
+        let _ = profiles_reload_trigger.read();
+        get_profiles(Some(pagination())).await
     })
     .suspend()?;
     let nav = use_navigator();
 
-    use_effect(move || match &*profiles.read() {
+    use_effect(move || match profiles_res() {
         Ok(profiles) => {
             *profiles_ctx.write() = profiles.clone();
         }
@@ -30,8 +30,11 @@ pub fn ProfileList() -> Element {
 
     rsx! {
         ul { class: "list bg-base-100 rounded-box shadow-md",
-            for profile in &*profiles_ctx.read() {
-                ProfileListItem {profile: profile.clone() }
+            for profile in profiles_ctx() {
+                ProfileListItem {
+                    profile: profile.clone(),
+                    profiles_reload_trigger: profiles_reload_trigger
+                }
             }
         }
     }

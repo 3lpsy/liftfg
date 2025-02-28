@@ -28,7 +28,7 @@ pub fn NavBar() -> Element {
             }
             div { class: "navbar-end",
                 // profile if exists
-                if profile_ctx.read().is_some() {
+                if profile_ctx().is_some() {
                     Link {
                         class: "btn btn-square btn-ghost",
                         to: Route::ProfileIndexView {},

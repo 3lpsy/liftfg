@@ -1910,6 +1910,12 @@
   .sticky {
     position: sticky;
   }
+  .top-2 {
+    top: calc(var(--spacing) * 2);
+  }
+  .right-2 {
+    right: calc(var(--spacing) * 2);
+  }
   .input {
     cursor: text;
     border: var(--border) solid transparent;
@@ -2483,6 +2489,12 @@
       --modal-br: 0;
     }
   }
+  .btn-circle {
+    border-radius: calc(infinity * 1px);
+    padding-inline: calc(0.25rem * 0);
+    width: var(--size);
+    height: var(--size);
+  }
   .btn-square {
     padding-inline: calc(0.25rem * 0);
     width: var(--size);
@@ -2713,6 +2725,11 @@
     font-size: 1.125rem;
     --btn-p: 1.25rem;
     --size: calc(var(--size-field, 0.25rem) * 12);
+  }
+  .btn-sm {
+    font-size: 0.75rem;
+    --btn-p: 0.75rem;
+    --size: calc(var(--size-field, 0.25rem) * 8);
   }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);

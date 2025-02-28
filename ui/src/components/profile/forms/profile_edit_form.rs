@@ -9,8 +9,7 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
     let mut form_errors = use_signal(|| ValidationErrors::new());
     let nav = use_navigator();
     let error_messages = use_memo(move || {
-        form_errors
-            .read()
+        form_errors()
             .field_errors()
             .iter()
             .map(|(field, errors)| {
@@ -33,11 +32,10 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                 class: "card-body",
                 onsubmit: move |e| async move {
                     e.prevent_default();
-                    let data = form_data.read().clone();
-                    if let Err(validation_errors) = data.validate() {
+                    if let Err(validation_errors) = form_data().validate() {
                         form_errors.set(validation_errors);
                     } else {
-                        match update_profile((data).clone()).await {
+                        match update_profile(form_data()).await {
                             Ok(profile) => {
                                 form_data.set(profile.into()); // probably unnecssary
                                 nav.replace(router::Route::ProfileIndexView {  });
@@ -56,7 +54,7 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                         class: "input w-full",
                         r#type: "text",
                         placeholder: "Enter your name",
-                        value: "{form_data.read().name.as_ref().map_or_else(String::new, |s| s.clone())}",
+                        value: "{form_data().name.map_or_else(String::new, |s| s.clone())}",
                         name: "name",
                         oninput: move |evt| {
                             form_data.with_mut(|data| {
@@ -65,7 +63,7 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                         }
                     }
                 }
-                for (field, messages) in error_messages.read().iter() {
+                for (field, messages) in error_messages().iter() {
                     p {
                         class: "fieldset-label",
                         span { class: "font-semibold", "{field}: " }

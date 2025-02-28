@@ -28,7 +28,8 @@ pub fn Container() -> Element {
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
     // mostly non reactive
-    use_effect(move || match &*profile_res.read() {
+    //
+    use_effect(move || match profile_res() {
         Ok(profile) => {
             info("Updating current profile in container");
             *current_profile_ctx.write() = Some(profile.clone());
