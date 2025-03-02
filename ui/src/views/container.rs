@@ -47,9 +47,10 @@ pub fn Container() -> Element {
             }
         }
     });
-    // this causes rerender on route change
-    let route: Route = use_route();
-    let show_dock = use_memo(|| !route.to_string().starts_with("/onboard"));
+    // TODO: fix
+    let router = router();
+    let route = use_memo(move || router.current::<Route>());
+    let show_dock = use_memo(move || !route.to_string().starts_with("/onboard"));
     rsx! {
         NavBar {},
         div {
@@ -64,12 +65,12 @@ pub fn Container() -> Element {
                 div {
                     class: "mx-4 my-2 h-full",
                     Outlet::<Route> {},
-                    div { class: "my-2", p {"Route: {route}"} }
+                    div { class: "my-2", p {"Route: {route()}"} }
                 }
             }
 
         }
-        if show_dock {
+        if show_dock() {
             Dock {}
         }
     }

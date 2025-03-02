@@ -33,14 +33,15 @@ pub fn ProfileCreateForm() -> Element {
                 class: "card-body",
                 onsubmit: move |e| async move {
                     e.prevent_default();
-                    if let Err(validation_errors) = form_data().validate() {
+                    let mut form_data = form_data();
+                    if let Err(validation_errors) = form_data.validate() {
                         form_errors.set(validation_errors);
                     } else {
                         let current_profile = current_profile_ctx();
                         if current_profile.is_none() {
-                            form_data().is_default = Some(true);
+                            form_data.is_default = Some(true);
                         }
-                        match create_profile(form_data()).await {
+                        match create_profile(form_data).await {
                             Ok(profile) => {
                                 let new_profile_id = profile.id;
                                 // if there was no previous current profile, set it
