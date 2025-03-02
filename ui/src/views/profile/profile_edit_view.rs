@@ -67,7 +67,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
                                                 if p.id == deleted.id {
                                                     // shouldn't happen but just in case
                                                     current_profile_ctx.set(None);
-                                                    nav.replace(router::Route::ProfileCreateOnboardView {  });
+                                                    nav.replace(router::Route::OnboardProfileCreateView  {  });
                                                 } else {
                                                     nav.replace(router::Route::ProfileIndexView {  });
                                                 }

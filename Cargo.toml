@@ -1,7 +1,7 @@
 [workspace]
 # members = ["shell", "ui"]
 resolver = "2"
-members = ["shell", "ui", "cli", "db", "core", "utils", "scripts/docgen"]
+members = ["shell", "ui", "cli", "db", "core", "utils"]
 default-members = ["cli"]
 
 [workspace.dependencies]

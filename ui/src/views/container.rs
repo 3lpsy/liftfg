@@ -24,12 +24,10 @@ pub fn Container() -> Element {
     })
     .suspend()?;
 
-    let nav = use_navigator();
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
-    // mostly non reactive
-    //
-    use_effect(move || match profile_res() {
+    let nav = use_navigator();
+    use_hook(move || match profile_res() {
         Ok(profile) => {
             info("Updating current profile in container");
             *current_profile_ctx.write() = Some(profile.clone());
@@ -39,7 +37,9 @@ pub fn Container() -> Element {
                 field == "is_default" && errors.iter().any(|err| err.code == "exists")
             });
             if should_create_profile {
-                nav.replace(router::Route::ProfileCreateOnboardView {});
+                // no default profile exists, we're onboarding
+                info("Naving to onboartdindexview");
+                nav.replace(router::Route::OnboardIndexView {});
             } else {
                 let mut app_errors = use_context::<Signal<ValidationErrors>>();
                 app_errors.set(e.clone());
@@ -49,39 +49,28 @@ pub fn Container() -> Element {
     });
     // this causes rerender on route change
     let route: Route = use_route();
+    let show_dock = use_memo(|| !route.to_string().starts_with("/onboard"));
     rsx! {
-        match route {
-            Route::ProfileCreateOnboardView {} => rsx! {
-                SuspenseBoundary {
-                    fallback: |_| rsx!{ Loading {  }},
-                    Outlet::<Route> {}
-                    "Route: {route}"
-                }
-            },
-            _ => {
-                rsx! {
-                    NavBar {},
+        NavBar {},
+        div {
+            class: "page container mx-auto flex flex-col",
+            SuspenseBoundary {
+                fallback: |_| rsx!{
                     div {
-                        class: "page container mx-auto flex flex-col",
-                        SuspenseBoundary {
-                            fallback: |_| rsx!{
-                                div {
-                                    class: "flex items-center justify-center flex-1",
-                                    Loading {  }
-                                }
-                            },
-                            div {
-                                class: "mx-4 my-2",
-                                Outlet::<Route> {}
-                            }
-                            div { class: "mx-4 my-2", p {"Route: {route}"} }
-                        }
-
+                        class: "flex items-center justify-center flex-1",
+                        Loading {  }
                     }
-                    Dock {}
+                },
+                div {
+                    class: "mx-4 my-2 h-full",
+                    Outlet::<Route> {},
+                    div { class: "my-2", p {"Route: {route}"} }
                 }
             }
-        }
 
+        }
+        if show_dock {
+            Dock {}
+        }
     }
 }

@@ -27,7 +27,7 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
             modal_ref: modal_ref,
             body: Some(rsx! {
                 div {
-                    class:"modal-action flex justify-between w-full",
+                    class: "modal-action flex justify-between w-full",
                     button {
                         class: "btn btn-warning btn-outline",
                         onclick: move |_| async move {
@@ -41,7 +41,7 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
                                             if let Some(r) = modal_ref() {
                                                 r.close();
                                             }
-                                            nav.replace(router::Route::ProfileCreateOnboardView {  });
+                                            nav.replace(router::Route::OnboardProfileCreateView  {  });
                                         } else {
                                             if let Some(r) = modal_ref() {
                                                 r.close();

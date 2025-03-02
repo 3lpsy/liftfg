@@ -52,5 +52,5 @@ body {
 }
 
 .page {
-    min-height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height));
+    height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height));
 }

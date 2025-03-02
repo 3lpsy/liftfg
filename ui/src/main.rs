@@ -8,8 +8,8 @@ mod logging;
 mod router;
 mod services;
 mod views;
-
 use std::str::FromStr;
+use tracing::info;
 
 use chrono_tz::Tz;
 use dioxus::prelude::*;
@@ -26,6 +26,14 @@ fn main() {
 }
 
 const MAIN_CSS: Asset = asset!("/assets/main.css");
+// pub fn on_update_route<R>(state: GenericRouterContext<R>) -> Option<NavigationTarget<R>>
+// where
+//     R: Routable,
+// {
+//     let c = state.current();
+//     info!("Nav event: {}", c);
+//     None
+// }
 
 #[component]
 fn App() -> Element {
@@ -88,7 +96,12 @@ fn App() -> Element {
                     Loading {}
                 }
             },
-            Router::<router::Route> {}
+            Router::<router::Route> {
+                // config: || {
+                //     RouterConfig::default()
+                //         .on_update(on_update_route)
+                // }
+            }
         }
     }
 }

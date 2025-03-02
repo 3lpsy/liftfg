@@ -1,24 +1,30 @@
 #![allow(non_snake_case)]
 
 use crate::views::{
-    Container, Empty, Errors, Home, NotFoundFallback, ProfileCreateOnboardView, ProfileCreateView,
-    ProfileEditView, ProfileIndexView, ProfileShowView, ProgramCreate,
+    Container, Empty, Errors, Home, NotFoundFallback, OnboardIndexView, OnboardProfileCreateView,
+    ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView, ProgramCreate,
 };
 use dioxus::prelude::*;
 
-// use dioxus_router::prelude::*;
-//
+#[component]
+pub fn Index() -> Element {
+    rsx! { h1 { "Welcome to the Dioxus Blog!" } }
+}
 
 /// An enum of all of the possible routes in the app.
-#[derive(Routable, Clone)]
+#[derive(Routable, Debug, Clone, PartialEq)]
 #[rustfmt::skip]
 pub enum Route {
     // The home page is at the / route
     #[layout(Container)]
         #[route("/")]
+        Index {},
+        #[route("/home")]
         Home {},
-        #[route("/profile/create/onboard")]
-        ProfileCreateOnboardView {},
+        #[route("/onboard")]
+        OnboardIndexView {},
+        #[route("/onboard/profile/create")]
+        OnboardProfileCreateView {},
         #[route("/profile")]
         ProfileIndexView {},
         #[route("/profile/create")]

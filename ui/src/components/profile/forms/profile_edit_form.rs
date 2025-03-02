@@ -70,7 +70,7 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                         span { "{messages}" }
                     }
                 }
-                button { class: "mt-2 btn btn-primary w-full", "Update Profile" }
+                button { class: "mt-2 btn w-full", "Update Profile" }
             }
 
 

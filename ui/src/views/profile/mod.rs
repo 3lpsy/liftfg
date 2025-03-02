@@ -1,5 +1,5 @@
 pub mod profile_create_view;
-pub use profile_create_view::{ProfileCreateOnboardView, ProfileCreateView};
+pub use profile_create_view::ProfileCreateView;
 pub mod profile_edit_view;
 pub use profile_edit_view::ProfileEditView;
 

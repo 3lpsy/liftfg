@@ -12,7 +12,7 @@ pub fn ProfileIndexView() -> Element {
             class: "flex justify-between items-center",
             h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Profiles" },
             Link {
-                class: "btn btn-primary btn-outline",
+                class: "btn btn-outline",
                 to: router::Route::ProfileCreateView  {},
                 "New Profile"
             }

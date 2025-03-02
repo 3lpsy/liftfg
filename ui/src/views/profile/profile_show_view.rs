@@ -68,7 +68,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                             class: "flex flex-col space-y-2",
                             Link {
                                 to: router::Route::ProfileEditView { profile_id: profile.id as usize },
-                                class: "btn btn-primary w-full",
+                                class: "btn w-full",
                                 "Edit"
                             }
 

@@ -9,6 +9,8 @@ fgdb = { path = "../db", default-features = false }
 fgutils = { path = "../utils" }
 
 dioxus = { version = "0.6", features = ["web", "router"] }
+# dioxus = { path = "../../../community/dioxus/packages/dioxus", features = ["web", "router"] }
+
 dioxus-cli-config = { version = "0.6" }
 dioxus-logger = "0.6"
 wasm-bindgen = "0.2"

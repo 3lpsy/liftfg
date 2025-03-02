@@ -99,7 +99,7 @@ pub fn ProfileCreateForm() -> Element {
                             span { "{messages}" }
                         }
                     }
-                    button { class: "mt-2 btn btn-primary w-full", "Create Profile" }
+                    button { class: "mt-2 btn w-full", "Create Profile" }
 
                 }
             }
