@@ -14,4 +14,4 @@ pub use not_found::{Empty, NotFoundFallback};
 pub use onboard::{OnboardIndexView, OnboardProfileCreateView};
 pub use profile::{ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView};
 
-pub use program::ProgramCreate;
+pub use program::ProgramCreateView;

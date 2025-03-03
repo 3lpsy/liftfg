@@ -2,7 +2,7 @@
 
 use crate::views::{
     Container, Empty, Errors, Home, NotFoundFallback, OnboardIndexView, OnboardProfileCreateView,
-    ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView, ProgramCreate,
+    ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView, ProgramCreateView,
 };
 use dioxus::prelude::*;
 
@@ -34,7 +34,7 @@ pub enum Route {
         #[route("/profile/:profile_id/edit")]
         ProfileEditView {profile_id: usize},
         #[route("/profile/:profile_id/program/create")]
-        ProgramCreate {
+        ProgramCreateView {
             profile_id: usize
         },
         #[route("/errors")]

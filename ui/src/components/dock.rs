@@ -13,7 +13,7 @@ pub fn Dock() -> Element {
         Route::ProfileIndexView { .. }
         | Route::ProfileShowView { .. }
         | Route::ProfileCreateView { .. } => "settings",
-        Route::ProgramCreate { .. } => "programs",
+        Route::ProgramCreateView { .. } => "programs",
         _ => "home",
     };
     rsx! {
@@ -29,7 +29,7 @@ pub fn Dock() -> Element {
                 span { class: "dock-label", "Programs" }
             }
             button {
-                class: if active_tab == "programs" { "dock-active"},
+                class: if active_tab == "hsitory" { "dock-active"},
                 InboxIcon{},
                 span { class: "dock-label", "History" }
             }

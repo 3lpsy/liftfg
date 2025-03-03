@@ -31,9 +31,9 @@ pub fn NavBar() -> Element {
             }
             div { class: "navbar-center",
                 if can_go_back {
-                    Link { class: "btn btn-ghost text-xl", to: Route::Home {}, "LIFTFG" }
+                    Link { class: "btn btn-ghost text-xl", to: Route::Home {}, "{route}" }
                 } else {
-                    span { class: "text-xl font-bold", "LIFTFG" }
+                    span { class: "text-xl font-bold", "{route}" }
                 }
             }
             div { class: "navbar-end",

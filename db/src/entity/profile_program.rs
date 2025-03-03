@@ -5,37 +5,45 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "gym")]
+#[sea_orm(table_name = "profile_program")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
+    pub profile_id: i32,
+    pub program_id: i32,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::gym_profile::Entity")]
-    GymProfile,
-    #[sea_orm(has_many = "super::profile::Entity")]
+    #[sea_orm(
+        belongs_to = "super::program::Entity",
+        from = "Column::ProgramId",
+        to = "super::program::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    Program,
+    #[sea_orm(
+        belongs_to = "super::profile::Entity",
+        from = "Column::ProfileId",
+        to = "super::profile::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
     Profile,
 }
 
-impl Related<super::gym_profile::Entity> for Entity {
+impl Related<super::program::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::GymProfile.def()
+        Relation::Program.def()
     }
 }
 
-// Through pivot
 impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
-        super::gym_profile::Relation::Profile.def()
-    }
-
-    fn via() -> Option<RelationDef> {
-        Some(super::gym_profile::Relation::Gym.def().rev())
+        Relation::Profile.def()
     }
 }
 

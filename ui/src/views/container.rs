@@ -38,7 +38,6 @@ pub fn Container() -> Element {
             });
             if should_create_profile {
                 // no default profile exists, we're onboarding
-                info("Naving to onboartdindexview");
                 nav.replace(router::Route::OnboardIndexView {});
             } else {
                 let mut app_errors = use_context::<Signal<ValidationErrors>>();
@@ -51,6 +50,7 @@ pub fn Container() -> Element {
     let router = router();
     let route = use_memo(move || router.current::<Route>());
     let show_dock = use_memo(move || !route.to_string().starts_with("/onboard"));
+
     rsx! {
         NavBar {},
         div {
@@ -65,7 +65,7 @@ pub fn Container() -> Element {
                 div {
                     class: "mx-4 my-2 h-full",
                     Outlet::<Route> {},
-                    div { class: "my-2", p {"Route: {route()}"} }
+                    // div { class: "my-2", p {"Route: {route()}"} }
                 }
             }
 

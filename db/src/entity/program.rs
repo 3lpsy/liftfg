@@ -35,9 +35,13 @@ impl Related<super::program_target_muscle::Entity> for Entity {
     }
 }
 
+// Through pivot
 impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Profile.def()
+        super::profile_program::Relation::Profile.def()
+    }
+    fn via() -> Option<RelationDef> {
+        Some(super::profile_program::Relation::Profile.def().rev())
     }
 }
 

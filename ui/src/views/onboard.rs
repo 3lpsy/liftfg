@@ -35,7 +35,7 @@ pub fn OnboardProfileCreateView() -> Element {
         div { class: "hero h-full align-center",
             div { class: "hero-content flex-col",
                 div { class: "text-center",
-                    h1 { class: "text-5xl font-bold", "Create Profile" }
+                    h1 { class: "text-5xl font-bold", "Profile Setup" }
                 }
                 ProfileCreateForm{}
             }
