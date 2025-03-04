@@ -1,0 +1,64 @@
+muscles:
+  - name: Biceps
+    long_name: Biceps Brachii
+    code: BICEPS
+  - name: Brachialis
+    long_name: Brachialis
+    code: BRACHIALIS
+  - name: Triceps
+    long_name: Triceps Brachii
+    code: TRICEPS
+  - name: Front Delts
+    long_name: Anterior Deltoid
+    code: FRONT_DELTS
+  - name: Side Delts
+    long_name: Lateral Deltoid
+    code: SIDE_DELTS
+  - name: Rear Delts
+    long_name: Posterior Deltoid
+    code: REAR_DELTS
+  - name: Pecs
+    long_name: Pectoralis Major
+    code: PECS
+  - name: Lats
+    long_name: Latissimus Dorsi
+    code: LATS
+  - name: Upper Back
+    long_name: Trapezius
+    code: UPPER_BACK
+  - name: Lower Back
+    long_name: Erector Spinae
+    code: LOWER_BACK
+  - name: Abs
+    long_name: Rectus Abdominis
+    code: ABS
+  - name: Obliques
+    long_name: Obliques
+    code: OBLIQUES
+  - name: Quads
+    long_name: Quadriceps
+    code: QUADS
+  - name: Hamstrings
+    long_name: Hamstrings
+    code: HAMSTRINGS
+  - name: Glutes
+    long_name: Gluteus Maximus
+    code: GLUTES
+  - name: Lateral Thigh
+    long_name: Gluteus Medius, Gluteus Minimus, Tensor Fasciae Latae
+    code: LATERAL_THIGH
+  - name: Inner Thigh
+    long_name: Adductor Magnus, Adductor Longus, Adductor Brevis, Gracilis, Pectineus
+    code: INNER_THIGH
+  - name: Calves
+    long_name: Gastrocnemius
+    code: CALVES
+  - name: Soleus
+    long_name: Soleus
+    code: SOLEUS
+  - name: Forearms
+    long_name: Forearm Flexors and Extensors
+    code: FOREARMS
+  - name: Heart
+    long_name: Cardiac Muscle
+    code: HEART

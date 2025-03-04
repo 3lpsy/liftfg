@@ -1,0 +1,55 @@
+[package]
+name = "fgshell"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "fgshell_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+fgdb = { path = "../db", features = ["db"] }
+fgcore = { path = "../core" }
+fgutils = { path = "../utils" }
+tauri = { version = "2", features = ["tracing"] }
+tauri-plugin-opener = "2"
+tauri-plugin-fs = "2"
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+sea-orm = { workspace = true }
+sea-orm-migration = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-log = { workspace = true }
+validator = { workspace = true }
+
+tauri-plugin-log = { path = "../../../../community/plugins-workspace/plugins/log" }
+log = { workspace = true }
+
+[target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
+tauri-plugin-cli = "2"
+
+
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+tempfile = "3.8"
+ctor = "0.2.9"
+uuid = { version = "1.0", features = ["v4"] }
+
+# [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+# tauri-plugin-cli = "2"
+
+# [target.x86_64-unknown-linux-gnu]
+# linker = "clang"
+# rustflags = ["-C", "link-arg=-fuse-ld=/usr/bin/mold"]

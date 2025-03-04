@@ -1,8 +1,20 @@
 [workspace]
 # members = ["shell", "ui"]
 resolver = "2"
-members = ["shell", "ui", "cli", "db", "core", "utils"]
-default-members = ["cli"]
+members = [
+    "packages/shell",
+    "packages/ui",
+    "packages/cli",
+    "packages/db",
+    "packages/core",
+    "packages/utils",
+]
+default-members = [
+    "packages/shell",
+    "packages/ui",
+    "packages/core",
+    "packages/db",
+]
 
 [workspace.dependencies]
 serde = { version = "1", features = ["derive"] }

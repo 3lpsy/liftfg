@@ -19,18 +19,18 @@ all:
 
 # Cli commands
 migrate:
-	@echo "Running: cd ui && dx serve --port 1420"
-	@cd ui && dx serve --port 1420
+	@echo "Running: cd packages/ui && dx serve --port 1420"
+	@cd packages/ui && dx serve --port 1420
 # DX commands
 dx: dx-dev
 
 dx-dev:
 	@echo "Running: cd ui && dx serve --port 1420"
-	@cd ui && dx serve --port 1420
+	@cd packages/ui && dx serve --port 1420
 
 dx-prod:
 	@echo "Running: cd ui && dx build"
-	@cd ui && dx build
+	@cd packages/ui && dx build
 
 # Shell commands
 
@@ -62,8 +62,8 @@ android-dev:
 css: tailwind
 
 tailwind:
-	@echo "Running: npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch"
-	@cd ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch
+	@echo "Running: cd packages/ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch
+	@cd packages/ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch
 
 # Handle arguments
 %:
