@@ -16,7 +16,7 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
         Some(p) => p.id,
         None => 0,
     });
-    let nav = use_navigator();
+    let nav = navigator();
     let profile_id = profile.id;
     let modal_ref = use_signal(|| None::<HtmlDialogElement>);
     rsx! {

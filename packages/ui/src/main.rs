@@ -96,12 +96,23 @@ fn App() -> Element {
                     Loading {}
                 }
             },
-            Router::<router::Route> {
-                // config: || {
-                //     RouterConfig::default()
-                //         .on_update(on_update_route)
-                // }
+            ErrorBoundary {
+                handle_error: |err| {
+                    rsx! {
+                        "An unhandled error has occured: {err:?}"
+                    }
+                },
+                Router::<router::Route> {
+                    config: || {
+                        RouterConfig::default()
+                            .on_update(|state| {
+                                tracing::info!("Nav event: {}", state.current());
+                                None
+                            })
+                    }
+                }
             }
+
         }
     }
 }

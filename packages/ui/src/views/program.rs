@@ -21,7 +21,7 @@ pub fn ProgramCreateView(profile_id: usize) -> Element {
     // first we write get_programs
     // second, add a includes setup for profile to include programs on response
 
-    let nav = use_navigator();
+    let nav = navigator();
     use_effect(move || match profile_res() {
         Ok(profile) => {
             profile_sig.set(Some(profile.clone()));

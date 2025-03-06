@@ -7,7 +7,7 @@ use validator::{Validate, ValidationErrors};
 pub fn ProfileEditForm(profile: ProfileData) -> Element {
     let mut form_data: Signal<ProfileUpdateData> = use_signal(|| profile.clone().into());
     let mut form_errors = use_signal(|| ValidationErrors::new());
-    let nav = use_navigator();
+    let nav = navigator();
     let error_messages = use_memo(move || {
         form_errors()
             .field_errors()

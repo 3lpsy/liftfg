@@ -26,11 +26,23 @@ pub fn Container() -> Element {
 
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
-    let nav = use_navigator();
+    let nav = navigator();
+    let router = router();
+    // current makes this reactive
+    let is_onboard = use_memo(move || {
+        router
+            .current::<router::Route>()
+            .to_string()
+            .starts_with("/onboard")
+    });
+
     use_hook(move || match profile_res() {
         Ok(profile) => {
             info("Updating current profile in container");
             *current_profile_ctx.write() = Some(profile.clone());
+            if is_onboard() {
+                nav.push(router::Route::Home {});
+            }
         }
         Err(e) => {
             let should_create_profile = e.field_errors().iter().any(|(field, errors)| {
@@ -46,10 +58,6 @@ pub fn Container() -> Element {
             }
         }
     });
-    // TODO: fix
-    let router = router();
-    let route = use_memo(move || router.current::<Route>());
-    let show_dock = use_memo(move || !route.to_string().starts_with("/onboard"));
 
     rsx! {
         NavBar {},
@@ -62,15 +70,22 @@ pub fn Container() -> Element {
                         Loading {  }
                     }
                 },
-                div {
-                    class: "mx-4 my-2 h-full",
-                    Outlet::<Route> {},
-                    // div { class: "my-2", p {"Route: {route()}"} }
+                ErrorBoundary {
+                    handle_error: |err| {
+                        rsx! {
+                            "An unhandled error has occured: {err:?}"
+                        }
+                    },
+                    div {
+                        class: "mx-4 my-2 h-full",
+                        Outlet::<Route> {},
+                        // div { class: "my-2", p {"Route: {route()}"} }
+                    }
                 }
             }
 
         }
-        if show_dock() {
+        if !is_onboard() {
             Dock {}
         }
     }

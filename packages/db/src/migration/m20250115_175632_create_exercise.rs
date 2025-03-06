@@ -1,4 +1,7 @@
-use super::common::{MigrationTimestampExt, TableWithTimestamps};
+use super::{
+    common::{MigrationTimestampExt, TableWithTimestamps},
+    m20250115_101001_create_muscle::Muscle,
+};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -7,19 +10,6 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        manager
-            .create_table(
-                Table::create()
-                    .table(Muscle::Table)
-                    .if_not_exists()
-                    .col(pk_auto(Muscle::Id))
-                    .col(string(Muscle::Name).not_null())
-                    .add_timestamps()
-                    .to_owned(),
-            )
-            .await?;
-        self.create_timestamp_trigger(manager, Muscle::Table.to_string())
-            .await?;
         manager
             .create_table(
                 Table::create()
@@ -79,15 +69,10 @@ impl MigrationTrait for Migration {
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         self.drop_timestamp_trigger(manager, ExerciseMuscle::Table.to_string())
             .await?;
-        self.drop_timestamp_trigger(manager, Muscle::Table.to_string())
-            .await?;
         self.drop_timestamp_trigger(manager, Exercise::Table.to_string())
             .await?;
         manager
             .drop_table(Table::drop().table(ExerciseMuscle::Table).to_owned())
-            .await?;
-        manager
-            .drop_table(Table::drop().table(Muscle::Table).to_owned())
             .await?;
         manager
             .drop_table(Table::drop().table(Exercise::Table).to_owned())
@@ -101,12 +86,6 @@ pub enum Exercise {
     Id,
     Name,
     EquipmentType,
-}
-#[derive(DeriveIden)]
-pub enum Muscle {
-    Table,
-    Id,
-    Name,
 }
 #[derive(DeriveIden)]
 enum ExerciseMuscle {

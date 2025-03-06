@@ -15,7 +15,7 @@ pub fn ProfileList() -> Element {
         get_profiles(Some(pagination())).await
     })
     .suspend()?;
-    let nav = use_navigator();
+    let nav = navigator();
 
     use_effect(move || match profiles_res() {
         Ok(profiles) => {

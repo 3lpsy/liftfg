@@ -13,7 +13,7 @@ use crate::{
 #[component]
 pub fn NavBar() -> Element {
     let profile_ctx = use_context::<Signal<Option<ProfileData>>>();
-    let nav = use_navigator();
+    let nav = navigator();
     let route: Route = use_route();
     let can_go_back = match route {
         Route::OnboardIndexView {} => false,

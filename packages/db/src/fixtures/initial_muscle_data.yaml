@@ -17,7 +17,7 @@ muscles:
   - name: Rear Delts
     long_name: Posterior Deltoid
     code: REAR_DELTS
-  - name: Pecs
+  - name: Chest
     long_name: Pectoralis Major
     code: PECS
   - name: Lats

@@ -3,6 +3,7 @@ pub mod data;
 pub mod db;
 #[cfg(feature = "db")]
 pub mod entity;
+#[cfg(feature = "db")]
 pub mod fixtures;
 #[cfg(feature = "db")]
 pub mod migration;

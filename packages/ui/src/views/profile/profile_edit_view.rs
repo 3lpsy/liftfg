@@ -21,7 +21,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
         .await
     })
     .suspend()?;
-    let nav = use_navigator();
+    let nav = navigator();
     use_effect(move || match profile_res() {
         Ok(profile) => {
             profile_sig.set(Some(profile.clone()));

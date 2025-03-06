@@ -1,1 +1,196 @@
-test
+programs:
+  - name: Upper Body Push
+    code: UPPER_BODY_PUSH
+    muscles:
+      - code: PECS
+        volume: 9
+        order: 1
+      - code: FRONT_DELTS
+        volume: 3
+        order: 3
+      - code: TRICEPS
+        volume: 6
+        order: 5
+      - code: SIDE_DELTS
+        volume: 3
+        order: 7
+  - name: Upper Body Pull
+    code: UPPER_BODY_PULL
+    muscles:
+      - code: LATS
+        volume: 9
+        order: 1
+      - code: UPPER_BACK
+        volume: 6
+        order: 3
+      - code: REAR_DELTS
+        volume: 3
+        order: 5
+      - code: BICEPS
+        volume: 6
+        order: 7
+  - name: Upper Body
+    code: UPPER_BODY
+    muscles:
+      - code: PECS
+        volume: 6
+        order: 1
+      - code: LATS
+        volume: 6
+        order: 1
+      - code: UPPER_BACK
+        volume: 6
+        order: 3
+      - code: FRONT_DELTS
+        volume: 3
+        order: 5
+      - code: REAR_DELTS
+        volume: 3
+        order: 5
+      - code: BICEPS
+        volume: 6
+        order: 7
+      - code: TRICEPS
+        volume: 6
+        order: 7
+  - name: Lower Body
+    code: LOWER_BODY
+    muscles:
+      - code: LOWER_BACK
+        volume: 3
+        order: 1
+      - code: HAMSTRINGS
+        volume: 3
+        order: 3
+      - code: QUADS
+        volume: 6
+        order: 5
+      - code: CALVES
+        volume: 3
+        order: 7
+      - code: GLUTES
+        volume: 3
+        order: 9
+  - name: Full Body Push
+    code: FULL_BODY_PUSH
+    muscles:
+      - code: PECS
+        volume: 6
+        order: 1
+      - code: QUADS
+        volume: 6
+        order: 3
+      - code: FRONT_DELTS
+        volume: 3
+        order: 5
+      - code: TRICEPS
+        volume: 6
+        order: 7
+      - code: CALVES
+        volume: 3
+        order: 9
+  - name: Full Body Pull
+    code: FULL_BODY_PULL
+    muscles:
+      - code: LOWER_BACK
+        volume: 3
+        order: 1
+      - code: HAMSTRINGS
+        volume: 3
+        order: 3
+      - code: GLUTES
+        volume: 3
+        order: 5
+      - code: UPPER_BACK
+        volume: 3
+        order: 5
+      - code: REAR_DELTS
+        volume: 3
+        order: 7
+      - code: BICEPS
+        volume: 3
+        order: 9
+  - name: Full Body
+    code: FULL_BODY
+    muscles:
+      - code: PECS
+        volume: 6
+        order: 1
+      - code: LATS
+        volume: 6
+        order: 1
+      - code: LOWER_BACK
+        volume: 3
+        order: 1
+      - code: QUADS
+        volume: 6
+        order: 3
+      - code: GLUTES
+        volume: 3
+        order: 5
+      - code: FRONT_DELTS
+        volume: 3
+        order: 5
+      - code: REAR_DELTS
+        volume: 3
+        order: 7
+      - code: TRICEPS
+        volume: 6
+        order: 7
+      - code: BICEPS
+        volume: 6
+        order: 9
+      - code: CALVES
+        volume: 3
+        order: 9
+  - name: Chest
+    code: CHEST
+    muscles:
+      - code: PECS
+        volume: 9
+        order: 1
+      - code: FRONT_DELTS
+        volume: 3
+        order: 3
+      - code: TRICEPS
+        volume: 6
+        order: 5
+  - name: Back
+    code: BACK
+    muscles:
+      - code: LATS
+        volume: 9
+        order: 1
+      - code: UPPER_BACK
+        volume: 6
+        order: 3
+      - code: LOWER_BACK
+        volume: 3
+        order: 5
+      - code: REAR_DELTS
+        volume: 3
+        order: 7
+      - code: BICEPS
+        volume: 6
+        order: 9
+  - name: Shoulders
+    code: SHOULDERS
+    muscles:
+      - code: FRONT_DELTS
+        volume: 6
+        order: 1
+      - code: SIDE_DELTS
+        volume: 6
+        order: 3
+      - code: REAR_DELTS
+        volume: 6
+        order: 5
+  - name: Arms
+    code: ARMS
+    muscles:
+      - code: BICEPS
+        volume: 9
+        order: 1
+      - code: TRICEPS
+        volume: 9
+        order: 3

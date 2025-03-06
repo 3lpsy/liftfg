@@ -1,7 +1,7 @@
+#[cfg(feature = "db")]
+use crate::entity::program as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-
-use crate::entity::program as entity;
 
 use super::{ResponsableData, ResponseData};
 

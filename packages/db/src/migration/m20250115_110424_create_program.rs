@@ -1,4 +1,4 @@
-use crate::seed::default_program_data;
+use crate::fixtures::get_program_data_fixutre;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20220101_000001_create_profile as profile;
@@ -27,24 +27,19 @@ impl MigrationTrait for Migration {
         self.create_timestamp_trigger(manager, Program::Table.to_string())
             .await?;
 
-        let program_data = default_program_data();
+        let programs_data = get_program_data_fixutre();
         let dbc = manager.get_connection();
-        for name in program_data {
-            let code = name.replace(' ', "_").to_uppercase();
+        for program in programs_data {
             let stmt = Statement::from_sql_and_values(
                 DbBackend::Sqlite,
-                "INSERT INTO program (name, code) VALUES (?, ?)",
+                "INSERT INTO program (name, code, long_name) VALUES (?, ?, ?)",
                 vec![
-                    Value::String(Some(name.to_string().into())),
-                    Value::String(Some(code.into())),
+                    Value::String(Some(program.name.into())),
+                    Value::String(Some(program.code.into())),
                 ],
             );
-
             dbc.execute(stmt).await?;
         }
-
-        // Execute the statement
-        let dbc = manager.get_connection();
 
         manager
             .create_table(

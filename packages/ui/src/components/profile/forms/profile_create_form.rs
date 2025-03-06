@@ -8,7 +8,7 @@ pub fn ProfileCreateForm() -> Element {
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
     let mut form_data = use_signal(|| ProfileStoreData::default());
     let mut form_errors = use_signal(|| ValidationErrors::new());
-    let nav = use_navigator();
+    let nav = navigator();
     let error_messages = use_memo(move || {
         form_errors()
             .field_errors()
