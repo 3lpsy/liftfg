@@ -1,5 +1,5 @@
 pub mod profile;
-pub mod program;
+pub mod workout;
 
 #[cfg(feature = "db")]
 use fgutils::constants::VALIDATION_DATABASE_FIELD;

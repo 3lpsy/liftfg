@@ -5,7 +5,7 @@ use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
 
 use crate::entity::profile;
 
-pub fn default_program_data() -> Vec<String> {
+pub fn default_workout_data() -> Vec<String> {
     let p = vec![
         "Upper Body Push",
         "Upper Body Pull",

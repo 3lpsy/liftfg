@@ -1,5 +1,5 @@
 #[cfg(feature = "db")]
-use crate::entity::program as entity;
+use crate::entity::workout as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
@@ -7,7 +7,7 @@ use super::{ResponsableData, ResponseData};
 
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct ProgramData {
+pub struct WorkoutData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
     pub code: String,
@@ -17,7 +17,7 @@ pub struct ProgramData {
 // impls
 
 #[cfg(feature = "db")]
-impl From<entity::Model> for ProgramData {
+impl From<entity::Model> for WorkoutData {
     fn from(model: entity::Model) -> Self {
         Self {
             id: model.id,
@@ -29,8 +29,8 @@ impl From<entity::Model> for ProgramData {
     }
 }
 
-impl From<ProgramData> for ResponseData<ProgramData> {
-    fn from(data: ProgramData) -> Self {
+impl From<WorkoutData> for ResponseData<WorkoutData> {
+    fn from(data: WorkoutData) -> Self {
         ResponseData {
             data: Some(data),
             errors: None,
@@ -39,5 +39,5 @@ impl From<ProgramData> for ResponseData<ProgramData> {
     }
 }
 
-impl ResponsableData for ProgramData {}
-impl ResponsableData for Vec<ProgramData> {}
+impl ResponsableData for WorkoutData {}
+impl ResponsableData for Vec<WorkoutData> {}

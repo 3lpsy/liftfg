@@ -23,10 +23,10 @@ pub enum Relation {
     GymProfile,
     #[sea_orm(has_many = "crate::entity::gym::Entity")]
     Gym,
-    #[sea_orm(has_many = "crate::entity::profile_program::Entity")]
-    ProfileProgram,
-    #[sea_orm(has_many = "crate::entity::program::Entity")]
-    Program,
+    #[sea_orm(has_many = "crate::entity::profile_workout::Entity")]
+    ProfileWorkout,
+    #[sea_orm(has_many = "crate::entity::workout::Entity")]
+    Workout,
 }
 
 impl Related<crate::entity::gym_profile::Entity> for Entity {
@@ -35,23 +35,23 @@ impl Related<crate::entity::gym_profile::Entity> for Entity {
     }
 }
 
-// impl Related<crate::entity::program::Entity> for Entity {
+// impl Related<crate::entity::workout::Entity> for Entity {
 //     fn to() -> RelationDef {
-//         Relation::Program.def()
+//         Relation::Workout.def()
 //     }
 // }
 
-impl Related<crate::entity::program::Entity> for Entity {
+impl Related<crate::entity::workout::Entity> for Entity {
     // The final relation is Cake -> CakeFilling -> Filling
     fn to() -> RelationDef {
-        crate::entity::profile_program::Relation::Program.def()
+        crate::entity::profile_workout::Relation::Workout.def()
     }
 
     fn via() -> Option<RelationDef> {
         // The original relation is CakeFilling -> Cake,
         // after `rev` it becomes Cake -> CakeFilling
         Some(
-            crate::entity::profile_program::Relation::Profile
+            crate::entity::profile_workout::Relation::Profile
                 .def()
                 .rev(),
         )

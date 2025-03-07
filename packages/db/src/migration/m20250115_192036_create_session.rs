@@ -11,14 +11,14 @@ impl MigrationTrait for Migration {
         manager
             .create_table(
                 Table::create()
-                    .table(Workout::Table)
+                    .table(Session::Table)
                     .if_not_exists()
-                    .col(pk_auto(Workout::Id))
+                    .col(pk_auto(Session::Id))
                     .add_timestamps()
                     .to_owned(),
             )
             .await?;
-        self.create_timestamp_trigger(manager, Workout::Table.to_string())
+        self.create_timestamp_trigger(manager, Session::Table.to_string())
             .await?;
         manager
             .create_table(
@@ -28,12 +28,12 @@ impl MigrationTrait for Migration {
                     .col(pk_auto(Set::Id))
                     .col(integer(Set::Reps))
                     .col(integer(Set::Weight))
-                    .col(integer(Set::WorkoutId).not_null())
+                    .col(integer(Set::SessionId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_set_workout")
-                            .from(Set::Table, Set::WorkoutId)
-                            .to(Workout::Table, Workout::Id)
+                            .name("fk_set_session")
+                            .from(Set::Table, Set::SessionId)
+                            .to(Session::Table, Session::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
@@ -58,10 +58,10 @@ impl MigrationTrait for Migration {
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         self.drop_timestamp_trigger(manager, Set::Table.to_string())
             .await?;
-        self.drop_timestamp_trigger(manager, Workout::Table.to_string())
+        self.drop_timestamp_trigger(manager, Session::Table.to_string())
             .await?;
         manager
-            .drop_table(Table::drop().table(Workout::Table).to_owned())
+            .drop_table(Table::drop().table(Session::Table).to_owned())
             .await?;
         manager
             .drop_table(Table::drop().table(Set::Table).to_owned())
@@ -70,7 +70,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Workout {
+enum Session {
     Table,
     Id,
 }
@@ -82,5 +82,5 @@ enum Set {
     Reps,
     Weight,
     ExerciseId,
-    WorkoutId,
+    SessionId,
 }

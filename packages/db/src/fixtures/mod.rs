@@ -1,7 +1,7 @@
 #[cfg(feature = "db")]
 // only db
 pub const INITIAL_MUSCLE_DATA: &str = include_str!("./initial_muscle_data.yaml");
-pub const INITIAL_PROGRAM_DATA: &str = include_str!("./initial_program_data.yaml");
+pub const INITIAL_WORKOUT_DATA: &str = include_str!("./initial_workout_data.yaml");
 
 use serde::{Deserialize, Serialize};
 
@@ -24,26 +24,26 @@ pub fn get_muscle_data_fixture() -> Vec<MuscleFixture> {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProgramMuscleFixture {
+pub struct WorkoutMuscleFixture {
     pub code: String,
     pub volume: u8,
-    pub order: u8,
+    pub priority: u8,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProgramFixture {
+pub struct WorkoutFixture {
     pub name: String,
     pub code: String,
-    pub muscles: Vec<ProgramMuscleFixture>,
+    pub muscles: Vec<WorkoutMuscleFixture>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct ProgramsFixture {
-    pub programs: Vec<ProgramFixture>,
+pub struct WorkoutsFixture {
+    pub workouts: Vec<WorkoutFixture>,
 }
 
-pub fn get_program_data_fixutre() -> Vec<ProgramFixture> {
-    let muscle_data: ProgramsFixture =
-        serde_yaml::from_str(INITIAL_MUSCLE_DATA).expect("Failed to parse YAML");
-    muscle_data.programs
+pub fn get_workout_data_fixutre() -> Vec<WorkoutFixture> {
+    let muscle_data: WorkoutsFixture =
+        serde_yaml::from_str(INITIAL_WORKOUT_DATA).expect("Failed to parse YAML");
+    muscle_data.workouts
 }

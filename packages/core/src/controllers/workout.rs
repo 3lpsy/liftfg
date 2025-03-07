@@ -1,8 +1,8 @@
 use fgdb::{
     data::{
-        program::ProgramData, DbValidationErrors, DefaultPaginationParams, Paginator, ResponseData,
+        workout::WorkoutData, DbValidationErrors, DefaultPaginationParams, Paginator, ResponseData,
     },
-    entity::program,
+    entity::workout,
 };
 use sea_orm::{DatabaseConnection, EntityTrait, PaginatorTrait, QueryOrder};
 use validator::{Validate, ValidationErrors};
@@ -10,13 +10,13 @@ use validator::{Validate, ValidationErrors};
 pub async fn index(
     params: DefaultPaginationParams,
     dbc: &DatabaseConnection,
-) -> Result<ResponseData<Vec<ProgramData>>, ValidationErrors> {
+) -> Result<ResponseData<Vec<WorkoutData>>, ValidationErrors> {
     params.validate()?;
 
     let pagination = params.pagination.unwrap_or_default();
 
-    let pager = program::Entity::find()
-        .order_by(program::Column::Id, pagination.order.into())
+    let pager = workout::Entity::find()
+        .order_by(workout::Column::Id, pagination.order.into())
         .paginate(dbc, pagination.size as u64);
     let pagination =
         Paginator::from_db_paginator(&pager, pagination.page, pagination.size, pagination.order)

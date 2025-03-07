@@ -1,0 +1,131 @@
+workouts:
+  - name: Upper Body Push
+    code: UPPER_BODY_PUSH
+    # 21 sets
+    muscles:
+      - code: PECS
+        volume: 9
+        priority: 1
+      - code: FRONT_DELTS
+        volume: 3
+        priority: 3
+      - code: TRICEPS
+        volume: 6
+        priority: 5
+      - code: SIDE_DELTS
+        volume: 3
+        priority: 7
+  - name: Upper Body Pull
+    code: UPPER_BODY_PULL
+    # 18 sets
+    muscles:
+      - code: LOWER_BACK
+        volume: 3
+        priority: 1
+      - code: LATS
+        volume: 6
+        priority: 3
+      - code: UPPER_BACK
+        volume: 3
+        priority: 5
+      - code: REAR_DELTS
+        volume: 3
+        priority: 7
+      - code: BICEPS
+        volume: 6
+        priority: 9
+  - name: Upper Body
+    code: UPPER_BODY
+    # 21 sets
+    muscles:
+      - code: PECS
+        volume: 6
+        priority: 1
+      - code: FRONT_DELTS
+        volume: 3
+        priority: 2
+      - code: LATS
+        volume: 6
+        priority: 3
+      - code: BICEPS
+        volume: 3
+        priority: 7
+      - code: TRICEPS
+        volume: 3
+        priority: 7
+  - name: Lower Body
+    code: LOWER_BODY
+    # 18 sets
+    muscles:
+      - code: LOWER_BACK
+        volume: 3
+        priority: 1
+      - code: HAMSTRINGS
+        volume: 3
+        priority: 3
+      - code: QUADS
+        volume: 6
+        priority: 5
+      - code: GLUTES
+        volume: 3
+        priority: 9
+      - code: CALVES
+        volume: 3
+        priority: 7
+  - name: Full Body Push
+    code: FULL_BODY_PUSH
+    # 24 sets
+    muscles:
+      - code: QUADS
+        volume: 6
+        priority: 1
+      - code: PECS
+        volume: 6
+        priority: 3
+      - code: FRONT_DELTS
+        volume: 3
+        priority: 5
+      - code: TRICEPS
+        volume: 6
+        priority: 7
+      - code: CALVES
+        volume: 3
+        priority: 9
+  - name: Full Body Pull
+    code: FULL_BODY_PULL
+    # 18 sets
+    muscles:
+      - code: LOWER_BACK
+        volume: 3
+        priority: 1
+      - code: HAMSTRINGS
+        volume: 3
+        priority: 3
+      - code: GLUTES
+        volume: 3
+        priority: 5
+      - code: LATS
+        volume: 3
+        priority: 5
+      - code: REAR_DELTS
+        volume: 3
+        priority: 7
+      - code: BICEPS
+        volume: 3
+        priority: 9
+  - name: Full Body
+    code: FULL_BODY
+    # 20
+    muscles:
+      - code: PECS
+        volume: 5
+        priority: 1
+      - code: LATS
+        volume: 5
+        priority: 3
+      - code: HAMSTRINGS
+        volume: 5
+        priority: 5
+      - code: QUADS
+        volume: 5
+        priority: 7

@@ -11,7 +11,7 @@ pub struct Model {
     pub id: i32,
     pub reps: i32,
     pub weight: i32,
-    pub workout_id: i32,
+    pub session_id: i32,
     pub exercise_id: i32,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
@@ -28,13 +28,13 @@ pub enum Relation {
     )]
     Exercise,
     #[sea_orm(
-        belongs_to = "super::workout::Entity",
-        from = "Column::WorkoutId",
-        to = "super::workout::Column::Id",
+        belongs_to = "super::session::Entity",
+        from = "Column::SessionId",
+        to = "super::session::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    Workout,
+    Session,
 }
 
 impl Related<super::exercise::Entity> for Entity {
@@ -43,9 +43,9 @@ impl Related<super::exercise::Entity> for Entity {
     }
 }
 
-impl Related<super::workout::Entity> for Entity {
+impl Related<super::session::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Workout.def()
+        Relation::Session.def()
     }
 }
 

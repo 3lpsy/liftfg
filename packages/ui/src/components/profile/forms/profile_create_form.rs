@@ -51,7 +51,7 @@ pub fn ProfileCreateForm() -> Element {
                                         current_profile_ctx.set(Some(profile));
                                     }
                                 }
-                                nav.replace(router::Route::ProgramCreateView { profile_id: new_profile_id as usize });
+                                nav.replace(router::Route::WorkoutCreateView { profile_id: new_profile_id as usize });
                             },
                             Err(e) => form_errors.set(e)
                         }

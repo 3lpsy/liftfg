@@ -15,7 +15,8 @@ impl MigrationTrait for Migration {
                     .table(Gym::Table)
                     .if_not_exists()
                     .col(pk_auto(Gym::Id))
-                    .col(string(Gym::Name).unique_key())
+                    .col(string(Gym::Name).not_null().unique_key())
+                    .col(boolean(Gym::IsDefault).not_null().default(false))
                     .add_timestamps()
                     .to_owned(),
             )
@@ -82,6 +83,7 @@ enum Gym {
     Table,
     Id,
     Name,
+    IsDefault,
 }
 
 #[derive(DeriveIden)]

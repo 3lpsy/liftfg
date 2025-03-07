@@ -13,7 +13,7 @@ pub fn Dock() -> Element {
         Route::ProfileIndexView { .. }
         | Route::ProfileShowView { .. }
         | Route::ProfileCreateView { .. } => "settings",
-        Route::ProgramCreateView { .. } => "programs",
+        Route::WorkoutCreateView { .. } => "workouts",
         _ => "home",
     };
     rsx! {
@@ -24,9 +24,9 @@ pub fn Dock() -> Element {
                 span { class: "dock-label", "Session" }
             }
             button {
-                class: if active_tab == "programs" { "dock-active"},
+                class: if active_tab == "workouts" { "dock-active"},
                 HomeIcon{}
-                span { class: "dock-label", "Programs" }
+                span { class: "dock-label", "Workouts" }
             }
             button {
                 class: if active_tab == "hsitory" { "dock-active"},

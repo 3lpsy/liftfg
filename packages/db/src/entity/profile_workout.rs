@@ -5,13 +5,12 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "program_target_muscle")]
+#[sea_orm(table_name = "profile_workout")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub sets: i32,
-    pub program_id: i32,
-    pub target_muscle_id: i32,
+    pub profile_id: i32,
+    pub workout_id: i32,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -19,32 +18,32 @@ pub struct Model {
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::program::Entity",
-        from = "Column::ProgramId",
-        to = "super::program::Column::Id",
+        belongs_to = "super::workout::Entity",
+        from = "Column::WorkoutId",
+        to = "super::workout::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    Program,
+    Workout,
     #[sea_orm(
-        belongs_to = "super::target_muscle::Entity",
-        from = "Column::TargetMuscleId",
-        to = "super::target_muscle::Column::Id",
+        belongs_to = "super::profile::Entity",
+        from = "Column::ProfileId",
+        to = "super::profile::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    TargetMuscle,
+    Profile,
 }
 
-impl Related<super::program::Entity> for Entity {
+impl Related<super::workout::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Program.def()
+        Relation::Workout.def()
     }
 }
 
-impl Related<super::target_muscle::Entity> for Entity {
+impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::TargetMuscle.def()
+        Relation::Profile.def()
     }
 }
 

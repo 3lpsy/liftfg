@@ -1,5 +1,5 @@
 pub mod profile;
-pub mod program;
+pub mod workout;
 use std::borrow::Cow;
 
 use fgdb::data::{

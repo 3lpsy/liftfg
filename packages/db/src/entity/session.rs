@@ -5,24 +5,23 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "target_muscle")]
+#[sea_orm(table_name = "session")]
 pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::program_target_muscle::Entity")]
-    ProgramTargetMuscle,
+    #[sea_orm(has_many = "super::set::Entity")]
+    Set,
 }
 
-impl Related<super::program_target_muscle::Entity> for Entity {
+impl Related<super::set::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::ProgramTargetMuscle.def()
+        Relation::Set.def()
     }
 }
 

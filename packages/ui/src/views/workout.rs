@@ -8,7 +8,7 @@ use fgdb::data::profile::ProfileShowParams;
 use validator::ValidationErrors;
 
 #[component]
-pub fn ProgramCreateView(profile_id: usize) -> Element {
+pub fn WorkoutCreateView(profile_id: usize) -> Element {
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
     let profile_res = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {
@@ -18,8 +18,8 @@ pub fn ProgramCreateView(profile_id: usize) -> Element {
         .await
     })
     .suspend()?;
-    // first we write get_programs
-    // second, add a includes setup for profile to include programs on response
+    // first we write get_workouts
+    // second, add a includes setup for profile to include workouts on response
 
     let nav = navigator();
     use_effect(move || match profile_res() {
@@ -35,18 +35,18 @@ pub fn ProgramCreateView(profile_id: usize) -> Element {
     rsx! {
         div {
             class: "flex justify-between items-center",
-            h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Add Program" },
+            h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Add Workout" },
             Link {
                 class: "btn btn-outline",
                 to: router::Route::Home  {},
-                "Create Program"
+                "Create Workout"
             }
 
         }
         div {
             class: "justify-center",
             p {
-                "A program guides your workout and will determine what exercises you will be prompted for based on desired muscle groups and volume."
+                "A workout guides your session and will determine what exercises you will be prompted for based on desired muscle groups and volume."
             }
         }
 
@@ -54,7 +54,7 @@ pub fn ProgramCreateView(profile_id: usize) -> Element {
             class: "divider"
         }
 
-        h2 { class: "text-xl sm:text-2xl font-bold text-base-content", "Selected Programs" }
+        h2 { class: "text-xl sm:text-2xl font-bold text-base-content", "Selected Workouts" }
         p { "None" }
         div  {
             class: "mt-2",
