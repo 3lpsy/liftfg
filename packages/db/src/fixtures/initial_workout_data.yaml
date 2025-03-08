@@ -1,11 +1,14 @@
 workouts:
   - name: Upper Body Push
     code: UPPER_BODY_PUSH
-    # 21 sets
+    # 20 sets
     muscles:
       - code: PECS
-        volume: 9
+        volume: 8
         priority: 1
+        # even split on 4, with 3 it would be 3+3+2 with simple
+        # mostly for testing
+        exercise_set_split: 4
       - code: FRONT_DELTS
         volume: 3
         priority: 3
@@ -55,13 +58,13 @@ workouts:
         priority: 7
   - name: Lower Body
     code: LOWER_BODY
-    # 18 sets
+    # 20 sets
     muscles:
       - code: LOWER_BACK
         volume: 3
         priority: 1
       - code: HAMSTRINGS
-        volume: 3
+        volume: 4
         priority: 3
       - code: QUADS
         volume: 6
@@ -70,42 +73,42 @@ workouts:
         volume: 3
         priority: 9
       - code: CALVES
-        volume: 3
+        volume: 4
         priority: 7
   - name: Full Body Push
     code: FULL_BODY_PUSH
-    # 24 sets
+    # 20 sets
     muscles:
       - code: QUADS
-        volume: 6
+        volume: 5
         priority: 1
       - code: PECS
-        volume: 6
+        volume: 5
         priority: 3
       - code: FRONT_DELTS
         volume: 3
         priority: 5
       - code: TRICEPS
-        volume: 6
+        volume: 4
         priority: 7
       - code: CALVES
         volume: 3
         priority: 9
   - name: Full Body Pull
     code: FULL_BODY_PULL
-    # 18 sets
+    # 20 sets
     muscles:
       - code: LOWER_BACK
         volume: 3
         priority: 1
       - code: HAMSTRINGS
-        volume: 3
+        volume: 4
         priority: 3
       - code: GLUTES
         volume: 3
         priority: 5
       - code: LATS
-        volume: 3
+        volume: 5
         priority: 5
       - code: REAR_DELTS
         volume: 3

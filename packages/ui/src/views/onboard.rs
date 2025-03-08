@@ -48,7 +48,7 @@ pub fn OnboardTermsIndexView() -> Element {
                     Link {
                         to: router::Route::OnboardProfileCreateView {  },
                         class: "btn btn-outline w-full",
-                        "Get Started"
+                        "Create a Profile"
                     }
                 }
             }

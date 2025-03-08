@@ -9,12 +9,18 @@ use serde::{Deserialize, Serialize};
 pub enum EquipmentType {
     #[sea_orm(string_value = "CABLE")]
     Cable,
-    #[sea_orm(string_value = "MACHINE")]
-    Machine,
+    #[sea_orm(string_value = "HAMMER_MACHINE")]
+    HammerMachine,
+    #[sea_orm(string_value = "GENERAL_MACHINE")]
+    GeneralMachine,
+    #[sea_orm(string_value = "SMITH_MACHINE")]
+    SmithMachine,
     #[sea_orm(string_value = "DUMBBELL")]
     Dumbbell,
     #[sea_orm(string_value = "BARBELL")]
     Barbell,
+    #[sea_orm(string_value = "BODY_WEIGHT")]
+    BodyWeight,
     #[sea_orm(string_value = "OTHER")]
     Other,
 }

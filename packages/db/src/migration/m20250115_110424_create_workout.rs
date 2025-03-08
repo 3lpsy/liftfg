@@ -1,5 +1,5 @@
-use crate::entity::workout::{MuscleOrderStrategy, SetSplitStrategy};
-use crate::fixtures::get_workout_data_fixutre;
+use crate::entity::workout::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
+use crate::fixtures::get_workout_data_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20220101_000001_create_profile as profile;
@@ -27,11 +27,16 @@ impl MigrationTrait for Migration {
                             .default(MuscleOrderStrategy::Deterministic),
                     )
                     .col(
-                        string(Workout::SetSplitStrategy)
+                        string(Workout::ExcerciseSplitStrategy)
                             .not_null()
-                            .default(SetSplitStrategy::Simple),
+                            .default(ExcerciseSplitStrategy::Simple),
                     )
-                    .col(integer(Workout::DefaultSetSplit).not_null().default(3))
+                    .col(
+                        string(Workout::ExercisePromptStrategy)
+                            .not_null()
+                            .default(ExercisePromptStrategy::CommonCompound),
+                    )
+                    .col(integer(Workout::ExerciseSetSplit).not_null().default(3))
                     .add_timestamps()
                     .to_owned(),
             )
@@ -39,7 +44,7 @@ impl MigrationTrait for Migration {
         self.create_timestamp_trigger(manager, Workout::Table.to_string())
             .await?;
 
-        let workouts_data = get_workout_data_fixutre();
+        let workouts_data = get_workout_data_fixture();
         let dbc = manager.get_connection();
         for workout in workouts_data {
             let stmt = Statement::from_sql_and_values(
@@ -117,8 +122,9 @@ pub enum Workout {
     Code,
     ProfileId,
     MuscleOrderStrategy,
-    SetSplitStrategy,
-    DefaultSetSplit,
+    ExcerciseSplitStrategy,
+    ExercisePromptStrategy,
+    ExerciseSetSplit,
 }
 #[derive(DeriveIden)]
 enum ProfileWorkout {

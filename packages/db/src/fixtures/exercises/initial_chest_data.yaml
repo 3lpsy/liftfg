@@ -1,0 +1,375 @@
+exercises:
+  # straight bench press
+  - name: Bench Press (Barbell)
+    code: BENCH_PRESS
+    movement_code: BENCH_PRESS_BARBELL
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Dumbbell)
+    code: BENCH_PRESS_DUMBBELL
+    movement_code: BENCH_PRESS
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 2
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Bench Press (Hammer)
+    code: BENCH_PRESS_HAMMER
+    movement_code: BENCH_PRESS
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Machine)
+    code: BENCH_PRESS_GENERAL_MACHINE
+    movement_code: BENCH_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Smith)
+    code: BENCH_PRESS_SMITH_MACHINE
+    movement_code: BENCH_PRESS
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 2
+      - code: TRICEPS
+        effectiveness: 2
+
+  # incline bench press
+  - name: Bench Press (Barbell, Incline)
+    code: BENCH_PRESS_BARBELL_INCLINE
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 3
+
+  - name: Bench Press (Dumbbell, Incline)
+    code: BENCH_PRESS_DUMBBELL_INCLINE
+    movement_code: BENCH_PRESS
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 3
+
+  - name: Bench Press (Hammer, Incline)
+    code: BENCH_PRESS_HAMMER_MACHINE_INCLINE
+    movement_code: BENCH_PRESS
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Machine, Incline)
+    code: BENCH_PRESS_GENERAL_MACHINE_INCLINE
+    movement_code: BENCH_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Smith Machine, Incline)
+    code: BRENCH_PRESS_SMITH_MACHINE_INCLINE
+    movement_code: BENCH_PRESS
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 2
+      - code: TRICEPS
+        effectiveness: 2
+
+  # decline bench press
+  - name: Bench Press (Barbell, Decline)
+    code: BENCH_PRESS_BARBELL_DECLINE
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Bench Press (Dumbbell, Decline)
+    code: BENCH_PRESS_DUMBBELL_DECLINE
+    movement_code: BENCH_PRESS
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Bench Press (Hammer, Decline)
+    code: BENCH_PRESS_HAMMER_MACHINE_DECLINE
+    movement_code: BENCH_PRESS
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+
+  - name: Bench Press (Machine, Decline)
+    code: BENCH_PRESS_GENERAL_MACHINE_DECLINE
+    movement_code: BENCH_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+
+  # pressing variants
+  - name: Bench Press (Barbell, Close Grip)
+    code: BENCH_PRESS_BARBELL_CLOSE_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Bench Press (Dumbbell, Incline, Hammer Grip)
+    code: BENCH_PRESS_DUMBBELL_INCLINE_HAMMER_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 2
+      - code: TRICEPS
+        effectiveness: 1
+
+  - name: Bench Press (Barbell, Wide Grip)
+    code: BENCH_PRESS_BARBELL_WIDE_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 1
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Bench Press (Barbell, Decline, Wide Grip)
+    code: BRENCH_PRESS_BARBELL_DECLINE_WIDE_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  # Flyes
+  - name: Chest Flyes (Dumbbell)
+    code: CHEST_FLYES_DUMBBELL
+    movement_code: CHEST_FLYES
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Machine)
+    code: CHEST_FLYES_MACHINE
+    movement_code: CHEST_FLYES
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Cable, Standing)
+    code: CHEST_FLYES_CABLE_STANDING
+    movement_code: CHEST_FLYES
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Cable, Bent Over)
+    code: CHEST_FLYES_CABLE_BENT_OVER
+    movement_code: CHEST_FLYES
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Dumbbell, Decline)
+    code: CHEST_FLYES_DUMBBELL_DECLINE
+    movement_code: CHEST_FLYES
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Cable, Lying)
+    code: CHEST_FLYES_CABLE_LYING
+    movement_code: CHEST_FLYES
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Cable, Incline)
+    code: CHEST_FLYES_CABLE_INCLINE
+    movement_code: CHEST_FLYES
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+  - name: Chest Flyes (Dumbbell, Incline)
+    code: CHEST_FLYES_DUMBBELL_INCLINE
+    movement_code: CHEST_FLYES
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+
+  - name: Dips (Chest)
+    code: CHEST_DIPS
+    movement_code: DIPS
+    equipment_type: BODY
+    fatigue_score: 4
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Push Up (Decline)
+    code: PUSH_UPS_DECLINE
+    movement_code: PUSH_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Push Up
+    code: PUSH_UPS
+    movement_code: PUSH_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1

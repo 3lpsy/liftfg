@@ -17,7 +17,11 @@ impl MigrationTrait for Migration {
                     .if_not_exists()
                     .col(pk_auto(Exercise::Id))
                     .col(string(Exercise::Name).not_null())
+                    .col(string(Exercise::MovementCode).not_null())
+                    .col(string(Exercise::Code).not_null())
                     .col(string(Exercise::EquipmentType).not_null().default("OTHER"))
+                    .col(string_null(Exercise::VariantName))
+                    .col(integer(Exercise::FatigueScore).default(3))
                     .add_timestamps()
                     .to_owned(),
             )
@@ -30,7 +34,7 @@ impl MigrationTrait for Migration {
                     .table(ExerciseMuscle::Table)
                     .if_not_exists()
                     .col(pk_auto(ExerciseMuscle::Id))
-                    .col(integer(ExerciseMuscle::Effectiveness).not_null())
+                    .col(integer(ExerciseMuscle::EffectScore).not_null())
                     .col(integer(ExerciseMuscle::ExerciseId).not_null())
                     .foreign_key(
                         ForeignKey::create()
@@ -85,7 +89,11 @@ pub enum Exercise {
     Table,
     Id,
     Name,
+    Code,
+    MovementCode,
     EquipmentType,
+    VariantName,
+    FatigueScore,
 }
 #[derive(DeriveIden)]
 enum ExerciseMuscle {
@@ -93,5 +101,5 @@ enum ExerciseMuscle {
     Id,
     MuscleId,
     ExerciseId,
-    Effectiveness,
+    EffectScore,
 }

@@ -28,6 +28,7 @@ pub struct WorkoutMuscleFixture {
     pub code: String,
     pub volume: u8,
     pub priority: u8,
+    pub exercise_set_split: Option<u8>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -42,7 +43,7 @@ pub struct WorkoutsFixture {
     pub workouts: Vec<WorkoutFixture>,
 }
 
-pub fn get_workout_data_fixutre() -> Vec<WorkoutFixture> {
+pub fn get_workout_data_fixture() -> Vec<WorkoutFixture> {
     let muscle_data: WorkoutsFixture =
         serde_yaml::from_str(INITIAL_WORKOUT_DATA).expect("Failed to parse YAML");
     muscle_data.workouts
