@@ -1,0 +1,52 @@
+exercises:
+  - name: Lateral Raise (Dumbbell)
+    code: LATERAL_RAISE_DUMBBELL
+    movement_code: LATERAL_RAISE
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: SIDE_DELTS
+        effectiveness: 3
+      - code: UPPER_TRAPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Lateral Raise (Cable)
+    code: LATERAL_RAISE_CABLE
+    movement_code: LATERAL_RAISE
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: SIDE_DELTS
+        effectiveness: 3
+      - code: UPPER_TRAPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Lateral Raise (Machine)
+    code: LATERAL_RAISE_GENERAL_MACHINE
+    movement_code: LATERAL_RAISE
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: SIDE_DELTS
+        effectiveness: 3
+      - code: UPPER_TRAPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Lateral Raise (Dumbbell, Incline)
+    code: LATERAL_RAISE_DUMBBELL_INCLINE
+    movement_code: LATERAL_RAISE
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: SIDE_DELTS
+        effectiveness: 3
+      - code: UPPER_TRAPS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1

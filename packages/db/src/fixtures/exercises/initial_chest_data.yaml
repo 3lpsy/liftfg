@@ -185,18 +185,19 @@ exercises:
         effectiveness: 1
 
   # pressing variants
-  - name: Bench Press (Barbell, Close Grip)
-    code: BENCH_PRESS_BARBELL_CLOSE_GRIP
-    movement_code: BENCH_PRESS
-    equipment_type: BARBELL
-    fatigue_score: 3
-    muscles:
-      - code: PECS
-        effectiveness: 3
-      - code: TRICEPS
-        effectiveness: 3
-      - code: FRONT_DELTS
-        effectiveness: 1
+  # in triceps
+  # - name: Bench Press (Barbell, Close Grip)
+  #   code: BENCH_PRESS_BARBELL_CLOSE_GRIP
+  #   movement_code: BENCH_PRESS
+  #   equipment_type: BARBELL
+  #   fatigue_score: 3
+  #   muscles:
+  #     - code: PECS
+  #       effectiveness: 3
+  #     - code: TRICEPS
+  #       effectiveness: 3
+  #     - code: FRONT_DELTS
+  #       effectiveness: 1
 
   - name: Bench Press (Dumbbell, Incline, Hammer Grip)
     code: BENCH_PRESS_DUMBBELL_INCLINE_HAMMER_GRIP

@@ -1,0 +1,258 @@
+exercises:
+  - name: Triceps Extension (Machine)
+    code: TRICEP_EXTENSION_GENERAL_MACHINE
+    movement_code: TRICEP_EXTENSION
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Pushdown (Cable)
+    code: TRICEP_PUSHDOWN_CABLE
+    movement_code: TRICEP_PUSHDOWN
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Pushdown (Rope)
+    code: TRICEP_PUSHDOWN_ROPE
+    movement_code: TRICEP_PUSHDOWN
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Pushdown (V-Bar)
+    code: TRICEP_PUSHDOWN_VBAR
+    movement_code: TRICEP_PUSHDOWN
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Reverse Grip Triceps Pushdown (Cable)
+    code: REVERSE_TRICEP_PUSHDOWN_CABLE
+    movement_code: TRICEP_PUSHDOWN
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Overhead Triceps Extension (Dumbbell)
+    code: OVERHEAD_TRICEP_EXTENSION_DUMBBELL
+    movement_code: OVERHEAD_TRICEP_EXTENSION
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Overhead Triceps Extension (Barbell)
+    code: OVERHEAD_TRICEP_EXTENSION_BARBELL
+    movement_code: OVERHEAD_TRICEP_EXTENSION
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Overhead Triceps Extension (Cable)
+    code: OVERHEAD_TRICEP_EXTENSION_CABLE
+    movement_code: OVERHEAD_TRICEP_EXTENSION
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Skull Crushers (EZ Bar)
+    code: SKULL_CRUSHER_EZ_BAR
+    movement_code: SKILL_CRUSHER
+    equipment_type: EZ_BAR
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Skull Crushers (Dumbbell)
+    code: SKULL_CRUSHER_DUMBBELL
+    movement_code: SKILL_CRUSHER
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Skull Crusher (Decline, Close Grip)
+    code: SKULL_CRUSHER_DECLINE_CLOSE_GRIP
+    movement_code: SKILL_CRUSHER
+    equipment_type: EZ_BAR
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+
+  - name: Close-Grip Bench Press (Barbell)
+    code: BENCH_PRESS_BARBELL_CLOSE_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Close-Grip Bench Press (Smith Machine)
+    code: BENCH_PRESS_SMITH_MACHINE_CLOSE_GRIP
+    movement_code: BENCH_PRESS
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Bench Dips
+    code: BENCH_DIPS
+    movement_code: DIPS
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+
+  - name: Dips (Triceps Focus)
+    code: DIPS_TRICEPS
+    movement_code: DIPS
+    equipment_type: BODY
+    fatigue_score: 4
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Dips (Machine)
+    code: DIPS_GENERAL_MACHINE_TRICEPS
+    movement_code: DIPS
+    equipment_type: MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 2
+
+  - name: Diamond Push-Ups
+    code: PUSH_UP_DIAMOND
+    movement_code: PUSH_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Close Push-Up
+    code: PUSH_UP_CLOSE
+    movement_code: PUSH_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+      - code: PECS
+        effectiveness: 2
+
+  - name: Kickbacks (Dumbbell)
+    code: TRICEP_KICKBACK_DUMBELL
+    movement_code: TRICEP_KICKBACK
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Kickbacks (Cable)
+    code: TRICEP_KICKBACK_CABLE
+    movement_code: TRICEP_KICKBACK
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (Incline, Cable)
+    code: TRICEP_EXTENSION_INCLINE_CABLE
+    movement_code: TRICEP_EXTENSION
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (Cable, Lying)
+    code: TRICEP_EXTENSION_LYING_CABLE
+    movement_code: TRICEP_EXTENSION
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (Dumbbell, Lying)
+    code: TRICEP_EXTENSION_LYING_DUMBBELL
+    movement_code: TRICEP_EXTENSION
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (Overhead, Seated, EZ Curl Bar)
+    code: OVERHEAD_TRICEP_EXTENSION_SEATED_EZ_BAR
+    movement_code: OVERHEAD_TRICEP_EXTENSION
+    equipment_type: EZ_BAR
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (Overhead, Standing, EZ Curl Bar)
+    code: OVERHEAD_TRICEP_EXTENSION_STANDING_EZ_BAR
+    movement_code: TRICEP_EXTENSION
+    equipment_type: EZ_BAR
+    fatigue_score: 3
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
+
+  - name: Triceps Extension (One Arm, Cable, Low Pulley)
+    code: TRICEP_EXTENSION_ONE_ARM_LOW_PULLEY
+    movement_code: TRICEP_EXTENSION
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: TRICEPS
+        effectiveness: 3
