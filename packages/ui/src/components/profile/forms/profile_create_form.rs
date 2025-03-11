@@ -1,4 +1,4 @@
-use crate::{logging::info, router, services::profile::create_profile};
+use crate::{router, services::profile::create_profile};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileStoreData};
 use validator::{Validate, ValidationErrors};

@@ -1,0 +1,44 @@
+exercises:
+  - name: Thigh Abductor (Machine)
+    code: THIGH_ABDUCTOR
+    movement_code: THIGH_ABDUCTION
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: LATERAL_THIGH
+        effectiveness: 3
+      - code: QUADS
+        effectiveness: 1
+
+  - name: Hip Abduction (Cable)
+    code: HIP_ABDUCTION_CABLE
+    movement_code: HIP_ABDUCTION
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATERAL_THIGH
+        effectiveness: 3
+      - code: QUADS
+        effectiveness: 1
+
+  - name: Thigh Adductor (Machine)
+    code: THIGH_ADDUCTOR
+    movement_code: THIGH_ADDUCTION
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: INNER_THIGH
+        effectiveness: 3
+      - code: QUADS
+        effectiveness: 1
+
+  - name: Hip Adduction (Cable)
+    code: HIP_ADDUCTION_CABLE
+    movement_code: HIP_ADDUCTION
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: INNER_THIGH
+        effectiveness: 3
+      - code: QUADS
+        effectiveness: 1

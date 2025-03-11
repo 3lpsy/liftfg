@@ -5,23 +5,6 @@ use sea_orm::{ActiveModelTrait, DatabaseConnection, Set};
 
 use crate::entity::profile;
 
-pub fn default_workout_data() -> Vec<String> {
-    let p = vec![
-        "Upper Body Push",
-        "Upper Body Pull",
-        "Upper Body",
-        "Lower Body",
-        "Full Body Push",
-        "Full Body Pull",
-        "Full Body",
-        "Chest",
-        "Back",
-        "Shoulders",
-        "Arms",
-    ];
-    p.iter().map(|i| i.to_string()).collect()
-}
-
 // seeding should be done in migrations as schema may change
 #[cfg(feature = "db")]
 pub async fn dev(dbc: DatabaseConnection) -> Result<()> {

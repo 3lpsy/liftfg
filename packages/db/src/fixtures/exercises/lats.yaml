@@ -1,0 +1,511 @@
+# TODO: REAR_DELTS target
+exercises:
+  # pulldown
+  - name: Pulldown (Cable, Underhand)
+    code: PULLDOWN_CABLE_UNDERHAND
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Pulldown (Cable, Overhand)
+    code: PULLDOWN_CABLE_OVERHAND
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  # close grip neutral
+  - name: Pulldown (Cable, Close Neutral Grip)
+    code: PULLDOWN_CLOSE_NEUTRAL_GRIP
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Pulldown (Cable, Neutral Grip)
+    code: PULLDOWN_NEUTRAL_GRIP
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Pulldown (Cable, Wide Grip)
+    code: PULLDOWN_WIDE_GRIP
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: REAR_DELTS
+        effectiveness: 1
+
+  - name: Pulldown (One Arm, Cable, Straight)
+    code: PULLDOWN_CABLE_ONE_ARM_STRAIGHT
+    movement_code: PULLDOWN
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  # rows
+  - name: Row (Cable, Seated)
+    code: ROW_CABLE_SEATED
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: LOWER_BACK
+        effectiveness: 2
+
+  - name: Row (One Arm, Cable, Seated)
+    code: ROW_CABLE_SEATED_ONE_ARM
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: LOWER_BACK
+        effectiveness: 2
+
+  - name: High Row (One Arm, Cable, Kneeling)
+    code: ROW_HIGH_ONE_ARM_CABLE_KNEELING
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: High Row (One Arm, Cable, Chest Supported)
+    code: ROW_HIGH_ONE_ARM_CABLE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (One Arm, Cable)
+    code: ROW_LOW_ONE_ARM_CABLE
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (One Arm, Cable, Chest Supported)
+    code: ROW_LOW_ONE_ARM_CABLE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Row (Dumbbell, One Arm, Bench Supported)
+    code: ROW_DUMBBELL_ONE_ARM_BENCH_SUPPORTED
+    movement_code: ROW
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: REAR_DELTS
+        effectiveness: 2
+
+  - name: Row (Barbell, Bent Over)
+    code: ROW_BARBELL_BENT_OVER
+    movement_code: ROW
+    equipment_type: BARBELL
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: REAR_DELTS
+        effectiveness: 2
+
+  - name: Row (Barbell, Bent Over, Reverse Grip)
+    code: ROW_BARBELL_BENT_OVER_REVERSE
+    movement_code: ROW
+    equipment_type: BARBELL
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Row (T-Bar)
+    code: ROW_T_BAR
+    movement_code: ROW
+    equipment_type: T_BAR_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: REAR_DELTS
+        effectiveness: 2
+
+  - name: Inverted Row (Barbell)
+    code: INVERTED_ROW_BARBELL
+    movement_code: ROW
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: PECS
+        effectiveness: 2
+
+  - name: Inverted Row (Dumbbell)
+    code: INVERTED_ROW_DUMBBELL
+    movement_code: ROW
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+      - code: PECS
+        effectiveness: 2
+
+  # row machines
+  - name: Row (Machine, Chest Supported)
+    code: ROW_GENERAL_MACHINE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Row (One Arm, Machine, Chest Supported)
+    code: ROW_ONE_ARM_GENERAL_MACHINE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  # general mid row
+  - name: Row (Machine)
+    code: ROW_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Row (One Arm, Machine)
+    code: ROW_ONE_ARM_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  # hammer multi grip
+  - name: Row (Hammer, Chest Supported)
+    code: ROW_HAMMER_MACHINE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Row (One Arm, Hammer, Chest Supported)
+    code: ROW_ONE_ARM_HAMMER_MACHINE_CHEST_SUPPORTED
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: High Row (Machine)
+    code: ROW_HIGH_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: High Row (One Arm, Machine)
+    code: ROW_HIGH_ONE_ARM_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: High Row (Hammer)
+    code: ROW_HIGH_HAMMER_MACHINE
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: High Row (One Arm, Hammer)
+    code: ROW_HIGH_ONE_ARM_HAMMER_MACHINE
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (Machine)
+    code: ROW_LOW_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (One Arm, Machine)
+    code: ROW_LOW_ONE_ARM_GENERAL_MACHINE
+    movement_code: ROW
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (Hammer)
+    code: ROW_LOW_HAMMER_MACHINE
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Low Row (One Arm, Hammer)
+    code: ROW_LOW_ONE_ARM_HAMMER_MACHINE
+    movement_code: ROW
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  # body
+  - name: Pull Up
+    code: PULL_UP
+    movement_code: PULL_UP
+    equipment_type: BODY
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Pull Up (Band Assisted)
+    code: PULL_UP_BAND_ASSISTED
+    movement_code: PULL_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Pull Up (Machine Assisted)
+    code: PULL_UP_MACHINE_ASSISTED
+    movement_code: PULL_UP
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 2
+
+  - name: Chin Up
+    code: CHIN_UP
+    movement_code: PULL_UP
+    equipment_type: BODY
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Chin Up (Band Assisted)
+    code: CHIN_UP_BAND_ASSISTED
+    movement_code: PULL_UP
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Chin Up (Machine Assisted)
+    code: CHIN_UP_MACHINE_ASSISTED
+    movement_code: PULL_UP
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Chin Up (Narrow Parallel Grip)
+    code: CHIN_UP_NARROW_PARALLEL
+    movement_code: PULL_UP
+    equipment_type: BODY
+    fatigue_score: 4
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: BICEPS
+        effectiveness: 3
+      - code: REAR_DELTS
+        effectiveness: 2
+
+  # Pull Over
+  - name: Pull Over (Cable)
+    code: PULL_OVER_CABLE
+    movement_code: PULL_OVER
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Pull Over (Cable, Rope)
+    code: PULL_OVER_CABLE_ROPE
+    movement_code: PULL_OVER
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Pull Over (Cable, Incline, Bench)
+    code: PULL_OVER_INCLINE_BENCH
+    movement_code: PULL_OVER
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Pull Over (Hammer)
+    code: PULL_OVER_HAMMER_MACHINE
+    movement_code: PULL_OVER
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2
+
+  - name: Pull Over (Machine)
+    code: PULL_OVER_GENERAL_MACHINE
+    movement_code: PULL_OVER
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: LATS
+        effectiveness: 3
+      - code: TRICEPS
+        effectiveness: 2

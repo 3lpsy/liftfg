@@ -28,8 +28,9 @@ pub fn run() {
     // Setup Callback
     builder = builder.setup(|app| Ok(setup::setup(app, log_handles, None)?));
     builder = builder.invoke_handler(commands::generate());
+    let context = tauri::generate_context!();
 
-    builder.run(tauri::generate_context!()).unwrap_or_else(|e| {
+    builder.run(context).unwrap_or_else(|e| {
         eprintln!("Error while running Tauri application: {:?}", e);
         panic!("Error while running Tauri application")
     });

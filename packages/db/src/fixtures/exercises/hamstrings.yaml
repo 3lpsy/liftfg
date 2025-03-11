@@ -1,0 +1,132 @@
+exercises:
+  - name: Leg Curl (Seated, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_SEATED
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  - name: Leg Curl (Seated, One Leg, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_SEATED_ONE_LEG
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  - name: Leg Curl (Standing, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_STANDING
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  - name: Leg Curl (Standing, One Leg, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_STANDING_ONE_LEG
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  - name: Leg Curl (Lying, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_LYING
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  - name: Leg Curl (Lying, One Leg, Machine)
+    code: LEG_CURL_GENERAL_MACHINE_LYING_ONE_LEG
+    movement_code: LEG_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+
+  # idk
+  - name: Romanian Deadlift (Barbell)
+    code: ROMANIAN_DEADLIFT_BARBELL
+    movement_code: DEADLIFT
+    equipment_type: BARBELL
+    fatigue_score: 4
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+      - code: LOWER_BACK
+        effectiveness: 2
+
+  - name: Romanian Deadlift (Dumbbell)
+    code: ROMANIAN_DEADLIFT_DUMBBELL
+    movement_code: DEADLIFT
+    equipment_type: DUMBBELL
+    fatigue_score: 4
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+      - code: LOWER_BACK
+        effectiveness: 2
+
+  - name: Lunges (Barbell)
+    code: LUNGES_BARBELL
+    movement_code: LUNGES
+    equipment_type: BARBELL
+    fatigue_score: 4
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+      - code: QUADS
+        effectiveness: 2
+      - code: CALVES
+        effectiveness: 1
+      - code: SOLEUS
+        effectiveness: 1
+
+  - name: Lunges (Dumbbell)
+    code: LUNGES_DUMBBELL
+    movement_code: LUNGES
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+      - code: QUADS
+        effectiveness: 2
+      - code: CALVES
+        effectiveness: 1
+      - code: SOLEUS
+        effectiveness: 1
+
+  - name: Lunges (Dumbbell, Walking)
+    code: LUNGES_DUMBBELL_WALKING
+    movement_code: LUNGES
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: HAMSTRINGS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+      - code: QUADS
+        effectiveness: 2
+      - code: CALVES
+        effectiveness: 1
+      - code: SOLEUS
+        effectiveness: 1

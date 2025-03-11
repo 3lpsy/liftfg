@@ -1,0 +1,264 @@
+# TODO: qa
+exercises:
+  # Squat
+  - name: Squat (Back, Barbell)
+    code: SQUAT_BACK_BARBELL
+    movement_code: SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Squat (Back, Smith Machine)
+    code: SQUAT_BACK_SMITH_MACHINE
+    movement_code: SQUAT
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Squat (Back, Barbell, Narrow Stance)
+    code: SQUAT_BACK_BARBELL_NARROW_STANCE
+    movement_code: SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Squat (Back, Barbell, Wide Stance)
+    code: SQUAT_BACK_BARBELL_WIDE_STANCE
+    movement_code: SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Squat (Front, Barbell)
+    code: SQUAT_FRONT_BARBELL
+    movement_code: SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Squat (Dumbbell)
+    code: SQUAT_DUMBBELL
+    movement_code: SQUAT
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  # Split squat
+  - name: Split Squat (Back, Barbell)
+    code: SPLIT_SQUAT_BACK_BARBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Back, Smith Machine)
+    code: SPLIT_SQUAT_BACK_SMITH_MACHINE
+    movement_code: SPLIT_SQUAT
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Front, Barbell)
+    code: SPLIT_SQUAT_FRONT_BARBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Dumbbell)
+    code: SPLIT_SQUAT_DUMBBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Bulgarian, Back, Barbell)
+    code: SPLIT_SQUAT_BULGARIAN_BACK_BARBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Bulgarian, Back, Smith Machine)
+    code: SPLIT_SQUAT_BULGARIAN_BACK_SMITH_MACHINE
+    movement_code: SPLIT_SQUAT
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Bulgarian, Front, Barbell)
+    code: SPLIT_SQUAT_BULGARIAN_FRONT_BARBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Split Squat (Bulgarian, Dumbbell)
+    code: SPLIT_SQUAT_BULGARIAN_DUMBBELL
+    movement_code: SPLIT_SQUAT
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  # hack squat
+  - name: Hack Squat (Machine)
+    code: HACK_SQUAT_MACHINE
+    movement_code: SQUAT
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Hack Squat (Machine, Narrow Stance)
+    code: HACK_SQUAT_MACHINE_NARROW_STANCE
+    movement_code: SQUAT
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Hack Squat (Barbell)
+    code: HACK_SQUAT_BARBELL
+    movement_code: SQUAT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Hack Squat (Smith Machine)
+    code: HACK_SQUAT_SMITH_MACHINE
+    movement_code: SQUAT
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Leg Press (Incline, Machine)
+    code: LEG_PRESS_INCLINE_GENERAL_MACHINE
+    movement_code: LEG_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Leg Press (Incline, Machine, Narrow Stance)
+    code: LEG_PRESS_INCLINE_GENERAL_MACHINE_NARROW_STANCE
+    movement_code: LEG_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Leg Press (Machine)
+    code: LEG_PRESS_GENERAL_MACHINE
+    movement_code: LEG_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Leg Press (Narrow Stance, Machine)
+    code: LEG_PRESS_GENERAL_MACHINE_NARROW_STANCE
+    movement_code: LEG_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+      - code: GLUTES
+        effectiveness: 2
+
+  - name: Leg Extension (Machine)
+    code: LEG_EXTENSION_GENERAL_MACHINE
+    movement_code: LEG_EXTENSION
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: QUADS
+        effectiveness: 3
+
+  - name: Leg Extension (One Leg)
+    code: LEG_EXTENSION_ONE_LEG
+    movement_code: LEG_EXTENSION
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: QUADS
+        effectiveness: 3

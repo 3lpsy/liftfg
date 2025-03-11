@@ -20,13 +20,7 @@ pub enum MuscleOrderStrategy {
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum, Serialize, Deserialize)]
 #[sea_orm(rs_type = "String", db_type = "String(StringLen::N(1))")]
 pub enum ExcerciseSplitStrategy {
-    // splits 4 into 2+2
-    // splits 5 into 3+2
-    // splits 6 into 3+3
-    // splits 7 into 3+2+2
-    // splits 8 into 3+3+2
-    // splits 9 into 3+3+3
-    // basically minimum 2 sets for exercise, prefer 3
+    // splits 4 into 2+2, splits 5 into 3+2, splits 6 into 3+3, splits 7 into 3+2+2, splits 8 into 3+3+2, splits 9 into 3+3+3, basically minimum 2 sets for exercise, prefer 3
     #[sea_orm(string_value = "SIMPLE")]
     Simple,
     // on x, always prefer that split no matter remainder

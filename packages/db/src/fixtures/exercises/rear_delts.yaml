@@ -1,0 +1,19 @@
+# TODO: more exercises
+exercises:
+  - name: Reverse Flyes (Cable)
+    code: REVERSE_FLYE_CABLE
+    movement_code: REVERSE_FLYE
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: REAR_DELTS
+        effectiveness: 3
+
+  - name: Face Pulls
+    code: FACE_PULL
+    movement_code: FACE_PULL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: REAR_DELTS
+        effectiveness: 3

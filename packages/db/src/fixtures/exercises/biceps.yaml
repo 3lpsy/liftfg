@@ -1,0 +1,226 @@
+# TODO brachialis muscle
+#
+exercises:
+  - name: Biceps Curl (Dumbbell)
+    code: BICEP_CURL_DUMBBELL
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Biceps Curl (Dumbbell, Hammer Grip)
+    code: BICEP_CURL_DUMBBELL_HAMMER_GRIP
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Biceps Curl (Cable, Straight Bar)
+    code: BICEP_CURL_CABLE_STRAIGHT_BAR
+    movement_code: BICEP_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Biceps Curl (One Arm, Cable)
+    code: BICEP_CURL_CABLE_ONE_ARM
+    movement_code: BICEP_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Biceps Curl (One Arm, Cable, Facing Away)
+    code: BICEP_CURL_CABLE_ONE_ARM_FACING_AWAY
+    movement_code: BICEP_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Biceps Curl (Cable, Rope)
+    code: BICEP_CURL_CABLE_ROPE
+    movement_code: BICEP_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Biceps Curl (EZ Curl Bar)
+    code: BICEP_CURL_EZ_BAR
+    movement_code: BICEP_CURL
+    equipment_type: EZ_BAR
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+      - code: FRONT_DELTS
+        effectiveness: 1
+
+  - name: Biceps Curl (Machine)
+    code: BICEP_CURL_MACHINE
+    movement_code: BICEP_CURL
+    equipment_type: MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Dumbbell, One Arm)
+    code: PREACHER_CURL_DUMBBELL_ONE_ARM
+    movement_code: PREACHER_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Cable)
+    code: PREACHER_CURL_CABLE
+    movement_code: PREACHER_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Machine)
+    code: PREACHER_CURL_GENERAL_MACHINE
+    movement_code: PREACHER_CURL
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Hammer Machine)
+    code: PREACHER_CURL_HAMMER_MACHINE
+    movement_code: PREACHER_CURL
+    equipment_type: HAMMER_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (EZ Curl Bar)
+    code: PREACHER_CURL_EZ_BAR
+    movement_code: PREACHER_CURL
+    equipment_type: EZ_BAR
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Dumbbell, Hammer Grip)
+    code: PREACHER_CURL_DUMBBELL_HAMMER_GRIP
+    movement_code: PREACHER_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Bicep Curl (Dumbbell, Zottman)
+    code: BICEP_CURL_DUMBBELL_ZOTTMAN
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Preacher Curl (Dumbbell, Zottman)
+    code: PREACHER_CURL_DUMBBELL_ZOTTMAN
+    movement_code: PREACHER_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  # other
+  - name: Concentration Curl (Dumbbell)
+    code: CONCENTRATION_CURL_DUMBBELL
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Drag Curl (EZ Curl Bar)
+    code: DRAG_CURL_EZ_BAR
+    movement_code: BICEP_CURL
+    equipment_type: EZ_BAR
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2
+
+  - name: Biceps Curl (Dumbbell, Incline)
+    code: BICEP_CURL_DUMBBELL_INCLINE
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Biceps Curl (Cable, Overhead)
+    code: BICEP_CURL_CABLE_OVERHEAD
+    movement_code: BICEP_CURL
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+
+  - name: Biceps Curl (Dumbbell, Reverse)
+    code: BICEP_CURL_DUMBBELL_REVERSE
+    movement_code: BICEP_CURL
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: BICEPS
+        effectiveness: 3
+      - code: FOREARMS
+        effectiveness: 2

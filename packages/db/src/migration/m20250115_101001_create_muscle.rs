@@ -1,4 +1,4 @@
-use crate::fixtures::get_muscle_data_fixture;
+use crate::fixtures::get_muscles_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use sea_orm::{DbBackend, Statement};
@@ -16,9 +16,10 @@ impl MigrationTrait for Migration {
                     .table(Muscle::Table)
                     .if_not_exists()
                     .col(pk_auto(Muscle::Id))
-                    .col(string(Muscle::Name).not_null())
-                    .col(string(Muscle::Code).not_null())
-                    .col(string(Muscle::LongName).not_null())
+                    .col(string(Muscle::Name).not_null().unique_key())
+                    .col(string(Muscle::Code).not_null().unique_key())
+                    .col(string(Muscle::LongName).not_null().unique_key())
+                    .col(integer(Muscle::SizeScore).default(3).not_null())
                     .add_timestamps()
                     .to_owned(),
             )
@@ -26,21 +27,34 @@ impl MigrationTrait for Migration {
         self.create_timestamp_trigger(manager, Muscle::Table.to_string())
             .await?;
 
-        let muscle_data = get_muscle_data_fixture();
         let dbc = manager.get_connection();
-        for muscle in muscle_data {
-            let stmt = Statement::from_sql_and_values(
-                DbBackend::Sqlite,
-                "INSERT INTO muscle (name, code, long_name) VALUES (?, ?, ?)",
-                vec![
-                    Value::String(Some(muscle.name.into())),
-                    Value::String(Some(muscle.code.into())),
-                    Value::String(Some(muscle.long_name.into())),
-                ],
-            );
-            dbc.execute(stmt).await?;
-        }
 
+        let values: Vec<Vec<Value>> = get_muscles_fixture()
+            .iter()
+            .map(|item| {
+                vec![
+                    Value::String(Some(item.name.clone().into())),
+                    Value::String(Some(item.code.clone().into())),
+                    Value::String(Some(item.long_name.clone().into())),
+                    Value::Int(Some(item.size_score.clone().into())),
+                ]
+            })
+            .collect();
+        let mut insert =
+            String::from("INSERT INTO muscle (name, code, long_name, size_score) VALUES ");
+        for i in 0..values.len() {
+            insert.push_str("(?, ?, ?, ?)");
+            if i < values.len() - 1 {
+                insert.push_str(", ");
+            }
+        }
+        let stmt = Statement::from_sql_and_values(
+            DbBackend::Sqlite,
+            &insert,
+            values.iter().flatten().cloned().collect::<Vec<Value>>(),
+        );
+        // Execute the batch insert
+        dbc.execute(stmt).await?;
         Ok(())
     }
 
@@ -60,4 +74,5 @@ pub enum Muscle {
     Code,
     Name,
     LongName,
+    SizeScore,
 }

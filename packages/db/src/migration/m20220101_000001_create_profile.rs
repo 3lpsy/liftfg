@@ -1,5 +1,5 @@
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
-use sea_orm_migration::{prelude::*, schema::*}; // Import the trait
+use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
 pub struct Migration;

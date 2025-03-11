@@ -2,63 +2,84 @@ muscles:
   - name: Biceps
     long_name: Biceps Brachii
     code: BICEPS
+    size_score: 2
   - name: Brachialis
     long_name: Brachialis
     code: BRACHIALIS
+    size_score: 1
   - name: Triceps
     long_name: Triceps Brachii
     code: TRICEPS
+    size_score: 3
   - name: Front Delts
     long_name: Anterior Deltoid
     code: FRONT_DELTS
+    size_score: 2
   - name: Side Delts
     long_name: Lateral Deltoid
     code: SIDE_DELTS
+    size_score: 2
   - name: Rear Delts
     long_name: Posterior Deltoid
     code: REAR_DELTS
+    size_score: 2
   - name: Chest
     long_name: Pectoralis Major
     code: PECS
+    size_score: 4
   - name: Lats
     long_name: Latissimus Dorsi
     code: LATS
+    size_score: 5
   - name: Upper Back
     long_name: Trapezius
     code: UPPER_BACK
+    size_score: 4
   - name: Lower Back
     long_name: Erector Spinae
     code: LOWER_BACK
+    size_score: 4
   - name: Abs
     long_name: Rectus Abdominis
     code: ABS
+    size_score: 2
   - name: Obliques
     long_name: Obliques
     code: OBLIQUES
+    size_score: 2
   - name: Quads
     long_name: Quadriceps
     code: QUADS
+    size_score: 5
   - name: Hamstrings
     long_name: Hamstrings
     code: HAMSTRINGS
+    size_score: 4
   - name: Glutes
     long_name: Gluteus Maximus
     code: GLUTES
+    size_score: 5
   - name: Lateral Thigh
     long_name: Gluteus Medius, Gluteus Minimus, Tensor Fasciae Latae
     code: LATERAL_THIGH
+    size_score: 3
   - name: Inner Thigh
     long_name: Adductor Magnus, Adductor Longus, Adductor Brevis, Gracilis, Pectineus
     code: INNER_THIGH
+    size_score: 3
   - name: Calves
     long_name: Gastrocnemius
     code: CALVES
+    size_score: 3
   - name: Soleus
     long_name: Soleus
     code: SOLEUS
+    size_score: 2
   - name: Forearms
     long_name: Forearm Flexors and Extensors
     code: FOREARMS
+    size_score: 2
   - name: Heart
     long_name: Cardiac Muscle
     code: HEART
+    size_score: 3

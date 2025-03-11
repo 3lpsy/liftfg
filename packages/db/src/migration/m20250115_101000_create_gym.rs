@@ -32,7 +32,7 @@ impl MigrationTrait for Migration {
                     .col(integer(GymProfile::ProfileId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_gym_profile_profile") // Name of the foreign key constraint
+                            .name("fk_gym_profile_profile")
                             .from(GymProfile::Table, GymProfile::ProfileId)
                             .to(profile::Profile::Table, profile::Profile::Id)
                             .on_delete(ForeignKeyAction::Cascade)

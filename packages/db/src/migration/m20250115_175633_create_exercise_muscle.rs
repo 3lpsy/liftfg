@@ -1,65 +1,65 @@
 use std::collections::HashMap;
 
-use crate::entity::workout::ExercisePromptStrategy;
-use crate::fixtures::get_workouts_fixture;
+use crate::fixtures::get_exercises_fixture;
 
-use super::common::{MigrationTimestampExt, TableWithTimestamps};
-use super::m20250115_101001_create_muscle::Muscle;
-use super::m20250115_110424_create_workout as workout;
-
+use super::{
+    common::{MigrationTimestampExt, TableWithTimestamps},
+    m20250115_101001_create_muscle::Muscle,
+    m20250115_175632_create_exercise::Exercise,
+};
 use sea_orm::{DbBackend, Statement};
 use sea_orm_migration::{prelude::*, schema::*};
+
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // no index so can be added multiple times
         manager
             .create_table(
                 Table::create()
-                    .table(WorkoutMuscle::Table)
+                    .table(ExerciseMuscle::Table)
                     .if_not_exists()
-                    .col(pk_auto(WorkoutMuscle::Id))
-                    .col(integer(WorkoutMuscle::Volume).not_null())
-                    .col(integer(WorkoutMuscle::Priority).not_null())
-                    .col(integer(WorkoutMuscle::WorkoutId).not_null())
-                    // overrride split on that exercise
-                    .col(integer_null(WorkoutMuscle::ExerciseSetSplit))
+                    .col(pk_auto(ExerciseMuscle::Id))
+                    .col(integer(ExerciseMuscle::EffectScore).not_null())
+                    .col(integer(ExerciseMuscle::ExerciseId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_workout_muscle_workout")
-                            .from(WorkoutMuscle::Table, WorkoutMuscle::WorkoutId)
-                            .to(workout::Workout::Table, workout::Workout::Id)
+                            .name("fk_exercise_muscle_exercise")
+                            .from(ExerciseMuscle::Table, ExerciseMuscle::ExerciseId)
+                            .to(Exercise::Table, Exercise::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(integer(WorkoutMuscle::MuscleId).not_null())
+                    .col(integer(ExerciseMuscle::MuscleId).not_null())
                     .foreign_key(
                         ForeignKey::create()
-                            .name("fk_workout_muscle_muscle")
-                            .from(WorkoutMuscle::Table, WorkoutMuscle::MuscleId)
+                            .name("fk_exercise_muscle_muscle")
+                            .from(ExerciseMuscle::Table, ExerciseMuscle::MuscleId)
                             .to(Muscle::Table, Muscle::Id)
                             .on_delete(ForeignKeyAction::Cascade)
                             .on_update(ForeignKeyAction::Cascade),
                     )
-                    .col(
-                        string_null(WorkoutMuscle::ExercisePromptStrategy)
-                            .default(ExercisePromptStrategy::CommonCompound),
+                    .index(
+                        Index::create()
+                            .name("idx_exercise_muscle")
+                            .table(ExerciseMuscle::Table)
+                            .col(ExerciseMuscle::MuscleId)
+                            .col(ExerciseMuscle::ExerciseId)
+                            .unique(),
                     )
                     .add_timestamps()
                     .to_owned(),
             )
             .await?;
-        self.create_timestamp_trigger(manager, WorkoutMuscle::Table.to_string())
+        self.create_timestamp_trigger(manager, ExerciseMuscle::Table.to_string())
             .await?;
-
         let dbc = manager.get_connection();
-        let workout_map: HashMap<String, i64> = dbc
+        let excercise_map: HashMap<String, i64> = dbc
             .query_all(Statement::from_string(
                 DbBackend::Sqlite,
-                "SELECT id, code from workout",
+                "SELECT id, code from exercise",
             ))
             .await?
             .iter()
@@ -82,31 +82,30 @@ impl MigrationTrait for Migration {
                 Some((code, id))
             })
             .collect();
-        let values: Vec<Vec<Value>> = get_workouts_fixture()
+        let values: Vec<Vec<Value>> = get_exercises_fixture()
             .iter()
-            .flat_map(|workout| {
-                workout
-                    .muscles
+            .flat_map(|ex| {
+                ex.muscles
                     .iter()
-                    .map(move |muscle| (workout.code.clone(), muscle))
+                    .map(move |muscle| (ex.code.clone(), muscle))
             })
             .map(|wm| {
                 let muscle = wm.1;
-                let workout_id: i64 = workout_map.get(&wm.0).unwrap().clone();
+                let exercise_id: i64 = excercise_map.get(&wm.0).unwrap().clone();
                 let muscle_id: i64 = muscle_map.get(&muscle.code).unwrap().clone();
                 vec![
-                    Value::BigInt(Some(workout_id)),
-                    Value::BigInt(Some(muscle_id)),
-                    Value::Int(Some(muscle.volume.into())),
-                    Value::Int(Some(muscle.priority.into())),
-                    Value::Int(muscle.exercise_set_split.map(|v| v as i32)),
+                    Value::Int(Some(exercise_id as i32)),
+                    Value::Int(Some(muscle_id as i32)),
+                    Value::Int(Some(muscle.effectiveness as i32)),
                 ]
             })
             .collect();
 
-        let mut insert = String::from("INSERT INTO workout_muscle (workout_id, muscle_id, volume, priority, exercise_set_split) VALUES ");
+        let mut insert = String::from(
+            "INSERT INTO exercise_muscle (exercise_id, muscle_id, effect_score) VALUES ",
+        );
         for i in 0..values.len() {
-            insert.push_str("(?, ?, ?, ?, ?)");
+            insert.push_str("(?, ?, ?)");
             if i < values.len() - 1 {
                 insert.push_str(", ");
             }
@@ -118,27 +117,23 @@ impl MigrationTrait for Migration {
         );
         // Execute the batch insert
         dbc.execute(stmt).await?;
-
         Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        self.drop_timestamp_trigger(manager, WorkoutMuscle::Table.to_string())
+        self.drop_timestamp_trigger(manager, ExerciseMuscle::Table.to_string())
             .await?;
         manager
-            .drop_table(Table::drop().table(WorkoutMuscle::Table).to_owned())
+            .drop_table(Table::drop().table(ExerciseMuscle::Table).to_owned())
             .await
     }
 }
 
 #[derive(DeriveIden)]
-enum WorkoutMuscle {
+enum ExerciseMuscle {
     Table,
     Id,
-    WorkoutId,
     MuscleId,
-    Volume,
-    Priority,
-    ExerciseSetSplit,
-    ExercisePromptStrategy,
+    ExerciseId,
+    EffectScore,
 }

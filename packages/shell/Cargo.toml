@@ -33,6 +33,7 @@ tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-log = { workspace = true }
 validator = { workspace = true }
+chrono = { workspace = true }
 
 tauri-plugin-log = { path = "../../../../community/plugins-workspace/plugins/log" }
 log = { workspace = true }

@@ -1,0 +1,85 @@
+# TODO: qa
+exercises:
+  - name: Deadlift (Barbell)
+    code: DEADLIFT_BARBELL
+    movement_code: DEADLIFT
+    equipment_type: BARBELL
+    fatigue_score: 5
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+
+  - name: Deadlift (Dumbbell)
+    code: DEADLIFT_DUMBBELL
+    movement_code: DEADLIFT
+    equipment_type: DUMBBELL
+    fatigue_score: 3
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+
+  - name: Deadlift (Smith Machine)
+    code: DEADLIFT_SMITH_MACHINE
+    movement_code: DEADLIFT
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 4
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+      - code: CALVES
+        effectiveness: 1
+      - code: SOLEUS
+        effectiveness: 1
+
+  - name: Good Mornings (Barbell)
+    code: GOOD_MORNINGS_BARBELL
+    movement_code: GOOD_MORNINGS
+    equipment_type: BARBELL
+    fatigue_score: 4
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+
+  - name: Good Mornings (Smith Machine)
+    code: GOOD_MORNINGS_SMITH_MACHINE
+    movement_code: GOOD_MORNINGS
+    equipment_type: SMITH_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+
+  - name: Hyper Extensions
+    code: HYPER_EXTENSIONS
+    movement_code: HYPER_EXTENSIONS
+    # something not a machine, but equipment?
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+      - code: ABS
+        effectiveness: 1
+
+  - name: Supermans
+    code: SUPERMANS
+    movement_code: SUPERMANS
+    equipment_type: BODY
+    fatigue_score: 1
+    muscles:
+      - code: LOWER_BACK
+        effectiveness: 3
+      - code: ABS
+        effectiveness: 1

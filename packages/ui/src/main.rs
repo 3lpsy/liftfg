@@ -9,7 +9,6 @@ mod router;
 mod services;
 mod views;
 use std::str::FromStr;
-use tracing::info;
 
 use chrono_tz::Tz;
 use dioxus::prelude::*;

@@ -7,7 +7,7 @@ exercises:
     muscles:
       - code: SIDE_DELTS
         effectiveness: 3
-      - code: UPPER_TRAPS
+      - code: UPPER_BACK
         effectiveness: 2
       - code: FRONT_DELTS
         effectiveness: 1
@@ -20,7 +20,7 @@ exercises:
     muscles:
       - code: SIDE_DELTS
         effectiveness: 3
-      - code: UPPER_TRAPS
+      - code: UPPER_BACK
         effectiveness: 2
       - code: FRONT_DELTS
         effectiveness: 1
@@ -33,7 +33,7 @@ exercises:
     muscles:
       - code: SIDE_DELTS
         effectiveness: 3
-      - code: UPPER_TRAPS
+      - code: UPPER_BACK
         effectiveness: 2
       - code: FRONT_DELTS
         effectiveness: 1
@@ -46,7 +46,7 @@ exercises:
     muscles:
       - code: SIDE_DELTS
         effectiveness: 3
-      - code: UPPER_TRAPS
+      - code: UPPER_BACK
         effectiveness: 2
       - code: FRONT_DELTS
         effectiveness: 1

@@ -6,6 +6,7 @@ use crate::{
 };
 
 use anyhow::Result;
+use chrono::Utc;
 use fgcore::{environment::Environment, logging};
 use fgdb::{db, seed};
 use fgutils;
@@ -18,6 +19,7 @@ pub async fn setup_async<R: Runtime>(
     log_handles: (logging::LayersHandle, logging::FilterHandle),
     conf: Option<AppConfig>,
 ) -> Result<()> {
+    let start_dt = Utc::now();
     if !AppConfig::should_no_dotenv(app)? {
         fgutils::load_dotenvs(vec![
             fgutils::cwd().join(".env"),
@@ -64,7 +66,12 @@ pub async fn setup_async<R: Runtime>(
     // null on mockruntime
     // let mut webview = app.webview_windows().get("main").unwrap().as_ref();
 
-    info!("App setup complete");
+    let end_dt = Utc::now();
+    let boot_duration = end_dt - start_dt;
+    info!(
+        "App setup complete ({} ms)",
+        boot_duration.num_milliseconds()
+    );
     Ok(())
 }
 

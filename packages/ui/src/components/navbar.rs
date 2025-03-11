@@ -1,7 +1,6 @@
 #![allow(non_snake_case)]
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
-use tracing::info;
 
 use crate::{
     icons::{ArrowLeft, ProfileIcon},

@@ -8,6 +8,7 @@ pub mod m20250115_101001_create_muscle;
 pub mod m20250115_110424_create_workout;
 pub mod m20250115_173443_create_workout_muscle;
 pub mod m20250115_175632_create_exercise;
+pub mod m20250115_175633_create_exercise_muscle;
 pub mod m20250115_192036_create_session;
 
 pub struct Migrator;
@@ -22,6 +23,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250115_110424_create_workout::Migration),
             Box::new(m20250115_173443_create_workout_muscle::Migration),
             Box::new(m20250115_175632_create_exercise::Migration),
+            Box::new(m20250115_175633_create_exercise_muscle::Migration),
             Box::new(m20250115_192036_create_session::Migration),
         ]
     }
