@@ -5,7 +5,7 @@ use crate::fixtures::get_workouts_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20250115_101001_create_muscle::Muscle;
-use super::m20250115_110424_create_workout as workout;
+use super::m20250115_110424_create_workout::{self as workout};
 
 use sea_orm::{DbBackend, Statement};
 use sea_orm_migration::{prelude::*, schema::*};
@@ -63,10 +63,10 @@ impl MigrationTrait for Migration {
             ))
             .await?
             .iter()
-            .filter_map(|row| {
-                let code = row.try_get("", "code").ok()?;
-                let id = row.try_get("", "id").ok()?;
-                Some((code, id))
+            .map(|row| {
+                let code = row.try_get("", "code").unwrap();
+                let id = row.try_get("", "id").unwrap();
+                (code, id)
             })
             .collect();
         let muscle_map: HashMap<String, i64> = dbc
@@ -76,13 +76,27 @@ impl MigrationTrait for Migration {
             ))
             .await?
             .iter()
-            .filter_map(|row| {
-                let code = row.try_get("", "code").ok()?;
-                let id = row.try_get("", "id").ok()?;
-                Some((code, id))
+            .map(|row| {
+                let code = row.try_get("", "code").unwrap();
+                let id = row.try_get("", "id").unwrap();
+                (code, id)
             })
             .collect();
-        let values: Vec<Vec<Value>> = get_workouts_fixture()
+        let columns: Vec<Alias> = [
+            WorkoutMuscle::WorkoutId.to_string(),
+            WorkoutMuscle::MuscleId.to_string(),
+            WorkoutMuscle::Volume.to_string(),
+            WorkoutMuscle::Priority.to_string(),
+            WorkoutMuscle::ExerciseSetSplit.to_string(),
+        ]
+        .into_iter()
+        .map(Alias::new)
+        .collect();
+
+        let mut insert = Query::insert();
+        insert.into_table(WorkoutMuscle::Table).columns(columns);
+
+        get_workouts_fixture()
             .iter()
             .flat_map(|workout| {
                 workout
@@ -90,35 +104,24 @@ impl MigrationTrait for Migration {
                     .iter()
                     .map(move |muscle| (workout.code.clone(), muscle))
             })
-            .map(|wm| {
+            .for_each(|wm| {
                 let muscle = wm.1;
-                let workout_id: i64 = workout_map.get(&wm.0).unwrap().clone();
-                let muscle_id: i64 = muscle_map.get(&muscle.code).unwrap().clone();
-                vec![
-                    Value::BigInt(Some(workout_id)),
-                    Value::BigInt(Some(muscle_id)),
-                    Value::Int(Some(muscle.volume.into())),
-                    Value::Int(Some(muscle.priority.into())),
-                    Value::Int(muscle.exercise_set_split.map(|v| v as i32)),
-                ]
-            })
-            .collect();
-
-        let mut insert = String::from("INSERT INTO workout_muscle (workout_id, muscle_id, volume, priority, exercise_set_split) VALUES ");
-        for i in 0..values.len() {
-            insert.push_str("(?, ?, ?, ?, ?)");
-            if i < values.len() - 1 {
-                insert.push_str(", ");
-            }
-        }
-        let stmt = Statement::from_sql_and_values(
-            DbBackend::Sqlite,
-            &insert,
-            values.iter().flatten().cloned().collect::<Vec<Value>>(),
-        );
-        // Execute the batch insert
-        dbc.execute(stmt).await?;
-
+                let exercise_set_split = match muscle.exercise_set_split {
+                    Some(val) => {
+                        sea_query::SimpleExpr::Value(sea_query::Value::Int(Some(val as i32)))
+                    }
+                    None => sea_query::SimpleExpr::Value(sea_query::Value::Int(None)),
+                };
+                insert.values_panic([
+                    (*workout_map.get(&wm.0).unwrap()).into(),
+                    (*muscle_map.get(&muscle.code).unwrap()).into(),
+                    muscle.volume.into(),
+                    muscle.priority.into(),
+                    exercise_set_split,
+                ]);
+            });
+        let builder = dbc.get_database_backend();
+        dbc.execute(builder.build(&insert)).await?;
         Ok(())
     }
 

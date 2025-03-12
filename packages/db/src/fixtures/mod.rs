@@ -24,7 +24,7 @@ pub struct MuscleFixture {
     pub name: String,
     pub long_name: String,
     pub code: String,
-    pub size_score: u8,
+    pub size_score: i64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -35,9 +35,9 @@ pub struct MusclesFixture {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WorkoutMuscleFixture {
     pub code: String,
-    pub volume: u8,
-    pub priority: u8,
-    pub exercise_set_split: Option<u8>,
+    pub volume: i64,
+    pub priority: i64,
+    pub exercise_set_split: Option<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

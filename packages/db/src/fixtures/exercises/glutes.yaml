@@ -7,7 +7,7 @@ exercises:
     muscles:
       - code: GLUTES
         effectiveness: 3
-      - code: ABS
+      - code: ABDOMINALS
         effectiveness: 1
 
   - name: Glutes Bridge (Body)
@@ -18,7 +18,7 @@ exercises:
     muscles:
       - code: GLUTES
         effectiveness: 3
-      - code: ABS
+      - code: ABDOMINALS
         effectiveness: 1
 
   - name: Glutes Kickback (Machine)

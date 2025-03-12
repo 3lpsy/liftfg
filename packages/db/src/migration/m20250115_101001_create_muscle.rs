@@ -1,7 +1,6 @@
 use crate::fixtures::get_muscles_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
-use sea_orm::{DbBackend, Statement};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -28,33 +27,28 @@ impl MigrationTrait for Migration {
             .await?;
 
         let dbc = manager.get_connection();
+        let columns: Vec<Alias> = [
+            Muscle::Name.to_string(),
+            Muscle::Code.to_string(),
+            Muscle::LongName.to_string(),
+            Muscle::SizeScore.to_string(),
+        ]
+        .into_iter()
+        .map(Alias::new)
+        .collect();
+        let mut insert = Query::insert();
+        insert.into_table(Muscle::Table).columns(columns);
+        get_muscles_fixture().iter().for_each(|item| {
+            insert.values_panic([
+                item.name.clone().into(),
+                item.code.clone().into(),
+                item.long_name.clone().into(),
+                item.size_score.clone().into(),
+            ]);
+        });
+        let builder = dbc.get_database_backend();
+        dbc.execute(builder.build(&insert)).await?;
 
-        let values: Vec<Vec<Value>> = get_muscles_fixture()
-            .iter()
-            .map(|item| {
-                vec![
-                    Value::String(Some(item.name.clone().into())),
-                    Value::String(Some(item.code.clone().into())),
-                    Value::String(Some(item.long_name.clone().into())),
-                    Value::Int(Some(item.size_score.clone().into())),
-                ]
-            })
-            .collect();
-        let mut insert =
-            String::from("INSERT INTO muscle (name, code, long_name, size_score) VALUES ");
-        for i in 0..values.len() {
-            insert.push_str("(?, ?, ?, ?)");
-            if i < values.len() - 1 {
-                insert.push_str(", ");
-            }
-        }
-        let stmt = Statement::from_sql_and_values(
-            DbBackend::Sqlite,
-            &insert,
-            values.iter().flatten().cloned().collect::<Vec<Value>>(),
-        );
-        // Execute the batch insert
-        dbc.execute(stmt).await?;
         Ok(())
     }
 

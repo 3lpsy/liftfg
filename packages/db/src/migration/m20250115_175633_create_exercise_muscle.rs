@@ -63,10 +63,10 @@ impl MigrationTrait for Migration {
             ))
             .await?
             .iter()
-            .filter_map(|row| {
-                let code = row.try_get("", "code").ok()?;
-                let id = row.try_get("", "id").ok()?;
-                Some((code, id))
+            .map(|row| {
+                let code = row.try_get("", "code").unwrap();
+                let id = row.try_get("", "id").unwrap();
+                (code, id)
             })
             .collect();
         let muscle_map: HashMap<String, i64> = dbc
@@ -76,50 +76,41 @@ impl MigrationTrait for Migration {
             ))
             .await?
             .iter()
-            .filter_map(|row| {
-                let code = row.try_get("", "code").ok()?;
-                let id = row.try_get("", "id").ok()?;
-                Some((code, id))
+            .map(|row| {
+                let code = row.try_get("", "code").unwrap();
+                let id = row.try_get("", "id").unwrap();
+                (code, id)
             })
             .collect();
-        let values: Vec<Vec<Value>> = get_exercises_fixture()
+
+        let columns: Vec<Alias> = [
+            ExerciseMuscle::ExerciseId.to_string(),
+            ExerciseMuscle::MuscleId.to_string(),
+            ExerciseMuscle::EffectScore.to_string(),
+        ]
+        .into_iter()
+        .map(Alias::new)
+        .collect();
+
+        let mut insert = Query::insert();
+        insert.into_table(ExerciseMuscle::Table).columns(columns);
+
+        get_exercises_fixture()
             .iter()
             .flat_map(|ex| {
                 ex.muscles
                     .iter()
                     .map(move |muscle| (ex.code.clone(), muscle))
             })
-            .map(|wm| {
-                let muscle = wm.1;
-                let exercise_id: i64 = excercise_map.get(&wm.0).unwrap().clone();
-                let muscle_id: i64 = muscle_map
-                    .get(&muscle.code)
-                    .expect(&format!("Not found: {}", muscle.code))
-                    .clone();
-                vec![
-                    Value::Int(Some(exercise_id as i32)),
-                    Value::Int(Some(muscle_id as i32)),
-                    Value::Int(Some(muscle.effectiveness as i32)),
-                ]
-            })
-            .collect();
-
-        let mut insert = String::from(
-            "INSERT INTO exercise_muscle (exercise_id, muscle_id, effect_score) VALUES ",
-        );
-        for i in 0..values.len() {
-            insert.push_str("(?, ?, ?)");
-            if i < values.len() - 1 {
-                insert.push_str(", ");
-            }
-        }
-        let stmt = Statement::from_sql_and_values(
-            DbBackend::Sqlite,
-            &insert,
-            values.iter().flatten().cloned().collect::<Vec<Value>>(),
-        );
-        // Execute the batch insert
-        dbc.execute(stmt).await?;
+            .for_each(|wm| {
+                insert.values_panic([
+                    (*excercise_map.get(&wm.0).unwrap()).into(),
+                    (*muscle_map.get(&wm.1.code).unwrap()).into(),
+                    wm.1.effectiveness.into(),
+                ]);
+            });
+        let builder = dbc.get_database_backend();
+        dbc.execute(builder.build(&insert)).await?;
         Ok(())
     }
 

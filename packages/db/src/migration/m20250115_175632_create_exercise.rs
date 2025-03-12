@@ -1,7 +1,6 @@
 use crate::fixtures::get_exercises_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
-use sea_orm::{DbBackend, Statement};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -29,32 +28,30 @@ impl MigrationTrait for Migration {
             .await?;
 
         let dbc = manager.get_connection();
-        let values: Vec<Vec<Value>> = get_exercises_fixture()
-            .iter()
-            .map(|item| {
-                vec![
-                    Value::String(Some(item.name.clone().into())),
-                    Value::String(Some(item.code.clone().into())),
-                    Value::String(Some(item.movement_code.clone().into())),
-                    Value::String(Some(item.equipment_type.clone().into())),
-                    Value::Int(Some(item.fatigue_score.clone().into())),
-                ]
-            })
-            .collect();
-        let mut insert = String::from("INSERT INTO exercise (name, code, movement_code, equipment_type, fatigue_score) VALUES ");
-        for i in 0..values.len() {
-            insert.push_str("(?, ?, ?, ?, ?)");
-            if i < values.len() - 1 {
-                insert.push_str(", ");
-            }
-        }
-        let stmt = Statement::from_sql_and_values(
-            DbBackend::Sqlite,
-            &insert,
-            values.iter().flatten().cloned().collect::<Vec<Value>>(),
-        );
-        // Execute the batch insert
-        dbc.execute(stmt).await?;
+        let columns: Vec<Alias> = [
+            Exercise::Name.to_string(),
+            Exercise::Code.to_string(),
+            Exercise::MovementCode.to_string(),
+            Exercise::EquipmentType.to_string(),
+            Exercise::FatigueScore.to_string(),
+        ]
+        .into_iter()
+        .map(Alias::new)
+        .collect();
+        let mut insert = Query::insert();
+        insert.into_table(Exercise::Table).columns(columns);
+        get_exercises_fixture().iter().for_each(|item| {
+            insert.values_panic([
+                item.name.clone().into(),
+                item.code.clone().into(),
+                item.movement_code.clone().into(),
+                item.equipment_type.clone().into(),
+                item.fatigue_score.into(),
+            ]);
+        });
+        let builder = dbc.get_database_backend();
+        dbc.execute(builder.build(&insert)).await?;
+
         Ok(())
     }
 

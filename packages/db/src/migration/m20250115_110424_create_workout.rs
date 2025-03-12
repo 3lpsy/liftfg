@@ -3,8 +3,6 @@ use crate::fixtures::get_workouts_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
 use super::m20220101_000001_create_profile as profile;
-
-use sea_orm::{DbBackend, Statement};
 use sea_orm_migration::{prelude::*, schema::*};
 
 #[derive(DeriveMigrationName)]
@@ -83,29 +81,17 @@ impl MigrationTrait for Migration {
             .await?;
 
         let dbc = manager.get_connection();
-        let values: Vec<Vec<Value>> = get_workouts_fixture()
-            .iter()
-            .map(|item| {
-                vec![
-                    Value::String(Some(item.name.clone().into())),
-                    Value::String(Some(item.code.clone().into())),
-                ]
-            })
+        let columns: Vec<Alias> = [Workout::Name.to_string(), Workout::Code.to_string()]
+            .into_iter()
+            .map(Alias::new)
             .collect();
-        let mut insert = String::from("INSERT INTO workout (name, code) VALUES ");
-        for i in 0..values.len() {
-            insert.push_str("(?, ?)");
-            if i < values.len() - 1 {
-                insert.push_str(", ");
-            }
-        }
-        let stmt = Statement::from_sql_and_values(
-            DbBackend::Sqlite,
-            &insert,
-            values.iter().flatten().cloned().collect::<Vec<Value>>(),
-        );
-        // Execute the batch insert
-        dbc.execute(stmt).await?;
+        let mut insert = Query::insert();
+        insert.into_table(Workout::Table).columns(columns);
+        get_workouts_fixture().iter().for_each(|item| {
+            insert.values_panic([item.name.clone().into(), item.code.clone().into()]);
+        });
+        let builder = dbc.get_database_backend();
+        dbc.execute(builder.build(&insert)).await?;
 
         Ok(())
     }
