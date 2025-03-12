@@ -70,7 +70,7 @@ exercises:
         effectiveness: 3
       - code: HAMSTRINGS
         effectiveness: 2
-      - code: ABS
+      - code: ABDOMINALS
         effectiveness: 1
 
   - name: Supermans
@@ -81,5 +81,5 @@ exercises:
     muscles:
       - code: LOWER_BACK
         effectiveness: 3
-      - code: ABS
+      - code: ABDOMINALS
         effectiveness: 1

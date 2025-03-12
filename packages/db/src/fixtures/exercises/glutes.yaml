@@ -1,0 +1,44 @@
+exercises:
+  - name: Glutes Bridge (Barbell)
+    code: GLUTES_BRIDGE_BARBELL
+    movement_code: BRIDGE
+    equipment_type: BARBELL
+    fatigue_score: 3
+    muscles:
+      - code: GLUTES
+        effectiveness: 3
+      - code: ABS
+        effectiveness: 1
+
+  - name: Glutes Bridge (Body)
+    code: GLUTES_BRIDGE_BODY
+    movement_code: BRIDGE
+    equipment_type: Body
+    fatigue_score: 2
+    muscles:
+      - code: GLUTES
+        effectiveness: 3
+      - code: ABS
+        effectiveness: 1
+
+  - name: Glutes Kickback (Machine)
+    code: GLUTES_KICKBACK_GENERAL_MACHINE
+    movement_code: GLUTES_KICKBACK
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 2
+    muscles:
+      - code: GLUTES
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2
+
+  - name: Glutes Kickback (Cable)
+    code: GLUTES_KICKBACK_CABLE
+    movement_code: GLUTES_KICKBACK
+    equipment_type: CABLE
+    fatigue_score: 2
+    muscles:
+      - code: GLUTES
+        effectiveness: 3
+      - code: HAMSTRINGS
+        effectiveness: 2

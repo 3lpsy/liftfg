@@ -92,7 +92,10 @@ impl MigrationTrait for Migration {
             .map(|wm| {
                 let muscle = wm.1;
                 let exercise_id: i64 = excercise_map.get(&wm.0).unwrap().clone();
-                let muscle_id: i64 = muscle_map.get(&muscle.code).unwrap().clone();
+                let muscle_id: i64 = muscle_map
+                    .get(&muscle.code)
+                    .expect(&format!("Not found: {}", muscle.code))
+                    .clone();
                 vec![
                     Value::Int(Some(exercise_id as i32)),
                     Value::Int(Some(muscle_id as i32)),

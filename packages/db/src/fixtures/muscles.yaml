@@ -41,7 +41,7 @@ muscles:
     size_score: 4
   - name: Abs
     long_name: Rectus Abdominis
-    code: ABS
+    code: ABDOMINALS
     size_score: 2
   - name: Obliques
     long_name: Obliques

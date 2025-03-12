@@ -1,0 +1,72 @@
+exercises:
+  - name: Crunch (Cable)
+    code: CRUNCH_CABLE
+    movement_code: CRUNCH
+    equipment_type: CABLE
+    fatigue_score: 3
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Leg Raises
+    code: LEG_RAISES
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 2
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Air Bike
+    code: AIR_BIKE
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Crunch (Cross Body)
+    code: CRUNCH_CROSS_BODY
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Crunch
+    code: CRUNCH
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 2
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Crunch (Decline)
+    code: CRUNCH_DECLINE
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
+
+  - name: Side Bend (Dumbbell)
+    code: SIDE_BEND_DUMBBELL
+    movement_code: CRUNCH
+    equipment_type: DUMBBELL
+    fatigue_score: 2
+    muscles:
+      - code: OBLIQUES
+        effectiveness: 3
+
+  - name: Exercise Ball Pull In
+    code: EXERCISE_BALL_PULL_IN
+    movement_code: CRUNCH
+    equipment_type: BODY
+    fatigue_score: 3
+    muscles:
+      - code: ABDOMINALS
+        effectiveness: 3
