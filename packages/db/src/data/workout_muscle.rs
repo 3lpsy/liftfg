@@ -1,23 +1,17 @@
+use crate::entity::workout::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
 #[cfg(feature = "db")]
-use crate::entity::workout as entity;
+use crate::entity::workout_muscle as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use super::{
-    enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy},
-    ResponsableData, ResponseData,
-};
+use super::{ResponsableData, ResponseData};
 
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct WorkoutData {
+pub struct WorkoutMuscleData {
     pub id: i32, // Using i32 since that's what's in the database
     pub name: String,
     pub code: String,
-    pub muscle_order_strategy: MuscleOrderStrategy,
-    pub exercise_prompt_strategy: ExercisePromptStrategy,
-    pub exercise_split_strategy: ExcerciseSplitStrategy,
-    // pub muscles: Option<Vec<WorkoutMuscleData>>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

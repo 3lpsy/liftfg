@@ -5,7 +5,7 @@ use validator::ValidationErrors;
 use crate::commands::parse_params;
 use crate::state::AppState;
 use fgcore::controllers::profile as profile_controller;
-use fgdb::data::{profile::ProfileData, DefaultPaginationParams, ResponseData};
+use fgdb::data::{profile::ProfileData, DefaultParams, ResponseData};
 use tauri::{self};
 
 // what if parsing failed on serde deserialize
@@ -15,7 +15,7 @@ pub async fn profile_index(
     state: tauri::State<'_, AppState>,
 ) -> Result<ResponseData<Vec<ProfileData>>, ResponseData<ValidationErrors>> {
     // parse and pass to controller
-    match parse_params::<DefaultPaginationParams>(request.body().to_owned()) {
+    match parse_params::<DefaultParams>(request.body().to_owned()) {
         Ok(params) => Ok(profile_controller::index(params, &state.dbc).await?.into()),
         Err(err) => return Ok(ResponseData::from_errors(err)),
     }
@@ -37,7 +37,11 @@ mod tests {
     #[tokio::test]
     async fn it_invokes_profile_index() {
         let (mut _app, webview, _test_id) = testutils::seeded_dev_test_setup().await.unwrap();
-        let payload = DefaultPaginationParams { pagination: None }.as_params();
+        let payload = DefaultParams {
+            pagination: None,
+            ..Default::default()
+        }
+        .as_params();
         let res = testutils::invoke::<Vec<ProfileData>>(
             &webview,
             "profile_index",
@@ -54,12 +58,13 @@ mod tests {
     async fn it_invokes_profile_index_pagination() {
         // no seed of two profiles
         let (app, webview, _test_id) = testutils::default_test_setup().await.unwrap();
-        let mut payload = DefaultPaginationParams {
+        let mut payload = DefaultParams {
             pagination: Some(Pagination {
                 page: 0,
                 size: 10,
                 ..Default::default()
             }),
+            ..Default::default()
         }
         .as_params();
         let res = testutils::invoke::<Vec<ProfileData>>(

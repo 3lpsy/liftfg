@@ -1,4 +1,4 @@
-use crate::entity::workout::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
+use crate::data::enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
 use crate::fixtures::get_workouts_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};

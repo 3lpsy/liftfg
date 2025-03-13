@@ -1,14 +1,19 @@
 #![allow(non_snake_case)]
 use crate::icons;
 use crate::router;
+use crate::services::get;
 use crate::services::profile::get_profile;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
 use fgdb::data::profile::ProfileShowParams;
+use fgdb::data::workout::WorkoutData;
+use fgdb::data::DefaultParams;
 use validator::ValidationErrors;
 
 #[component]
 pub fn WorkoutCreateView(profile_id: usize) -> Element {
+    // TODO: error handling verbose, ideally handle errors higher up
+    // and not in use_effect
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
     let profile_res = use_resource(move || async move {
         get_profile(Some(ProfileShowParams {
@@ -18,9 +23,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         .await
     })
     .suspend()?;
-    // first we write get_workouts
-    // second, add a includes setup for profile to include workouts on response
-
     let nav = navigator();
     use_effect(move || match profile_res() {
         Ok(profile) => {
@@ -32,6 +34,27 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
             nav.replace(router::Route::Errors {});
         }
     });
+
+    // first we write get_workouts
+    let mut workouts_ctx: Signal<Vec<WorkoutData>> = use_signal(|| vec![]);
+    let workouts_res = use_resource(move || async move {
+        get::<DefaultParams, Vec<WorkoutData>>("workout_index", None).await
+    })
+    .suspend()?;
+    let nav = navigator();
+    use_effect(move || match workouts_res() {
+        Ok(data) => {
+            *workouts_ctx.write() = data.clone();
+        }
+        Err(e) => {
+            let mut app_errors = use_context::<Signal<ValidationErrors>>();
+            app_errors.set(e.clone());
+            nav.replace(router::Route::Errors {});
+        }
+    });
+
+    // second, add a includes setup for profile to include workouts on response
+    //
     rsx! {
         div {
             class: "flex justify-between items-center",

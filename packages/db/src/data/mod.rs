@@ -1,3 +1,4 @@
+pub mod enums;
 pub mod profile;
 pub mod workout;
 
@@ -57,17 +58,31 @@ pub trait RequestableParams: for<'de> Deserialize<'de> + Serialize {
 impl<T> RequestableParams for T where T: for<'de> Deserialize<'de> + Serialize {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub enum SortOrder {
+pub enum OrderDirection {
     Asc,
     Desc,
 }
 
 #[cfg(feature = "db")]
-impl From<SortOrder> for sea_orm::Order {
-    fn from(sort_order: SortOrder) -> Self {
-        match sort_order {
-            SortOrder::Asc => sea_orm::Order::Asc,
-            SortOrder::Desc => sea_orm::Order::Desc,
+impl From<OrderDirection> for sea_orm::Order {
+    fn from(direction: OrderDirection) -> Self {
+        match direction {
+            OrderDirection::Asc => sea_orm::Order::Asc,
+            OrderDirection::Desc => sea_orm::Order::Desc,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Order {
+    pub direction: OrderDirection,
+    pub order_by: String,
+}
+impl Default for Order {
+    fn default() -> Self {
+        Self {
+            direction: OrderDirection::Asc,
+            order_by: String::from("id"),
         }
     }
 }
@@ -76,29 +91,97 @@ impl From<SortOrder> for sea_orm::Order {
 pub struct Pagination {
     pub page: i32,
     pub size: i32,
-    pub order: SortOrder,
 }
+
 // fetch_page and cur_page are 0 based
 impl Default for Pagination {
     fn default() -> Self {
-        Self {
-            page: 0,
-            size: 10,
-            order: SortOrder::Asc, // or SortOrder::Desc depending on your default preference
-        }
+        Self { page: 0, size: 10 }
     }
 }
-#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
-pub struct DefaultPaginationParams {
-    pub pagination: Option<Pagination>,
-}
-impl DefaultPaginationParams {
-    pub fn with_page(mut self, page: i32) -> Self {
-        self.pagination = Some(self.pagination.unwrap_or_default());
-        self.pagination.as_mut().unwrap().page = page;
+
+pub trait HasPagination {
+    fn pagination(&mut self) -> &mut Option<Pagination>;
+    fn with_page(mut self, page: i32) -> Self
+    where
+        Self: Sized,
+    {
+        let pagination = self.pagination();
+        *pagination = Some(pagination.take().unwrap_or_default());
+        pagination.as_mut().unwrap().page = page;
         self
     }
 }
+
+pub trait HasIncludes {
+    fn includes(&mut self) -> &mut Option<Vec<String>>;
+    fn with_include(mut self, include: &str) -> Self
+    where
+        Self: Sized,
+    {
+        let includes = self.includes();
+        if includes.is_none() {
+            *includes = Some(Vec::new());
+        }
+        includes.as_mut().unwrap().push(include.to_string());
+        self
+    }
+}
+
+pub trait HasOrder {
+    fn order(&mut self) -> &mut Option<Order>;
+
+    fn with_order(mut self, order: Order) -> Self
+    where
+        Self: Sized,
+    {
+        *self.order() = Some(order);
+        self
+    }
+
+    fn with_order_direction(mut self, direction: OrderDirection) -> Self
+    where
+        Self: Sized,
+    {
+        let order = self.order();
+        if order.is_none() {
+            *order = Some(Order::default());
+        }
+        order.as_mut().unwrap().direction = direction;
+        self
+    }
+
+    fn with_order_by(mut self, order_by: String) -> Self
+    where
+        Self: Sized,
+    {
+        let order = self.order();
+        if order.is_none() {
+            *order = Some(Order::default());
+        }
+        order.as_mut().unwrap().order_by = order_by;
+        self
+    }
+}
+
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct DefaultParams {
+    pub pagination: Option<Pagination>,
+    pub order: Option<Order>,
+}
+
+impl HasPagination for DefaultParams {
+    fn pagination(&mut self) -> &mut Option<Pagination> {
+        &mut self.pagination
+    }
+}
+
+impl HasOrder for DefaultParams {
+    fn order(&mut self) -> &mut Option<Order> {
+        &mut self.order
+    }
+}
+
 // together
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(bound = "T: RequestableData, P: RequestableParams")]
@@ -133,7 +216,7 @@ pub struct Paginator {
     pub size: i32,
     pub pages: i32,
     pub total: i32,
-    pub order: SortOrder,
+    pub order: OrderDirection,
 }
 
 #[cfg(feature = "db")]
@@ -142,7 +225,7 @@ impl Paginator {
         paginator: &sea_orm::Paginator<'_, C, S>,
         page: i32,
         size: i32,
-        order: SortOrder,
+        order: OrderDirection,
     ) -> Result<Self, DbValidationErrors>
     where
         C: ConnectionTrait,

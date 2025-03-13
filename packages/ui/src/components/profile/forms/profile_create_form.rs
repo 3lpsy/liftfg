@@ -77,14 +77,17 @@ pub fn ProfileCreateForm() -> Element {
                             });
                         }
                     }
-                    if current_profile_ctx().is_some() {
+                    // if current_profile_ctx().is_some() {
                         label {
                             class: "fieldset-label flex justify-end items-center",
                             "Activate"
                             input {
                                 class: "toggle",
                                 r#type: "checkbox",
-                                checked: form_data().is_default,
+                                disabled: current_profile_ctx().is_none(),
+                                checked: {
+                                    current_profile_ctx().is_none() || form_data().is_default.unwrap_or(false)
+                                },
                                 oninput: move |evt| {
                                     let v = evt.value().parse::<bool>()?;
                                     form_data.write().is_default = Some(v);
@@ -93,7 +96,7 @@ pub fn ProfileCreateForm() -> Element {
                             },
                         }
 
-                    }
+                    // }
                     for (field, messages) in error_messages().iter() {
                         li {
                             span { class: "font-semibold", "{field}: " }

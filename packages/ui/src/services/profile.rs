@@ -3,7 +3,7 @@ use fgdb::data::{
     profile::{
         ProfileData, ProfileDeleteParams, ProfileShowParams, ProfileStoreData, ProfileUpdateData,
     },
-    DefaultPaginationParams,
+    DefaultParams,
 };
 // use gloo_timers::future::sleep;
 // use std::time::Duration;
@@ -12,7 +12,7 @@ use validator::ValidationErrors;
 use super::{get, post};
 
 pub async fn get_profiles(
-    args: Option<DefaultPaginationParams>,
+    args: Option<DefaultParams>,
 ) -> Result<Vec<ProfileData>, ValidationErrors> {
     info("Getting Profiles");
     // sleep(Duration::from_secs(10)).await;

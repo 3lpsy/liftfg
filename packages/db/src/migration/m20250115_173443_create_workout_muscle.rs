@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::entity::workout::ExercisePromptStrategy;
+use crate::data::enums::ExercisePromptStrategy;
 use crate::fixtures::get_workouts_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
