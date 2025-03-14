@@ -23,11 +23,30 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    // direct
+    #[sea_orm(has_many = "super::profile_workout::Entity")]
+    ProfileWorkout,
+    #[sea_orm(has_many = "super::workout_muscle::Entity")]
+    WorkoutMuscle,
+    // indirect
     #[sea_orm(has_many = "super::profile::Entity")]
     Profile,
 }
 
-// Through pivot
+// direct
+impl Related<super::profile_workout::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ProfileWorkout.def()
+    }
+}
+
+impl Related<super::workout_muscle::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::WorkoutMuscle.def()
+    }
+}
+
+// indirect
 impl Related<super::profile::Entity> for Entity {
     fn to() -> RelationDef {
         super::profile_workout::Relation::Profile.def()
@@ -36,5 +55,4 @@ impl Related<super::profile::Entity> for Entity {
         Some(super::profile_workout::Relation::Profile.def().rev())
     }
 }
-
 impl ActiveModelBehavior for ActiveModel {}

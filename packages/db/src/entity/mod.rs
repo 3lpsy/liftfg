@@ -14,3 +14,4 @@ pub mod seed;
 pub mod session;
 pub mod set;
 pub mod workout;
+pub mod workout_muscle;

@@ -5,6 +5,7 @@ pub mod workout;
 #[cfg(feature = "db")]
 use fgutils::constants::VALIDATION_DATABASE_FIELD;
 use fgutils::constants::VALIDATION_REQUEST_FIELD;
+use fgutils::patterns::ALPHA_DASH;
 #[cfg(feature = "db")]
 use sea_orm::ConnectionTrait;
 #[cfg(feature = "db")]
@@ -57,8 +58,9 @@ pub trait RequestableParams: for<'de> Deserialize<'de> + Serialize {
 }
 impl<T> RequestableParams for T where T: for<'de> Deserialize<'de> + Serialize {}
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum OrderDirection {
+    #[default]
     Asc,
     Desc,
 }
@@ -72,10 +74,15 @@ impl From<OrderDirection> for sea_orm::Order {
         }
     }
 }
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Validate, Serialize, Deserialize, Clone)]
 pub struct Order {
     pub direction: OrderDirection,
+    #[validate(length(
+        min = 1,
+        max = 256,
+        message = "OrderBy must be between 1 and 256 characters long"
+    ))]
+    #[validate(regex(path = *ALPHA_DASH, message="Field must only contain alphanumeric or -, ., _ characters"))]
     pub order_by: String,
 }
 impl Default for Order {
@@ -87,9 +94,19 @@ impl Default for Order {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Validate, Serialize, Deserialize)]
 pub struct Pagination {
+    #[validate(range(
+        min = 0,
+        max = 65536,
+        message = "Page must be between 1 and 65536 characters long"
+    ))]
     pub page: i32,
+    #[validate(range(
+        min = 1,
+        max = 65536,
+        message = "Size must be between 1 and 65536 characters long"
+    ))]
     pub size: i32,
 }
 
@@ -113,9 +130,14 @@ pub trait HasPagination {
     }
 }
 
-pub trait HasIncludes {
-    fn includes(&mut self) -> &mut Option<Vec<String>>;
-    fn with_include(mut self, include: &str) -> Self
+pub trait Includable {}
+
+pub trait HasIncludes<T>
+where
+    T: Includable,
+{
+    fn includes(&mut self) -> &mut Option<Vec<T>>;
+    fn with_include(mut self, include: T) -> Self
     where
         Self: Sized,
     {
@@ -123,7 +145,7 @@ pub trait HasIncludes {
         if includes.is_none() {
             *includes = Some(Vec::new());
         }
-        includes.as_mut().unwrap().push(include.to_string());
+        includes.as_mut().unwrap().push(include);
         self
     }
 }
@@ -210,6 +232,7 @@ where
     }
 }
 // fetch_page and cur_page are 0 based
+// paginatior is what's returned to user
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Paginator {
     pub page: i32,

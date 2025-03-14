@@ -19,6 +19,7 @@ pub async fn store(
     dbc: &DatabaseConnection,
 ) -> Result<ResponseData<ProfileData>, ValidationErrors> {
     // structural validation
+    //
     data.validate()?;
     // <Fn, A, B> -> Result<A, B>
     let inserted = dbc

@@ -2,16 +2,47 @@
 use crate::entity::workout as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
 use super::{
     enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy},
-    ResponsableData, ResponseData,
+    HasIncludes, HasOrder, HasPagination, Includable, Order, Pagination, ResponsableData,
+    ResponseData,
 };
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct WorkoutInclude {}
+impl Includable for WorkoutInclude {}
+
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct WorkoutIndexParams {
+    pub pagination: Option<Pagination>,
+    pub order: Option<Order>,
+    pub includes: Option<Vec<WorkoutInclude>>,
+}
+
+impl HasIncludes<WorkoutInclude> for WorkoutIndexParams {
+    fn includes(&mut self) -> &mut Option<Vec<WorkoutInclude>> {
+        &mut self.includes
+    }
+}
+
+impl HasPagination for WorkoutIndexParams {
+    fn pagination(&mut self) -> &mut Option<Pagination> {
+        &mut self.pagination
+    }
+}
+
+impl HasOrder for WorkoutIndexParams {
+    fn order(&mut self) -> &mut Option<Order> {
+        &mut self.order
+    }
+}
 
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct WorkoutData {
-    pub id: i32, // Using i32 since that's what's in the database
+    pub id: i32,
     pub name: String,
     pub code: String,
     pub muscle_order_strategy: MuscleOrderStrategy,

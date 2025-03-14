@@ -19,28 +19,31 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "crate::entity::gym_profile::Entity")]
+    // direct
+    #[sea_orm(has_many = "super::gym_profile::Entity")]
     GymProfile,
-    #[sea_orm(has_many = "crate::entity::gym::Entity")]
-    Gym,
-    #[sea_orm(has_many = "crate::entity::profile_workout::Entity")]
+    #[sea_orm(has_many = "super::profile_workout::Entity")]
     ProfileWorkout,
-    #[sea_orm(has_many = "crate::entity::workout::Entity")]
+    // indirect
+    #[sea_orm(has_many = "super::gym::Entity")]
+    Gym,
+    #[sea_orm(has_many = "super::workout::Entity")]
     Workout,
 }
-
-impl Related<crate::entity::gym_profile::Entity> for Entity {
+// direct
+impl Related<super::gym_profile::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::GymProfile.def()
     }
 }
 
-// impl Related<crate::entity::workout::Entity> for Entity {
-//     fn to() -> RelationDef {
-//         Relation::Workout.def()
-//     }
-// }
+impl Related<super::profile_workout::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::ProfileWorkout.def()
+    }
+}
 
+//indirect
 impl Related<crate::entity::workout::Entity> for Entity {
     // The final relation is Cake -> CakeFilling -> Filling
     fn to() -> RelationDef {

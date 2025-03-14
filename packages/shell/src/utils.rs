@@ -11,6 +11,7 @@ pub mod testutils {
     use anyhow::{anyhow, Result};
     use ctor::ctor;
     use fgcore::logging;
+    use std::fmt::Debug;
     use std::fs;
     use std::sync::OnceLock;
     use tauri::test::{mock_builder, MockRuntime};
@@ -51,7 +52,7 @@ pub mod testutils {
         body: InvokeBody,
     ) -> ResponseData<T>
     where
-        T: ResponsableData,
+        T: ResponsableData + Debug,
     {
         match tauri::test::get_ipc_response(
             webview,
@@ -65,7 +66,13 @@ pub mod testutils {
                 invoke_key: tauri::test::INVOKE_KEY.to_string(),
             },
         )
-        .map(|b| b.deserialize::<ResponseData<T>>().unwrap())
+        .map(|b| match b.clone().deserialize::<ResponseData<T>>() {
+            Ok(r) => r,
+            Err(e) => {
+                tracing::error!("Failed to deserialize invocation with body: {:?}", b);
+                panic!("{:?}", e);
+            }
+        })
         .map_err(|b| serde_json::from_value::<ResponseData<T>>(b).unwrap())
         {
             Ok(r) => return r,

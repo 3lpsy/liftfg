@@ -15,7 +15,7 @@ pub async fn index(
     let order = params.order.unwrap_or_default();
 
     let pager = workout::Entity::find()
-        .order_by(workout::Column::Id, order.direction.into())
+        .order_by(workout::Column::Id, order.direction.clone().into())
         .paginate(dbc, pagination.size as u64);
     let pagination =
         Paginator::from_db_paginator(&pager, pagination.page, pagination.size, order.direction)

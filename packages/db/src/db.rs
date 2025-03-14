@@ -3,7 +3,7 @@
 use crate::migration;
 use anyhow::Result;
 use fgutils::touch;
-use sea_orm::{Database, DatabaseConnection};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection};
 use sea_orm_migration::MigratorTrait;
 use std::path::PathBuf;
 use tracing::{debug, info};
@@ -26,7 +26,14 @@ pub async fn get_dbc(db_path: &PathBuf) -> Result<DatabaseConnection> {
     touch(db_path)?;
     let db_url = get_db_url(db_path);
     debug!("Connecting: {}", db_url);
-    Ok(Database::connect(db_url).await?)
+    let options = ConnectOptions::new(db_url);
+    // options
+    // .max_connections(10)
+    // .min_connections(5)
+    // .connect_timeout(Duration::from_secs(8));
+    // .idle_timeout(Duration::from_secs(8));
+
+    Ok(Database::connect(options).await?)
 }
 
 pub fn get_db_url(db_path: &PathBuf) -> String {

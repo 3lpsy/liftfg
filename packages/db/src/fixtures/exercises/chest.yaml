@@ -350,7 +350,7 @@ exercises:
         effectiveness: 1
 
   - name: Push Up (Decline)
-    code: PUSH_UPS_DECLINE
+    code: PUSH_UP_DECLINE
     movement_code: PUSH_UP
     equipment_type: BODY
     fatigue_score: 3

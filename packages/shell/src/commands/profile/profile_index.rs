@@ -32,7 +32,6 @@ mod tests {
     use sea_orm::{EntityTrait, Set};
     use serde_json::json;
     use tauri::{ipc::InvokeBody, Manager};
-    use tracing::warn;
 
     #[tokio::test]
     async fn it_invokes_profile_index() {
@@ -48,7 +47,6 @@ mod tests {
             InvokeBody::Json(json!(payload)),
         )
         .await;
-        warn!("{:?}", &res);
         assert!(res.data.is_some());
         // seeded_test_setup creates two profiles
         assert_eq!(res.data.unwrap().len(), 2);

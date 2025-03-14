@@ -77,26 +77,26 @@ pub fn ProfileCreateForm() -> Element {
                             });
                         }
                     }
-                    // if current_profile_ctx().is_some() {
-                        label {
-                            class: "fieldset-label flex justify-end items-center",
-                            "Activate"
-                            input {
-                                class: "toggle",
-                                r#type: "checkbox",
-                                disabled: current_profile_ctx().is_none(),
-                                checked: {
-                                    current_profile_ctx().is_none() || form_data().is_default.unwrap_or(false)
-                                },
-                                oninput: move |evt| {
-                                    let v = evt.value().parse::<bool>()?;
-                                    form_data.write().is_default = Some(v);
-                                    Ok(())
-                                }
+                    label {
+                        class: "fieldset-label flex justify-end items-center",
+                        "Activate"
+                        input {
+                            class: "toggle",
+                            r#type: "checkbox",
+                            // if no current profile exists, no profile has ever been created
+                            // so keep checked by default in that case
+                            disabled: current_profile_ctx().is_none(),
+                            checked: {
+                                current_profile_ctx().is_none() || form_data().is_default.unwrap_or(false)
                             },
-                        }
+                            oninput: move |evt| {
+                                let v = evt.value().parse::<bool>()?;
+                                form_data.write().is_default = Some(v);
+                                Ok(())
+                            }
+                        },
+                    }
 
-                    // }
                     for (field, messages) in error_messages().iter() {
                         li {
                             span { class: "font-semibold", "{field}: " }

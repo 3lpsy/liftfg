@@ -28,7 +28,6 @@ pub fn Container() -> Element {
 
     let nav = navigator();
     let router = router();
-    // current makes this reactive
     let is_onboard = use_memo(move || {
         router
             .current::<router::Route>()
@@ -79,7 +78,6 @@ pub fn Container() -> Element {
                     div {
                         class: "mx-4 my-2 h-full",
                         Outlet::<Route> {},
-                        // div { class: "my-2", p {"Route: {route()}"} }
                     }
                 }
             }

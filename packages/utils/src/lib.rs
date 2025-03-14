@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 use tracing::info;
 use validator::{ValidationError, ValidationErrors};
 pub mod constants;
+pub mod patterns;
 
 pub fn dt_human(timestamp: DateTime<Utc>, timezone: &Tz) -> String {
     let dt_local = timestamp.with_timezone(timezone);

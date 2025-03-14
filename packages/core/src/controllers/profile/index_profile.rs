@@ -6,20 +6,19 @@ use fgdb::{
 use sea_orm::{DatabaseConnection, EntityTrait, PaginatorTrait, QueryOrder};
 use validator::{Validate, ValidationErrors};
 
-// gets only accep
 pub async fn index(
     params: DefaultParams,
     dbc: &DatabaseConnection,
 ) -> Result<ResponseData<Vec<ProfileData>>, ValidationErrors> {
     params.validate()?;
-
     let pagination = params.pagination.unwrap_or_default();
     let order = params.order.unwrap_or_default();
 
     // TODOcasting i32 to u64
     let pager = profile::Entity::find()
-        .order_by(profile::Column::Id, order.direction.into())
+        .order_by(profile::Column::Id, order.direction.clone().into())
         .paginate(dbc, pagination.size as u64);
+
     let pagination =
         Paginator::from_db_paginator(&pager, pagination.page, pagination.size, order.direction)
             .await?;
@@ -33,3 +32,5 @@ pub async fn index(
         pagination,
     ))
 }
+
+// test for validation
