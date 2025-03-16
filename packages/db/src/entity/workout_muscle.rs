@@ -2,6 +2,8 @@
 
 use sea_orm::entity::prelude::*;
 
+use crate::data::enums::ExercisePromptStrategy;
+
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq)]
 #[sea_orm(table_name = "workout_muscle")]
 pub struct Model {
@@ -12,13 +14,14 @@ pub struct Model {
     pub workout_id: i32,
     pub exercise_set_split: Option<i32>,
     pub muscle_id: i32,
-    pub exercise_prompt_strategy: Option<String>,
+    pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
     pub created_at: DateTimeUtc,
     pub updated_at: DateTimeUtc,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    // direct
     #[sea_orm(
         belongs_to = "super::muscle::Entity",
         from = "Column::MuscleId",

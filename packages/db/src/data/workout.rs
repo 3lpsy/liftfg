@@ -6,37 +6,28 @@ use validator::Validate;
 
 use super::{
     enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy},
+    profile::ProfileData,
+    profile_workout::ProfileWorkoutData,
+    workout_muscle::{WorkoutMuscleData, WorkoutMuscleInclude},
     HasIncludes, HasOrder, HasPagination, Includable, Order, Pagination, ResponsableData,
     ResponseData,
 };
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct WorkoutInclude {}
+pub enum WorkoutInclude {
+    ProfileWorkout,
+    Profile,
+    WorkoutMuscle(Option<Vec<WorkoutMuscleInclude>>),
+}
+
 impl Includable for WorkoutInclude {}
 
 #[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
 pub struct WorkoutIndexParams {
     pub pagination: Option<Pagination>,
     pub order: Option<Order>,
+    #[validate(length(max = 3, message = "Max length of array is 3."))]
     pub includes: Option<Vec<WorkoutInclude>>,
-}
-
-impl HasIncludes<WorkoutInclude> for WorkoutIndexParams {
-    fn includes(&mut self) -> &mut Option<Vec<WorkoutInclude>> {
-        &mut self.includes
-    }
-}
-
-impl HasPagination for WorkoutIndexParams {
-    fn pagination(&mut self) -> &mut Option<Pagination> {
-        &mut self.pagination
-    }
-}
-
-impl HasOrder for WorkoutIndexParams {
-    fn order(&mut self) -> &mut Option<Order> {
-        &mut self.order
-    }
 }
 
 // Responses
@@ -48,7 +39,9 @@ pub struct WorkoutData {
     pub muscle_order_strategy: MuscleOrderStrategy,
     pub exercise_prompt_strategy: ExercisePromptStrategy,
     pub exercise_split_strategy: ExcerciseSplitStrategy,
-    // pub muscles: Option<Vec<WorkoutMuscleData>>,
+    pub workout_muscle: Option<Vec<WorkoutMuscleData>>,
+    pub profile_workout: Option<Vec<ProfileWorkoutData>>,
+    pub profile: Option<ProfileData>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -63,6 +56,9 @@ impl From<entity::Model> for WorkoutData {
             muscle_order_strategy: model.muscle_order_strategy,
             exercise_prompt_strategy: model.exercise_prompt_strategy,
             exercise_split_strategy: model.exercise_split_strategy,
+            workout_muscle: None,
+            profile_workout: None,
+            profile: None,
             created_at: model.created_at,
             updated_at: model.updated_at,
         }
@@ -81,3 +77,21 @@ impl From<WorkoutData> for ResponseData<WorkoutData> {
 
 impl ResponsableData for WorkoutData {}
 impl ResponsableData for Vec<WorkoutData> {}
+
+impl HasIncludes<WorkoutInclude> for WorkoutIndexParams {
+    fn includes(&mut self) -> &mut Option<Vec<WorkoutInclude>> {
+        &mut self.includes
+    }
+}
+
+impl HasPagination for WorkoutIndexParams {
+    fn pagination(&mut self) -> &mut Option<Pagination> {
+        &mut self.pagination
+    }
+}
+
+impl HasOrder for WorkoutIndexParams {
+    fn order(&mut self) -> &mut Option<Order> {
+        &mut self.order
+    }
+}

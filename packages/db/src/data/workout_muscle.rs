@@ -1,4 +1,4 @@
-use crate::entity::workout::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
+use crate::data::enums::ExercisePromptStrategy;
 #[cfg(feature = "db")]
 use crate::entity::workout_muscle as entity;
 use chrono::{DateTime, Utc};
@@ -6,34 +6,44 @@ use serde::{Deserialize, Serialize};
 
 use super::{ResponsableData, ResponseData};
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum WorkoutMuscleInclude {
+    Workout,
+    Muscle,
+}
+
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct WorkoutMuscleData {
-    pub id: i32, // Using i32 since that's what's in the database
-    pub name: String,
-    pub code: String,
+    pub id: i32,
+    pub workout_id: i32,
+    pub muscle_id: i32,
+    pub priority: i32,
+    pub exercise_set_split: Option<i32>,
+    pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
+
 // impls
 #[cfg(feature = "db")]
-impl From<entity::Model> for WorkoutData {
+impl From<entity::Model> for WorkoutMuscleData {
     fn from(model: entity::Model) -> Self {
         Self {
             id: model.id,
-            name: model.name,
-            code: model.code,
-            muscle_order_strategy: model.muscle_order_strategy,
+            workout_id: model.workout_id,
+            muscle_id: model.muscle_id,
+            priority: model.muscle_id,
+            exercise_set_split: model.exercise_set_split,
             exercise_prompt_strategy: model.exercise_prompt_strategy,
-            exercise_split_strategy: model.exercise_split_strategy,
             created_at: model.created_at,
             updated_at: model.updated_at,
         }
     }
 }
 
-impl From<WorkoutData> for ResponseData<WorkoutData> {
-    fn from(data: WorkoutData) -> Self {
+impl From<WorkoutMuscleData> for ResponseData<WorkoutMuscleData> {
+    fn from(data: WorkoutMuscleData) -> Self {
         ResponseData {
             data: Some(data),
             errors: None,
@@ -42,5 +52,5 @@ impl From<WorkoutData> for ResponseData<WorkoutData> {
     }
 }
 
-impl ResponsableData for WorkoutData {}
-impl ResponsableData for Vec<WorkoutData> {}
+impl ResponsableData for WorkoutMuscleData {}
+impl ResponsableData for Vec<WorkoutMuscleData> {}

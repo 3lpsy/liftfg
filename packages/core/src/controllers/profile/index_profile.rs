@@ -22,13 +22,13 @@ pub async fn index(
     let pagination =
         Paginator::from_db_paginator(&pager, pagination.page, pagination.size, order.direction)
             .await?;
-    let profiles = pager
+    let rows = pager
         .fetch_page(pagination.page as u64)
         .await
         .map_err(DbValidationErrors::from)?;
 
     Ok(ResponseData::from_paginator(
-        profiles.into_iter().map(Into::into).collect(),
+        rows.into_iter().map(Into::into).collect(),
         pagination,
     ))
 }

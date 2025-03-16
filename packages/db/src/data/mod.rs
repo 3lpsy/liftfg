@@ -21,8 +21,11 @@ pub use meta::request::{
 };
 pub use meta::response::{ResponsableData, ResponseData};
 pub mod enums;
+pub mod muscle;
 pub mod profile;
+pub mod profile_workout;
 pub mod workout;
+pub mod workout_muscle;
 
 #[cfg(feature = "db")]
 pub use meta::db::DbValidationErrors;
