@@ -44,12 +44,20 @@ shell-prod:
 	@echo "Running: cargo build"
 	@cargo build
 
+
 shell-test:
 	@echo "Running: cargo test -p fgshell $(ARGS)"
 	@cargo test -p fgshell $(ARGS)
 
 emulator:
 	@QT_QPA_PLATFORM=xcb DISPLAY=:0 $(ANDROID_HOME)/emulator/emulator -avd Pixel_7a_API_34_Default -netdelay none -netspeed full -no-snapshot-load -no-snapshot-save
+
+ios: ios-dev
+
+ios-dev:
+	@echo "Running: cd packages/shell && tauri ios dev --no-dev-server-wait"
+	@cd packages/shell && tauri ios dev --no-dev-server-wait
+
 
 android: android-dev
 
