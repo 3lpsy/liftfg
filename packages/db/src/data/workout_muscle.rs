@@ -4,7 +4,7 @@ use crate::entity::workout_muscle as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
-use super::{ResponsableData, ResponseData};
+use super::{muscle::MuscleData, profile::ProfileData, ResponsableData, ResponseData};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorkoutMuscleInclude {
@@ -21,6 +21,8 @@ pub struct WorkoutMuscleData {
     pub priority: i32,
     pub exercise_set_split: Option<i32>,
     pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
+    pub muscle: Option<MuscleData>,
+    pub profile: Option<ProfileData>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -36,6 +38,8 @@ impl From<entity::Model> for WorkoutMuscleData {
             priority: model.muscle_id,
             exercise_set_split: model.exercise_set_split,
             exercise_prompt_strategy: model.exercise_prompt_strategy,
+            muscle: None,
+            profile: None,
             created_at: model.created_at,
             updated_at: model.updated_at,
         }
