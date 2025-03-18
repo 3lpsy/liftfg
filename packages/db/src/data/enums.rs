@@ -31,7 +31,7 @@ pub enum MuscleOrderStrategy {
     feature = "db",
     sea_orm(rs_type = "String", db_type = "String(StringLen::N(1))")
 )]
-pub enum ExcerciseSplitStrategy {
+pub enum ExerciseSplitStrategy {
     #[serde(rename = "SIMPLE")]
     #[cfg_attr(feature = "db", sea_orm(string_value = "SIMPLE"))]
     Simple,

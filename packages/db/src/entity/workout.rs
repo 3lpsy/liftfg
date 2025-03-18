@@ -4,7 +4,7 @@ use chrono::{DateTime, Utc};
 use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::data::enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
+use crate::data::enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
 #[sea_orm(table_name = "workout")]
@@ -16,7 +16,8 @@ pub struct Model {
     pub code: String,
     pub muscle_order_strategy: MuscleOrderStrategy,
     pub exercise_prompt_strategy: ExercisePromptStrategy,
-    pub exercise_split_strategy: ExcerciseSplitStrategy,
+    pub exercise_split_strategy: ExerciseSplitStrategy,
+    pub exercise_set_split: i32,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }

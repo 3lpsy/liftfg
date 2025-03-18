@@ -88,6 +88,8 @@ pub async fn index(
                                     });
                                 });
                             }
+                            // in reality, you can't query a nested workout on a muscle so
+                            // this should val error
                             _ => unimplemented!(),
                         }
                     }
@@ -121,7 +123,12 @@ pub async fn index(
                     .zip(items.iter_mut())
                     .for_each(|(child_rows, item)| {
                         // n-to-n relationship but only really can have 1
-                        item.profile = child_rows.into_iter().next().map(ProfileData::from);
+                        item.profiles = Some(
+                            child_rows
+                                .into_iter()
+                                .map(|i| ProfileData::from(i))
+                                .collect(),
+                        );
                     });
             }
         }
@@ -130,4 +137,101 @@ pub async fn index(
     Ok(ResponseData::from_paginator(items, paginator))
 }
 
-// TODO tests
+#[cfg(test)]
+mod tests {
+
+    use fgdb::data::{HasIncludes, HasPagination};
+
+    use crate::utils::testutils::setup_test_db_full;
+
+    use super::*;
+
+    #[tokio::test(flavor = "multi_thread")] // not really faster
+    async fn it_invokes_workout_index_first_page() {
+        let (dbc, _test_id) = setup_test_db_full().await.unwrap();
+        let all = workout::Entity::find().all(&dbc).await.unwrap();
+        assert!(all.len() > 1);
+        // default size 10
+        // first page is 0
+        let req = WorkoutIndexParams::default().with_page(0);
+        let page_size = req.pagination.as_ref().unwrap().size;
+        let res = index(req, &dbc).await.unwrap();
+        assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);
+        assert_eq!(all.len(), res.data.as_ref().unwrap().len());
+        res.data.as_ref().unwrap().iter().for_each(|i| {
+            assert!(i.profiles.is_none());
+            assert!(i.profile_workout.is_none());
+            assert!(i.workout_muscle.is_none());
+        });
+    }
+
+    #[tokio::test(flavor = "multi_thread")]
+    async fn it_invokes_workout_index_with_includes() {
+        let (dbc, _test_id) = setup_test_db_full().await.unwrap();
+        let all = workout::Entity::find().all(&dbc).await.unwrap();
+        assert!(all.len() > 1);
+        let req = WorkoutIndexParams::default()
+            .with_page(0)
+            .with_include(WorkoutInclude::ProfileWorkout)
+            .with_include(WorkoutInclude::Profile);
+
+        let page_size = req.pagination.as_ref().unwrap().size;
+        let res = index(req, &dbc).await.unwrap();
+        assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);
+        assert_eq!(all.len(), res.data.as_ref().unwrap().len());
+        res.data.as_ref().unwrap().iter().for_each(|i| {
+            assert!(i.profiles.is_some());
+            // no assigned profiles for default setup
+            assert!(i.profiles.as_ref().unwrap().is_empty());
+            assert!(i.profile_workout.is_some());
+            // same as above (empty) but is the pivot table
+            assert!(i.profile_workout.as_ref().unwrap().is_empty());
+            assert!(i.workout_muscle.is_none());
+        });
+    }
+
+    #[tokio::test(flavor = "multi_thread")]
+    async fn it_invokes_workout_index_with_workout_muscle() {
+        let (dbc, _test_id) = setup_test_db_full().await.unwrap();
+        let all = workout::Entity::find().all(&dbc).await.unwrap();
+        assert!(all.len() > 1);
+        let req = WorkoutIndexParams::default()
+            .with_page(0)
+            .with_include(WorkoutInclude::WorkoutMuscle(None));
+        let page_size = req.pagination.as_ref().unwrap().size;
+        let res = index(req, &dbc).await.unwrap();
+        assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);
+        assert_eq!(all.len(), res.data.as_ref().unwrap().len());
+        res.data.as_ref().unwrap().iter().for_each(|i| {
+            // by default, there's data
+            assert!(i.workout_muscle.is_some());
+            assert!(i.workout_muscle.as_ref().unwrap().len() > 0);
+            // assert no nest
+            assert!(i.workout_muscle.as_ref().unwrap()[0].muscle.is_none());
+        });
+    }
+    #[tokio::test(flavor = "multi_thread")]
+    async fn it_invokes_workout_index_with_workout_muscle_nested_muscle() {
+        let (dbc, _test_id) = setup_test_db_full().await.unwrap();
+        let all = workout::Entity::find().all(&dbc).await.unwrap();
+        assert!(all.len() > 1);
+        let req =
+            WorkoutIndexParams::default()
+                .with_page(0)
+                .with_include(WorkoutInclude::WorkoutMuscle(Some(vec![
+                    WorkoutMuscleInclude::Muscle,
+                ])));
+        let page_size = req.pagination.as_ref().unwrap().size;
+        let res = index(req, &dbc).await.unwrap();
+        assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);
+        assert_eq!(all.len(), res.data.as_ref().unwrap().len());
+        res.data.as_ref().unwrap().iter().for_each(|ii| {
+            assert!(ii.workout_muscle.is_some());
+            assert!(ii.workout_muscle.as_ref().unwrap().len() > 0);
+            ii.workout_muscle.as_ref().unwrap().iter().for_each(|jj| {
+                assert!(jj.muscle.is_some());
+                assert!(jj.muscle.as_ref().unwrap().id > 0);
+            });
+        });
+    }
+}

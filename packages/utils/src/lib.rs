@@ -52,6 +52,8 @@ pub fn resolve_path<P: AsRef<Path>>(path: &P) -> PathBuf {
 }
 
 // should only be used for dev, prod paths should be known or configured
+// only really usable by tauri and maybe dioxus
+// TODO: better solution
 pub fn cwd() -> PathBuf {
     let mut current = env::current_dir().unwrap();
     // we're in the wrong directory
@@ -60,4 +62,24 @@ pub fn cwd() -> PathBuf {
         current.pop(); // move to workspace root
     }
     current
+}
+
+pub fn find_workspace_root() -> Option<PathBuf> {
+    let manifest_dir = env::var("CARGO_MANIFEST_DIR").ok()?;
+    let mut path = PathBuf::from(manifest_dir);
+
+    loop {
+        if !path.pop() {
+            return None;
+        }
+
+        let cargo_toml = path.join("Cargo.toml");
+        if cargo_toml.exists() {
+            if let Ok(content) = std::fs::read_to_string(&cargo_toml) {
+                if content.contains("[workspace]") {
+                    return Some(path);
+                }
+            }
+        }
+    }
 }

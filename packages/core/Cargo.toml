@@ -17,3 +17,8 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 sea-orm = { workspace = true }
 validator = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+uuid = { workspace = true }
+ctor = { workspace = true }

@@ -1,4 +1,4 @@
-use crate::data::enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy};
+use crate::data::enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy};
 use crate::fixtures::get_workouts_fixture;
 
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
@@ -25,9 +25,9 @@ impl MigrationTrait for Migration {
                             .default(MuscleOrderStrategy::Deterministic),
                     )
                     .col(
-                        string(Workout::ExcerciseSplitStrategy)
+                        string(Workout::ExerciseSplitStrategy)
                             .not_null()
-                            .default(ExcerciseSplitStrategy::Simple),
+                            .default(ExerciseSplitStrategy::Simple),
                     )
                     .col(
                         string(Workout::ExercisePromptStrategy)
@@ -118,7 +118,7 @@ pub enum Workout {
     Code,
     ProfileId,
     MuscleOrderStrategy,
-    ExcerciseSplitStrategy,
+    ExerciseSplitStrategy,
     ExercisePromptStrategy,
     ExerciseSetSplit,
 }

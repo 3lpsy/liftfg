@@ -4,3 +4,4 @@ pub const VALIDATION_PARAMS_FIELD: &str = "params";
 
 pub const VALIDATION_DATABASE_FIELD: &str = "database";
 pub const VALIDATION_PARSING_CODE: &str = "parsing";
+pub const VALIDATION_UNIMPLEMENTED_CODE: &str = "unimplemented";

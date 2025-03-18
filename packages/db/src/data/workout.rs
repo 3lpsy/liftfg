@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 use super::{
-    enums::{ExcerciseSplitStrategy, ExercisePromptStrategy, MuscleOrderStrategy},
+    enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy},
     profile::ProfileData,
     profile_workout::ProfileWorkoutData,
     workout_muscle::{WorkoutMuscleData, WorkoutMuscleInclude},
@@ -38,10 +38,10 @@ pub struct WorkoutData {
     pub code: String,
     pub muscle_order_strategy: MuscleOrderStrategy,
     pub exercise_prompt_strategy: ExercisePromptStrategy,
-    pub exercise_split_strategy: ExcerciseSplitStrategy,
+    pub exercise_split_strategy: ExerciseSplitStrategy,
     pub workout_muscle: Option<Vec<WorkoutMuscleData>>,
     pub profile_workout: Option<Vec<ProfileWorkoutData>>,
-    pub profile: Option<ProfileData>,
+    pub profiles: Option<Vec<ProfileData>>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -58,7 +58,7 @@ impl From<entity::Model> for WorkoutData {
             exercise_split_strategy: model.exercise_split_strategy,
             workout_muscle: None,
             profile_workout: None,
-            profile: None,
+            profiles: None,
             created_at: model.created_at,
             updated_at: model.updated_at,
         }
