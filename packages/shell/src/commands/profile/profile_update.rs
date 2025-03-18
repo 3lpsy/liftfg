@@ -22,4 +22,3 @@ pub async fn profile_update(
         Err(err) => return Ok(ResponseData::from_errors(err)),
     }
 }
-// TODO: tests
