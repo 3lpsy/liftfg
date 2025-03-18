@@ -7,7 +7,11 @@ use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
 use fgdb::data::profile::ProfileShowParams;
 use fgdb::data::workout::WorkoutData;
+use fgdb::data::workout::WorkoutInclude;
+use fgdb::data::workout::WorkoutIndexParams;
+use fgdb::data::workout_muscle::WorkoutMuscleInclude;
 use fgdb::data::DefaultParams;
+use fgdb::data::HasIncludes;
 use validator::ValidationErrors;
 
 #[component]
@@ -38,7 +42,15 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
     // first we write get_workouts
     let mut workouts_ctx: Signal<Vec<WorkoutData>> = use_signal(|| vec![]);
     let workouts_res = use_resource(move || async move {
-        get::<DefaultParams, Vec<WorkoutData>>("workout_index", None).await
+        get::<WorkoutIndexParams, Vec<WorkoutData>>(
+            "workout_index",
+            Some(
+                WorkoutIndexParams::default().with_include(WorkoutInclude::WorkoutMuscle(Some(
+                    vec![WorkoutMuscleInclude::Muscle],
+                ))),
+            ),
+        )
+        .await
     })
     .suspend()?;
     let nav = navigator();
@@ -67,7 +79,7 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
 
         }
         div {
-            class: "justify-center",
+            class: "justify-center mt-2",
             p {
                 "A workout guides your session and will determine what exercises you will be prompted for based on desired muscle groups and volume."
             }
@@ -91,6 +103,45 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
                 }
             }
         }
+
+        // <div class="card w-96 bg-base-100 card-xs shadow-sm">
+        //   <div class="card-body">
+        //     <h2 class="card-title">Xsmall Card</h2>
+        //     <p>A card component has a figure, a body part, and inside body there are title and actions parts</p>
+        //     <div class="justify-end card-actions">
+        //       <button class="btn btn-primary">Buy Now</button>
+        //     </div>
+        //   </div>
+        // </div>
+        div {
+            class: "h-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2",
+            for workout in workouts_ctx() {
+                div {
+                    class: "card bg-base-100 card-xs shadow-sm",
+                    div {
+                        class: "card-body",
+                        h2 { class: "card-title",  "{workout.name}" }
+                        for workout_muscle in workout.workout_muscle.unwrap_or_default().iter() {
+                            p {
+                                strong {
+                                "{workout_muscle.muscle.as_ref().unwrap().name}: "
+                                }
+                                "{workout_muscle.volume} sets"
+
+                            }
+                        }
+                        div {
+                            class: "card-actions justify-end",
+                            button {
+                                class: "btn",
+                                "Add"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
     }
 }
