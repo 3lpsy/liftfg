@@ -10,7 +10,6 @@ use fgdb::data::workout::WorkoutData;
 use fgdb::data::workout::WorkoutInclude;
 use fgdb::data::workout::WorkoutIndexParams;
 use fgdb::data::workout_muscle::WorkoutMuscleInclude;
-use fgdb::data::DefaultParams;
 use fgdb::data::HasIncludes;
 use validator::ValidationErrors;
 
@@ -27,7 +26,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         .await
     })
     .suspend()?;
-    let nav = navigator();
     use_effect(move || match profile_res() {
         Ok(profile) => {
             profile_sig.set(Some(profile.clone()));
@@ -35,7 +33,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            nav.replace(router::Route::Errors {});
         }
     });
 
@@ -53,7 +50,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         .await
     })
     .suspend()?;
-    let nav = navigator();
     use_effect(move || match workouts_res() {
         Ok(data) => {
             *workouts_ctx.write() = data.clone();
@@ -61,7 +57,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            nav.replace(router::Route::Errors {});
         }
     });
 

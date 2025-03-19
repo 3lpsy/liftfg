@@ -13,7 +13,6 @@ use std::str::FromStr;
 use chrono_tz::Tz;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
-use validator::ValidationErrors;
 use views::Loading;
 // use state::AppState;
 
@@ -39,9 +38,6 @@ fn App() -> Element {
     logging::info("Rendering App");
     let current_profile: Signal<Option<ProfileData>> = use_signal(|| None);
     use_context_provider(|| current_profile.clone());
-
-    let app_errors: Signal<ValidationErrors> = use_signal(|| ValidationErrors::new());
-    use_context_provider(|| app_errors.clone());
 
     // set theme, wasm only?
     use_hook(move || {

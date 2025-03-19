@@ -31,7 +31,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            nav.replace(router::Route::Errors {});
+            // nav.replace(router::Route::Errors {});
         }
     });
     let timezone = use_context::<Signal<Tz>>();
@@ -89,7 +89,7 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                                                 Err(e) => {
                                                     let mut app_errors = use_context::<Signal<ValidationErrors>>();
                                                     app_errors.set(e.clone());
-                                                    nav.replace(router::Route::Errors {  });
+                                                    // nav.replace(router::Route::Errors {  });
                                                 }
                                             }
                                         },

@@ -56,7 +56,7 @@ pub async fn setup_async<R: Runtime>(
             error!("Cannot seed dev data in prod environment!");
         } else {
             let dbc = db::get_dbc(&config.db_path).await?;
-            seed::dev(dbc).await?;
+            seed::dev(&dbc).await?;
         }
     }
 

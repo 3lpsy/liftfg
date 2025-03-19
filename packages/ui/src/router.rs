@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::views::{
-    Container, Empty, Errors, Home, NotFoundFallback, OnboardIndexView, OnboardProfileCreateView,
+    Container, Empty, Home, NotFoundFallback, OnboardIndexView, OnboardProfileCreateView,
     OnboardTermsIndexView, ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView,
     WorkoutCreateView,
 };
@@ -40,8 +40,7 @@ pub enum Route {
         WorkoutCreateView {
             profile_id: usize
         },
-        #[route("/errors")]
-        Errors { },
+
         #[route("/:..route")]
         NotFoundFallback { route: Vec<String> },
     #[end_layout]

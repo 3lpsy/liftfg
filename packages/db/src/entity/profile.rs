@@ -79,19 +79,19 @@ impl ActiveModelBehavior for ActiveModel {}
 // Query Helpers
 //
 impl Entity {
-    pub async fn by_name<C>(db: &C, name: &str) -> Result<Option<Model>, DbErr>
+    pub async fn by_name<C>(dbc: &C, name: &str) -> Result<Option<Model>, DbErr>
     where
         C: ConnectionTrait,
     {
-        Self::find().filter(Column::Name.eq(name)).one(db).await
+        Self::find().filter(Column::Name.eq(name)).one(dbc).await
     }
-    pub async fn by_default<C>(db: &C) -> Result<Option<Model>, DbErr>
+    pub async fn by_default<C>(dbc: &C) -> Result<Option<Model>, DbErr>
     where
         C: ConnectionTrait,
     {
         Self::find()
             .filter(Column::IsDefault.eq(true))
-            .one(db)
+            .one(dbc)
             .await
     }
 }

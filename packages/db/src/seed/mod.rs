@@ -7,9 +7,10 @@ use crate::entity::profile;
 
 // seeding should be done in migrations as schema may change
 #[cfg(feature = "db")]
-pub async fn dev(dbc: DatabaseConnection) -> Result<()> {
+pub async fn dev(dbc: &DatabaseConnection) -> Result<Vec<profile::Model>> {
     let name = "TestProfile";
-    let _profile = match profile::Entity::by_name(&dbc, name).await? {
+    let mut profs = vec![];
+    let p = match profile::Entity::by_name(dbc, name).await? {
         Some(existing) => existing,
         None => {
             let profile_am = profile::ActiveModel {
@@ -17,12 +18,13 @@ pub async fn dev(dbc: DatabaseConnection) -> Result<()> {
                 is_default: Set(true),
                 ..Default::default()
             };
-            profile_am.insert(&dbc).await?
+            profile_am.insert(dbc).await?
         }
     };
+    profs.push(p);
     let name = "TestProfile2";
 
-    let _profile2 = match profile::Entity::by_name(&dbc, name).await? {
+    let p = match profile::Entity::by_name(dbc, name).await? {
         Some(existing) => existing,
         None => {
             let profile_am = profile::ActiveModel {
@@ -30,8 +32,9 @@ pub async fn dev(dbc: DatabaseConnection) -> Result<()> {
                 is_default: Set(false),
                 ..Default::default()
             };
-            profile_am.insert(&dbc).await?
+            profile_am.insert(dbc).await?
         }
     };
-    Ok(())
+    profs.push(p);
+    Ok(profs)
 }

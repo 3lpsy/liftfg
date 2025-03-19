@@ -12,6 +12,8 @@ use validator::ValidationErrors;
 #[component]
 pub fn Container() -> Element {
     logging::info("Rendering Container");
+    let app_errors: Signal<ValidationErrors> = use_signal(|| ValidationErrors::new());
+    use_context_provider(|| app_errors.clone());
 
     let profile_res = use_resource(move || async move {
         logging::info("Loading profile resource callback");
@@ -53,7 +55,7 @@ pub fn Container() -> Element {
             } else {
                 let mut app_errors = use_context::<Signal<ValidationErrors>>();
                 app_errors.set(e.clone());
-                nav.replace(router::Route::Errors {});
+                // nav.replace(router::Route::Errors {});
             }
         }
     });
@@ -75,8 +77,12 @@ pub fn Container() -> Element {
                             "An unhandled error has occured: {err:?}"
                         }
                     },
+
                     div {
                         class: "mx-4 my-2 h-full",
+                        if ! app_errors().is_empty() {
+                            code { "{app_errors():?}"}
+                        }
                         Outlet::<Route> {},
                     }
                 }

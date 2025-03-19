@@ -63,7 +63,7 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
                                     }
                                     let mut app_errors = use_context::<Signal<ValidationErrors>>();
                                     app_errors.set(e.clone());
-                                    nav.push(router::Route::Errors { });
+                                    // nav.push(router::Route::Errors { });
                                 }
                             }
                         },

@@ -12,8 +12,8 @@ use fgdb::{
     entity::{muscle, profile, profile_workout, workout, workout_muscle},
 };
 use sea_orm::{
-    ColumnTrait, DatabaseConnection, EntityTrait, LoaderTrait, PaginatorTrait, QueryFilter,
-    QueryOrder,
+    ColumnTrait, DatabaseConnection, EntityTrait, JoinType, LoaderTrait, PaginatorTrait,
+    QueryFilter, QueryOrder, QuerySelect, RelationTrait,
 };
 use validator::{Validate, ValidationErrors};
 
@@ -27,9 +27,16 @@ pub async fn index(
     let order = params.order.unwrap_or_default();
     let includes = params.includes.unwrap_or_default();
 
-    let pager = workout::Entity::find()
-        .order_by(workout::Column::Id, order.direction.clone().into())
-        .paginate(dbc, pagination.size as u64);
+    let mut query = workout::Entity::find();
+    if let Some(profile_id) = params.profile_id {
+        // filter on relationship workout_profile where workout_profile.profile_id is profile_id
+        // can't use relationship
+        query = query
+            .join(JoinType::InnerJoin, workout::Relation::ProfileWorkout.def())
+            .filter(profile_workout::Column::ProfileId.eq(profile_id));
+    }
+    query = query.order_by(workout::Column::Id, order.direction.clone().into());
+    let pager = query.paginate(dbc, pagination.size as u64);
 
     // pagination and relationships aren't really compat
     // so let's paginate the root model and use LoaderTrait for direct relationships
@@ -141,6 +148,7 @@ pub async fn index(
 mod tests {
 
     use fgdb::data::{HasIncludes, HasPagination};
+    use sea_orm::{ActiveModelTrait, ActiveValue};
 
     use crate::utils::testutils::setup_test_db_full;
 
@@ -231,6 +239,42 @@ mod tests {
             ii.workout_muscle.as_ref().unwrap().iter().for_each(|jj| {
                 assert!(jj.muscle.is_some());
                 assert!(jj.muscle.as_ref().unwrap().id > 0);
+            });
+        });
+    }
+
+    #[tokio::test(flavor = "multi_thread")]
+    async fn it_invokes_workout_index_for_profile() {
+        let (dbc, _test_id) = setup_test_db_full().await.unwrap();
+        let all = workout::Entity::find().all(&dbc).await.unwrap();
+        let profs = fgdb::seed::dev(&dbc).await.unwrap();
+        profile_workout::ActiveModel {
+            workout_id: ActiveValue::Set(all[0].id),
+            profile_id: ActiveValue::Set(profs[0].id),
+            ..Default::default()
+        }
+        .insert(&dbc)
+        .await
+        .unwrap();
+        profile_workout::ActiveModel {
+            workout_id: ActiveValue::Set(all[1].id),
+            profile_id: ActiveValue::Set(profs[0].id),
+            ..Default::default()
+        }
+        .insert(&dbc)
+        .await
+        .unwrap();
+
+        let mut req = WorkoutIndexParams::default()
+            .with_page(0)
+            .with_include(WorkoutInclude::ProfileWorkout);
+        req.profile_id = Some(profs[0].id);
+        let res = index(req, &dbc).await.unwrap();
+        assert_eq!(2, res.data.as_ref().unwrap().len());
+        res.data.as_ref().unwrap().iter().for_each(|ii| {
+            assert!(ii.profile_workout.is_some());
+            ii.profile_workout.as_ref().unwrap().iter().for_each(|jj| {
+                assert!(jj.profile_id == profs[0].id);
             });
         });
     }

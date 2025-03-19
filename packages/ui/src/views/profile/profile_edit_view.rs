@@ -29,7 +29,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            nav.replace(router::Route::Errors {});
+            // nav.replace(router::Route::Errors {});
         }
     });
     rsx! {
@@ -79,7 +79,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
                                         Err(e) => {
                                             let mut app_errors = use_context::<Signal<ValidationErrors>>();
                                             app_errors.set(e.clone());
-                                            nav.push(router::Route::Errors { });
+                                            // nav.push(router::Route::Errors { });
                                         }
                                     }
                                     Ok(())

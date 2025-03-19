@@ -24,6 +24,8 @@ impl Includable for WorkoutInclude {}
 
 #[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
 pub struct WorkoutIndexParams {
+    #[validate(range(min = 1, max = 256, message = "Profile ID must be between 1 and 256"))]
+    pub profile_id: Option<i32>,
     pub pagination: Option<Pagination>,
     pub order: Option<Order>,
     #[validate(length(max = 3, message = "Max length of array is 3."))]

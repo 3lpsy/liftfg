@@ -3,7 +3,7 @@ use fgdb::data::{profile::ProfileData, DefaultParams};
 use validator::ValidationErrors;
 
 use super::profile_list_item::ProfileListItem;
-use crate::{router, services::profile::get_profiles};
+use crate::services::profile::get_profiles;
 
 #[component]
 pub fn ProfileList() -> Element {
@@ -15,7 +15,6 @@ pub fn ProfileList() -> Element {
         get_profiles(Some(pagination())).await
     })
     .suspend()?;
-    let nav = navigator();
 
     use_effect(move || match profiles_res() {
         Ok(profiles) => {
@@ -24,7 +23,7 @@ pub fn ProfileList() -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            nav.replace(router::Route::Errors {});
+            // nav.replace(router::Route::Errors {});
         }
     });
 
