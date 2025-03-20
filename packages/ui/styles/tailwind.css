@@ -50,7 +50,17 @@ html,
 body {
     @apply min-h-screen h-full m-0 p-0 bg-base-200;
 }
-
+/* Dioxus root div class name */
+#main {
+    height: 100%;
+}
 .page {
-    height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height));
+    min-height: calc(var(--full-viewport) - var(--navbar-height));
+    height: auto;
+    padding-bottom: var(--dock-height);
+
+    /* for loading, make min height, but this needs to grow with scroll */
+    /* min-height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height)); */
+    /* Allow only this div to scroll */
+    /* @apply overflow-y-auto;  */
 }

@@ -19,10 +19,11 @@ pub fn NavBar() -> Element {
         _ => nav.can_go_back(),
     };
     rsx! {
-        div { class: "navbar bg-base-300",
+        div { class: "navbar sticky top-0 bg-base-300",
             div { class: "navbar-start",
                 if can_go_back {
                     a {
+                        class: "btn btn-square btn-ghost",
                         onclick: move |_e| nav.go_back(),
                         ArrowLeft{}
                     }

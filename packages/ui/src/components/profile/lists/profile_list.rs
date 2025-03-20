@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use fgdb::data::{profile::ProfileData, DefaultParams};
+use fgdb::data::{profile::ProfileData, DefaultParams, HasPagination};
 use validator::ValidationErrors;
 
 use super::profile_list_item::ProfileListItem;
@@ -8,7 +8,7 @@ use crate::services::profile::get_profiles;
 #[component]
 pub fn ProfileList() -> Element {
     let mut profiles_ctx = use_context::<Signal<Vec<ProfileData>>>();
-    let pagination = use_signal(|| DefaultParams::default());
+    let pagination = use_signal(|| DefaultParams::default().with_size(20));
     let profiles_reload_trigger = use_signal(|| 0);
     let profiles_res = use_resource(move || async move {
         let _ = profiles_reload_trigger.read();

@@ -871,6 +871,12 @@
   .absolute {
     position: absolute;
   }
+  .sticky {
+    position: sticky;
+  }
+  .top-0 {
+    top: calc(var(--spacing) * 0);
+  }
   .top-2 {
     top: calc(var(--spacing) * 2);
   }
@@ -1006,9 +1012,6 @@
     display: flex;
     justify-content: flex-end;
     gap: calc(0.25rem * 2);
-  }
-  .mt-1 {
-    margin-top: calc(var(--spacing) * 1);
   }
   .mt-2 {
     margin-top: calc(var(--spacing) * 2);
@@ -1219,6 +1222,9 @@
   .h-full {
     height: 100%;
   }
+  .min-h-full {
+    min-height: 100%;
+  }
   .w-5 {
     width: calc(var(--spacing) * 5);
   }
@@ -1236,6 +1242,9 @@
   }
   .flex-1 {
     flex: 1;
+  }
+  .flex-auto {
+    flex: auto;
   }
   .transform {
     transform: var(--tw-rotate-x) var(--tw-rotate-y) var(--tw-rotate-z) var(--tw-skew-x) var(--tw-skew-y);
@@ -1313,11 +1322,17 @@
   .p-6 {
     padding: calc(var(--spacing) * 6);
   }
+  .px-2 {
+    padding-inline: calc(var(--spacing) * 2);
+  }
   .px-4 {
     padding-inline: calc(var(--spacing) * 4);
   }
   .px-8 {
     padding-inline: calc(var(--spacing) * 8);
+  }
+  .py-2 {
+    padding-block: calc(var(--spacing) * 2);
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
@@ -1462,6 +1477,11 @@
       padding-inline: calc(var(--spacing) * 6);
     }
   }
+  .sm\:px-8 {
+    @media (width >= 40rem) {
+      padding-inline: calc(var(--spacing) * 8);
+    }
+  }
   .sm\:py-12 {
     @media (width >= 40rem) {
       padding-block: calc(var(--spacing) * 12);
@@ -1495,9 +1515,19 @@
       justify-content: center;
     }
   }
+  .md\:px-12 {
+    @media (width >= 48rem) {
+      padding-inline: calc(var(--spacing) * 12);
+    }
+  }
   .lg\:px-8 {
     @media (width >= 64rem) {
       padding-inline: calc(var(--spacing) * 8);
+    }
+  }
+  .lg\:px-16 {
+    @media (width >= 64rem) {
+      padding-inline: calc(var(--spacing) * 16);
     }
   }
 }
@@ -1513,8 +1543,13 @@ html, body {
   background-color: var(--color-base-200);
   padding: calc(var(--spacing) * 0);
 }
+#main {
+  height: 100%;
+}
 .page {
-  height: calc(var(--full-viewport) - var(--navbar-height) - var(--dock-height));
+  min-height: calc(var(--full-viewport) - var(--navbar-height));
+  height: auto;
+  padding-bottom: var(--dock-height);
 }
 @layer base {
   :where(:root),:root:has(input.theme-controller[value=light]:checked),[data-theme=light] {

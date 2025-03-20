@@ -82,4 +82,13 @@ pub trait HasPagination {
         pagination.as_mut().unwrap().page = page;
         self
     }
+    fn with_size(mut self, size: i32) -> Self
+    where
+        Self: Sized,
+    {
+        let pagination = self.pagination();
+        *pagination = Some(pagination.take().unwrap_or_default());
+        pagination.as_mut().unwrap().size = size;
+        self
+    }
 }

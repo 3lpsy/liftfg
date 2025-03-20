@@ -63,7 +63,9 @@ pub fn Container() -> Element {
     rsx! {
         NavBar {},
         div {
-            class: "page container mx-auto flex flex-col",
+            // bootleg container with padding
+            // don't want to use container as want scrollbar on edge
+            class: "page py-2 px-2 sm:px-8 md:px-12 lg:px-16 mx-auto flex flex-col",
             SuspenseBoundary {
                 fallback: |_| rsx!{
                     div {
@@ -79,7 +81,7 @@ pub fn Container() -> Element {
                     },
 
                     div {
-                        class: "mx-4 my-2 h-full",
+                        class: "flex-auto mx-4 my-2 min-h-full",
                         if ! app_errors().is_empty() {
                             code { "{app_errors():?}"}
                         }
