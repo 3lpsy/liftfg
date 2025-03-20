@@ -39,6 +39,8 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
 
     // first we write get_workouts
     let mut workouts_ctx: Signal<Vec<WorkoutData>> = use_signal(|| vec![]);
+    use_context_provider(|| workouts_ctx.clone());
+
     let workouts_res = use_resource(move || async move {
         get::<WorkoutIndexParams, Vec<WorkoutData>>(
             "workout_index",
