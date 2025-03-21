@@ -22,7 +22,7 @@ pub struct ProfileData {
 }
 
 // Requests
-#[derive(Default, Debug, Validate, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
 pub struct ProfileShowParams {
     #[validate(range(min = 1))]
     pub id: Option<i32>,

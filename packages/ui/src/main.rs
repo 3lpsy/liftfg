@@ -3,6 +3,8 @@ mod bindings;
 // mod invoke;
 // mod jslog;
 mod components;
+mod filters;
+mod hooks;
 mod icons;
 mod logging;
 mod router;

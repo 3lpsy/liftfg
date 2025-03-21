@@ -3,13 +3,18 @@ use dioxus::prelude::*;
 use fgdb::data::workout::WorkoutData;
 
 #[component]
-pub fn WorkoutGrid() -> Element {
-    let workouts_ctx = use_context::<Signal<Vec<WorkoutData>>>();
+pub fn WorkoutGrid(
+    workouts: Vec<WorkoutData>,
+    on_workout_add: EventHandler<WorkoutData>,
+) -> Element {
     rsx! {
         div {
             class: "h-full grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2",
-            for workout in workouts_ctx() {
-                WorkoutGridItem{ workout: workout}
+            for workout in workouts {
+                WorkoutGridItem {
+                    workout: workout,
+                    on_add: on_workout_add
+                }
             }
         }
     }

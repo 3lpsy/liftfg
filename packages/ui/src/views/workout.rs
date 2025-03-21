@@ -1,70 +1,44 @@
 #![allow(non_snake_case)]
 use crate::components::workout::workout_grid::WorkoutGrid;
+use crate::filters::use_workouts_searched;
+use crate::hooks::profile::use_profile_resource;
+use crate::hooks::workout::use_workouts_resource;
 use crate::icons;
 use crate::router;
-use crate::services::get;
-use crate::services::profile::get_profile;
+
 use dioxus::prelude::*;
-use fgdb::data::profile::ProfileData;
 use fgdb::data::profile::ProfileShowParams;
+
 use fgdb::data::workout::WorkoutData;
 use fgdb::data::workout::WorkoutInclude;
 use fgdb::data::workout::WorkoutIndexParams;
 use fgdb::data::workout_muscle::WorkoutMuscleInclude;
 use fgdb::data::HasIncludes;
-use validator::ValidationErrors;
 
 #[component]
 pub fn WorkoutCreateView(profile_id: usize) -> Element {
-    // TODO: error handling verbose, ideally handle errors higher up
-    // and not in use_effect
-    let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
-    let profile_res = use_resource(move || async move {
-        get_profile(Some(ProfileShowParams {
-            id: Some(profile_id as i32),
-            name: None,
-        }))
-        .await
-    })
-    .suspend()?;
-    use_effect(move || match profile_res() {
-        Ok(profile) => {
-            profile_sig.set(Some(profile.clone()));
-        }
-        Err(e) => {
-            let mut app_errors = use_context::<Signal<ValidationErrors>>();
-            app_errors.set(e.clone());
-        }
+    let profile_params_sig = use_signal(|| ProfileShowParams {
+        id: Some(profile_id as i32),
+        name: None,
     });
+    let (_profile_sig, profile_res) = use_profile_resource(profile_params_sig);
+    profile_res.suspend()?;
 
-    // first we write get_workouts
-    let mut workouts_ctx: Signal<Vec<WorkoutData>> = use_signal(|| vec![]);
-    use_context_provider(|| workouts_ctx.clone());
-
-    let workouts_res = use_resource(move || async move {
-        get::<WorkoutIndexParams, Vec<WorkoutData>>(
-            "workout_index",
-            Some(
-                WorkoutIndexParams::default().with_include(WorkoutInclude::WorkoutMuscle(Some(
-                    vec![WorkoutMuscleInclude::Muscle],
-                ))),
-            ),
-        )
-        .await
-    })
-    .suspend()?;
-    use_effect(move || match workouts_res() {
-        Ok(data) => {
-            *workouts_ctx.write() = data.clone();
-        }
-        Err(e) => {
-            let mut app_errors = use_context::<Signal<ValidationErrors>>();
-            app_errors.set(e.clone());
-        }
+    let workouts_params_sig = use_signal(|| {
+        WorkoutIndexParams::default().with_include(WorkoutInclude::WorkoutMuscle(Some(vec![
+            WorkoutMuscleInclude::Muscle,
+        ])))
     });
+    let (workouts_sig, workouts_res) = use_workouts_resource(workouts_params_sig);
+    workouts_res.suspend()?;
 
-    // second, add a includes setup for profile to include workouts on response
-    //
+    let mut search_sig = use_signal(|| String::new());
+    let workouts_searched_memo = use_workouts_searched(workouts_sig, search_sig);
+
+    let handle_workout_add = move |workout: WorkoutData| {
+        tracing::info!("Added workout: {}", workout.name);
+    };
+
     rsx! {
         div {
             class: "flex justify-between items-center",
@@ -74,7 +48,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
                 to: router::Route::Home  {},
                 "Create Workout"
             }
-
         }
         div {
             class: "justify-center mt-2",
@@ -96,11 +69,12 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
                 icons::SearchIcon{},
                 input {
                     r#type:"search",
-                    required: true,
-                    placeholder: "Filter"
+                    required: false,
+                    placeholder: "Filter",
+                    oninput: move |evt| {search_sig.set(evt.value());}
                 }
             }
         }
-        WorkoutGrid {}
+        WorkoutGrid { workouts: workouts_searched_memo(), on_workout_add: handle_workout_add}
     }
 }
