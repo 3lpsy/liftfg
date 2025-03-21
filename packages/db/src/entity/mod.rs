@@ -10,6 +10,7 @@ pub mod muscle;
 pub mod profile;
 pub mod profile_workout;
 
+pub mod common;
 pub mod seed;
 pub mod session;
 pub mod set;

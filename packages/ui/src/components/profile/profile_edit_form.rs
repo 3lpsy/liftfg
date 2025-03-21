@@ -1,4 +1,4 @@
-use crate::{router, services::profile::update_profile};
+use crate::{router, services::post};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileUpdateData};
 use validator::{Validate, ValidationErrors};
@@ -35,7 +35,7 @@ pub fn ProfileEditForm(profile: ProfileData) -> Element {
                     if let Err(validation_errors) = form_data().validate() {
                         form_errors.set(validation_errors);
                     } else {
-                        match update_profile(form_data()).await {
+                        match post::<ProfileUpdateData, ProfileData>("profile_update", form_data()).await {
                             Ok(profile) => {
                                 form_data.set(profile.into()); // probably unnecssary
                                 nav.replace(router::Route::ProfileIndexView {  });

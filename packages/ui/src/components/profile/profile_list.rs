@@ -3,7 +3,7 @@ use fgdb::data::{profile::ProfileData, DefaultParams, HasPagination};
 use validator::ValidationErrors;
 
 use super::profile_list_item::ProfileListItem;
-use crate::services::profile::get_profiles;
+use crate::services::get;
 
 #[component]
 pub fn ProfileList() -> Element {
@@ -12,7 +12,7 @@ pub fn ProfileList() -> Element {
     let profiles_reload_trigger = use_signal(|| 0);
     let profiles_res = use_resource(move || async move {
         let _ = profiles_reload_trigger.read();
-        get_profiles(Some(pagination())).await
+        get::<DefaultParams, Vec<ProfileData>>("profile_index", Some(pagination())).await
     })
     .suspend()?;
 
@@ -23,7 +23,6 @@ pub fn ProfileList() -> Element {
         Err(e) => {
             let mut app_errors = use_context::<Signal<ValidationErrors>>();
             app_errors.set(e.clone());
-            // nav.replace(router::Route::Errors {});
         }
     });
 

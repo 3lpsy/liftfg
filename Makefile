@@ -70,7 +70,7 @@ android-dev:
 css: tailwind
 
 tailwind:
-	@echo "Running: cd packages/ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch
+	@echo "Running: cd packages/ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch"
 	@cd packages/ui && npx @tailwindcss/cli -i styles/tailwind.css -o ./assets/main.css --watch
 
 # Handle arguments

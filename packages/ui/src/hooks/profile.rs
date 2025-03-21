@@ -6,7 +6,7 @@ use dioxus::{
 use fgdb::data::profile::{ProfileData, ProfileShowParams};
 use validator::ValidationErrors;
 
-use crate::services::profile::get_profile;
+use crate::services::get;
 
 pub fn use_profile_resource(
     params_sig: Signal<ProfileShowParams>,
@@ -16,7 +16,9 @@ pub fn use_profile_resource(
 ) {
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
 
-    let profile_res = use_resource(move || async move { get_profile(Some(params_sig())).await });
+    let profile_res = use_resource(move || async move {
+        get::<ProfileShowParams, ProfileData>("profile_show", Some(params_sig())).await
+    });
 
     use_effect(move || {
         if let Some(result) = profile_res() {

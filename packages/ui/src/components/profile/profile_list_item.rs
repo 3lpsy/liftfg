@@ -2,7 +2,7 @@ use crate::{
     components::modal::Modal,
     icons::{ArrowRight, TrashIcon},
     router,
-    services::profile::delete_profile,
+    services::post,
 };
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileDeleteParams};
@@ -32,7 +32,7 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
                         class: "btn btn-warning btn-outline",
                         onclick: move |_| async move {
                             let current_profile = current_profile_ctx();
-                            match delete_profile(ProfileDeleteParams {id: profile_id as i32}).await {
+                            match post::<ProfileDeleteParams, ProfileData>("profile_delete", ProfileDeleteParams {id: profile_id as i32}).await {
                                 Ok(deleted) => {
                                     if let Some(p) = current_profile {
                                         if p.id == deleted.id {

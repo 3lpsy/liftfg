@@ -1,5 +1,3 @@
-pub mod profile;
-
 use crate::{
     bindings::invoke,
     logging::{info, warn},

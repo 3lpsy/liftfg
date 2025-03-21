@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::router::{self};
-use crate::services::profile::{get_profile, update_profile};
+use crate::services::{get, post};
 use crate::views::Loading;
 use chrono_tz::Tz;
 use dioxus::prelude::*;
@@ -16,10 +16,13 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
     let mut current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
 
     let profile_res = use_resource(move || async move {
-        get_profile(Some(ProfileShowParams {
-            id: Some(profile_id as i32),
-            name: None,
-        }))
+        get::<ProfileShowParams, ProfileData>(
+            "profile_show",
+            Some(ProfileShowParams {
+                id: Some(profile_id as i32),
+                name: None,
+            }),
+        )
         .await
     })
     .suspend()?;
@@ -77,7 +80,8 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                                     button {
                                         class: "btn btn-secondary w-full",
                                         onclick: move |_| async move {
-                                            match update_profile(ProfileUpdateData {
+                                            match post::<ProfileUpdateData, ProfileData>(
+                                                "profile_update", ProfileUpdateData {
                                                 id: profile_id as i32,
                                                 is_default: Some(true),
                                                 name: None

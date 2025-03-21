@@ -1,22 +1,26 @@
 use dioxus::{
     hooks::use_memo,
-    signals::{Memo, Signal},
+    signals::{Memo, Readable, Signal},
 };
 use fgdb::data::workout::WorkoutData;
 
-pub fn use_workouts_searched(
-    workouts_ctx: Signal<Vec<WorkoutData>>,
+pub fn use_workouts_searched<T>(
+    workouts_ctx: T,
     search_sig: Signal<String>,
-) -> Memo<Vec<WorkoutData>> {
+) -> Memo<Vec<WorkoutData>>
+where
+    T: Readable<Target = Vec<WorkoutData>> + 'static,
+{
     use_memo(move || {
-        let workouts = workouts_ctx();
-        let query = search_sig();
-        search_workouts(&workouts, &query)
+        let workouts = workouts_ctx.read().clone();
+        let search = search_sig.read().clone();
+        search_workouts(&workouts, &search)
             .into_iter()
             .cloned()
             .collect::<Vec<WorkoutData>>()
     })
 }
+
 pub fn search_workouts<'a>(workouts: &'a [WorkoutData], query: &str) -> Vec<&'a WorkoutData> {
     if query.trim().is_empty() {
         return workouts.iter().collect();

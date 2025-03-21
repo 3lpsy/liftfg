@@ -31,7 +31,7 @@ pub struct ProfileShowParams {
 
 #[derive(Default, Debug, Validate, Serialize, Deserialize)]
 pub struct ProfileDeleteParams {
-    #[validate(range(min = 1))]
+    #[validate(range(min = 1, message = "Profile ID must be greater than 1"))]
     pub id: i32,
 }
 
@@ -91,6 +91,7 @@ impl From<ProfileStoreData> for entity::ActiveModel {
         }
     }
 }
+
 impl<P: RequestableParams> From<ProfileStoreData> for RequestData<ProfileStoreData, P> {
     fn from(data: ProfileStoreData) -> Self {
         RequestData::from_data(data)

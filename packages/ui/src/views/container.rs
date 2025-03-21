@@ -1,9 +1,8 @@
 #![allow(non_snake_case)]
 use crate::components::dock::Dock;
 use crate::components::navbar::NavBar;
-use crate::logging::{self, info};
 use crate::router;
-use crate::services::profile::get_profile;
+use crate::services::get;
 use crate::{router::Route, views::Loading};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileShowParams};
@@ -11,18 +10,11 @@ use validator::ValidationErrors;
 
 #[component]
 pub fn Container() -> Element {
-    logging::info("Rendering Container");
     let app_errors: Signal<ValidationErrors> = use_signal(|| ValidationErrors::new());
     use_context_provider(|| app_errors.clone());
 
     let profile_res = use_resource(move || async move {
-        logging::info("Loading profile resource callback");
-        // implicitly use is_default if current is None, in that case, check the error
-        get_profile(Some(ProfileShowParams {
-            id: None,
-            name: None,
-        }))
-        .await
+        get::<ProfileShowParams, ProfileData>("profile_show", None).await
     })
     .suspend()?;
 
@@ -39,7 +31,6 @@ pub fn Container() -> Element {
 
     use_hook(move || match profile_res() {
         Ok(profile) => {
-            info("Updating current profile in container");
             *current_profile_ctx.write() = Some(profile.clone());
             if is_onboard() {
                 nav.push(router::Route::Home {});
@@ -55,7 +46,6 @@ pub fn Container() -> Element {
             } else {
                 let mut app_errors = use_context::<Signal<ValidationErrors>>();
                 app_errors.set(e.clone());
-                // nav.replace(router::Route::Errors {});
             }
         }
     });

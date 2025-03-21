@@ -1,4 +1,4 @@
-use crate::{router, services::profile::create_profile};
+use crate::{router, services::post};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileStoreData};
 use validator::{Validate, ValidationErrors};
@@ -41,7 +41,7 @@ pub fn ProfileCreateForm() -> Element {
                         if current_profile.is_none() {
                             form_data.is_default = Some(true);
                         }
-                        match create_profile(form_data).await {
+                        match post::<ProfileStoreData, ProfileData>("profile_store", form_data).await {
                             Ok(profile) => {
                                 let new_profile_id = profile.id;
                                 // if there was no previous current profile, set it

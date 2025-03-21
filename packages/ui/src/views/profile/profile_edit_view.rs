@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 use crate::components::profile::ProfileEditForm;
 use crate::router;
-use crate::services::profile::{delete_profile, get_profile};
+use crate::services::{get, post};
 use crate::views::Loading;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileShowParams;
@@ -14,10 +14,13 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
 
     let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
     let profile_res = use_resource(move || async move {
-        get_profile(Some(ProfileShowParams {
-            id: Some(profile_id as i32),
-            name: None,
-        }))
+        get::<ProfileShowParams, ProfileData>(
+            "profile_show",
+            Some(ProfileShowParams {
+                id: Some(profile_id as i32),
+                name: None,
+            }),
+        )
         .await
     })
     .suspend()?;
@@ -61,7 +64,7 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
                                 },
                                 onclick: move |_e| async move {
                                     let current_profile = current_profile_ctx();
-                                    match delete_profile(ProfileDeleteParams {id: profile_id as i32}).await {
+                                    match post::<ProfileDeleteParams,ProfileData>("profile_delete", ProfileDeleteParams {id: profile_id as i32}).await {
                                         Ok(deleted) => {
                                             if let Some(p) = current_profile {
                                                 if p.id == deleted.id {
@@ -79,7 +82,6 @@ pub fn ProfileEditView(profile_id: usize) -> Element {
                                         Err(e) => {
                                             let mut app_errors = use_context::<Signal<ValidationErrors>>();
                                             app_errors.set(e.clone());
-                                            // nav.push(router::Route::Errors { });
                                         }
                                     }
                                     Ok(())
