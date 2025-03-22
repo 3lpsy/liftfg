@@ -72,7 +72,12 @@ pub fn ProfileShowView(profile_id: usize) -> Element {
                             Link {
                                 to: router::Route::ProfileEditView { profile_id: profile.id as usize },
                                 class: "btn w-full",
-                                "Edit"
+                                "Edit Profile"
+                            }
+                            Link {
+                                to: router::Route::ProfileWorkoutCreateView { profile_id: profile.id as usize },
+                                class: "btn w-full",
+                                "Edit Workouts"
                             }
 
                             {if !profile.is_default {

@@ -13,7 +13,7 @@ pub fn Dock() -> Element {
         Route::ProfileIndexView { .. }
         | Route::ProfileShowView { .. }
         | Route::ProfileCreateView { .. } => "settings",
-        Route::WorkoutCreateView { .. } => "workouts",
+        Route::ProfileWorkoutCreateView { .. } => "workouts",
         _ => "home",
     };
     rsx! {

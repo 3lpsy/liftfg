@@ -9,7 +9,6 @@ use crate::router;
 use crate::services::post;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileShowParams;
-use fgdb::data::profile_workout;
 use fgdb::data::profile_workout::ProfileWorkoutData;
 use fgdb::data::profile_workout::ProfileWorkoutDeleteData;
 use fgdb::data::profile_workout::ProfileWorkoutStoreData;
@@ -21,7 +20,7 @@ use fgdb::data::HasIncludes;
 use validator::ValidationErrors;
 
 #[component]
-pub fn WorkoutCreateView(profile_id: usize) -> Element {
+pub fn ProfileWorkoutCreateView(profile_id: usize) -> Element {
     let profile_id = profile_id as i32;
     let profile_params_sig = use_signal(|| ProfileShowParams {
         id: Some(profile_id),
@@ -44,7 +43,7 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
         workouts_sig()
             .iter()
             .filter(|w| {
-                w.profile_workout.as_ref().map_or(false, |pws| {
+                w.profile_workout.as_ref().map_or(true, |pws| {
                     for pw in pws {
                         if pw.profile_id == profile_id {
                             return false;
@@ -57,7 +56,7 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
             .collect::<Vec<WorkoutData>>()
     });
     let mut search_sig = use_signal(|| String::new());
-    let workouts_searched_memo = use_workouts_searched(unselected_workouts_memo, search_sig);
+    let searched_workouts_memo = use_workouts_searched(unselected_workouts_memo, search_sig);
 
     let selected_workouts_memo = use_memo(move || {
         workouts_sig()
@@ -175,6 +174,6 @@ pub fn WorkoutCreateView(profile_id: usize) -> Element {
                 }
             }
         }
-        WorkoutGrid { workouts: workouts_searched_memo(), on_workout_add: handle_workout_add}
+        WorkoutGrid { workouts: searched_workouts_memo(), on_workout_add: handle_workout_add}
     }
 }
