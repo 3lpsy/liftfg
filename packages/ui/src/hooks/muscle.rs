@@ -4,18 +4,18 @@ use dioxus::{
     prelude::*,
     signals::Signal,
 };
-use fgdb::data::workout::{WorkoutData, WorkoutIndexParams};
+use fgdb::data::muscle::{MuscleData, MuscleIndexParams};
 use validator::ValidationErrors;
 
-pub fn use_workouts_resource(
-    params_sig: Signal<WorkoutIndexParams>,
+pub fn use_muscles_resource(
+    params_sig: Signal<MuscleIndexParams>,
 ) -> (
-    Signal<Vec<WorkoutData>>,
-    Resource<Result<Vec<WorkoutData>, ValidationErrors>>,
+    Signal<Vec<MuscleData>>,
+    Resource<Result<Vec<MuscleData>, ValidationErrors>>,
 ) {
-    let mut data_sig: Signal<Vec<WorkoutData>> = use_signal(|| vec![]);
+    let mut data_sig: Signal<Vec<MuscleData>> = use_signal(|| vec![]);
     let resource = use_resource(move || async move {
-        get::<WorkoutIndexParams, Vec<WorkoutData>>("workout_index", Some(params_sig())).await
+        get::<MuscleIndexParams, Vec<MuscleData>>("muscle_index", Some(params_sig())).await
     });
     // Set up the effect to handle resource results
     use_effect(move || {

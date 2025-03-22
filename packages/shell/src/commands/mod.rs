@@ -1,3 +1,4 @@
+pub mod muscle;
 pub mod profile;
 pub mod profile_workout;
 pub mod workout;
@@ -120,6 +121,7 @@ pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync
         workout::workout_index,
         profile_workout::profile_workout_index,
         profile_workout::profile_workout_store,
-        profile_workout::profile_workout_delete
+        profile_workout::profile_workout_delete,
+        muscle::muscle_index
     ]
 }

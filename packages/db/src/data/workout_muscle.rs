@@ -22,10 +22,13 @@ pub struct WorkoutMuscleData {
     pub volume: i32,
     pub exercise_set_split: Option<i32>,
     pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
-    pub muscle: Option<MuscleData>,
-    pub profile: Option<ProfileData>,
+
+    // timesamps
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+    // relationships
+    pub muscle: Option<MuscleData>,
+    pub profile: Option<ProfileData>,
 }
 
 // impls

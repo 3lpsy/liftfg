@@ -1,11 +1,21 @@
 use chrono::{DateTime, Utc};
 
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
-use super::{ResponsableData, ResponseData};
+use super::{HasOrder, HasPagination, Order, Pagination, ResponsableData, ResponseData};
 
 #[cfg(feature = "db")]
 use crate::entity::muscle as entity;
+
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct MuscleIndexParams {
+    #[validate(nested)]
+    pub pagination: Option<Pagination>,
+    #[validate(nested)]
+    pub order: Option<Order>,
+}
+
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct MuscleData {
@@ -42,3 +52,15 @@ impl From<MuscleData> for ResponseData<MuscleData> {
 
 impl ResponsableData for MuscleData {}
 impl ResponsableData for Vec<MuscleData> {}
+
+impl HasPagination for MuscleIndexParams {
+    fn pagination(&mut self) -> &mut Option<Pagination> {
+        &mut self.pagination
+    }
+}
+
+impl HasOrder for MuscleIndexParams {
+    fn order(&mut self) -> &mut Option<Order> {
+        &mut self.order
+    }
+}

@@ -11,7 +11,7 @@ use router::Route;
 pub fn Dock() -> Element {
     let current_profile_ctx = use_context::<Signal<Option<ProfileData>>>();
     // this should never be none because of the container guard
-    let current_profile_id = use_memo(move || current_profile_ctx().as_ref().map_or(0, |p| p.id));
+    let _current_profile_id = use_memo(move || current_profile_ctx().as_ref().map_or(0, |p| p.id));
     let route: Route = use_route();
     let active_tab = match route {
         Route::ProfileIndexView { .. }

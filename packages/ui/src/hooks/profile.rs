@@ -14,17 +14,17 @@ pub fn use_profile_resource(
     Signal<Option<ProfileData>>,
     Resource<Result<ProfileData, ValidationErrors>>,
 ) {
-    let mut profile_sig: Signal<Option<ProfileData>> = use_signal(|| None);
+    let mut data_sig: Signal<Option<ProfileData>> = use_signal(|| None);
 
-    let profile_res = use_resource(move || async move {
+    let resource = use_resource(move || async move {
         get::<ProfileShowParams, ProfileData>("profile_show", Some(params_sig())).await
     });
 
     use_effect(move || {
-        if let Some(result) = profile_res() {
+        if let Some(result) = resource() {
             match result {
                 Ok(profile) => {
-                    profile_sig.set(Some(profile.clone()));
+                    data_sig.set(Some(profile.clone()));
                 }
                 Err(e) => {
                     let mut app_errors = use_context::<Signal<ValidationErrors>>();
@@ -34,5 +34,5 @@ pub fn use_profile_resource(
         }
     });
 
-    (profile_sig, profile_res)
+    (data_sig, resource)
 }
