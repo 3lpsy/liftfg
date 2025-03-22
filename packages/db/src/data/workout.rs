@@ -1,6 +1,7 @@
 #[cfg(feature = "db")]
 use crate::entity::workout as entity;
 use chrono::{DateTime, Utc};
+use fgutils::patterns::ALPHA_DASH;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -26,10 +27,53 @@ impl Includable for WorkoutInclude {}
 pub struct WorkoutIndexParams {
     #[validate(range(min = 1, max = 256, message = "Profile ID must be between 1 and 256"))]
     pub profile_id: Option<i32>,
+    #[validate(nested)]
     pub pagination: Option<Pagination>,
+    #[validate(nested)]
     pub order: Option<Order>,
     #[validate(length(max = 3, message = "Max length of array is 3."))]
     pub includes: Option<Vec<WorkoutInclude>>,
+}
+
+#[derive(Debug, Validate, Serialize, Deserialize, Clone, PartialEq)]
+pub struct WorkoutStoreData {
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Name must be between 1 and 127 characters long"
+    ))]
+    pub name: String,
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Code must be between 1 and 127 characters long"
+    ), regex(
+        path = *ALPHA_DASH,
+        message="Field must only contain alphanumeric or -, ., _ characters")
+    )]
+    pub code: String,
+    pub muscle_order_strategy: Option<MuscleOrderStrategy>,
+    pub exercise_split_strategy: Option<ExerciseSplitStrategy>,
+    pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
+    #[validate(range(
+        min = 1,
+        max = 32,
+        message = "Default exercise set split must be between 1 and 32"
+    ))]
+    pub exercise_set_split: Option<i32>,
+}
+
+impl Default for WorkoutStoreData {
+    fn default() -> Self {
+        WorkoutStoreData {
+            name: "".to_string(),
+            code: "".to_string(),
+            muscle_order_strategy: Some(MuscleOrderStrategy::default()),
+            exercise_split_strategy: Some(ExerciseSplitStrategy::default()),
+            exercise_prompt_strategy: Some(ExercisePromptStrategy::default()),
+            exercise_set_split: Some(3),
+        }
+    }
 }
 
 // Responses

@@ -116,7 +116,6 @@ pub enum Workout {
     Id,
     Name,
     Code,
-    ProfileId,
     MuscleOrderStrategy,
     ExerciseSplitStrategy,
     ExercisePromptStrategy,

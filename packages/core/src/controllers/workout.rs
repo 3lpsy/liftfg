@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, str::FromStr};
 
 use fgdb::{
     data::{
@@ -11,6 +11,7 @@ use fgdb::{
     },
     entity::{muscle, profile, profile_workout, workout, workout_muscle},
 };
+use fgutils::{constants::VALIDATION_GENERAL_VALIDATION_CODE, verrors};
 use sea_orm::{
     ColumnTrait, DatabaseConnection, EntityTrait, JoinType, LoaderTrait, PaginatorTrait,
     QueryFilter, QueryOrder, QuerySelect, RelationTrait,
@@ -35,7 +36,15 @@ pub async fn index(
             .join(JoinType::InnerJoin, workout::Relation::ProfileWorkout.def())
             .filter(profile_workout::Column::ProfileId.eq(profile_id));
     }
-    query = query.order_by(workout::Column::Id, order.direction.clone().into());
+
+    let order_by = workout::Column::from_str(&order.order_by).map_err(|_| {
+        verrors(
+            "order_by",
+            VALIDATION_GENERAL_VALIDATION_CODE,
+            "Order By field is invalid".to_string(),
+        )
+    })?;
+    query = query.order_by(order_by, order.direction.clone().into());
     let pager = query.paginate(dbc, pagination.size as u64);
 
     // pagination and relationships aren't really compat

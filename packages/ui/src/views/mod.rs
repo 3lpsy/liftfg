@@ -12,6 +12,6 @@ pub use onboard::{OnboardIndexView, OnboardProfileCreateView, OnboardTermsIndexV
 pub use profile::{ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView};
 
 pub mod profile_workout;
-pub use profile_workout::ProfileWorkoutCreateView;
+pub use profile_workout::{ProfileWorkoutCreateView, ProfileWorkoutIndexView};
 pub mod workout;
-pub use workout::{WorkoutCreateView, WorkoutIndexView};
+pub use workout::WorkoutCreateView;

@@ -1,7 +1,9 @@
 use super::common::{MigrationTimestampExt, TableWithTimestamps};
+use super::m20220101_000001_create_profile::Profile;
+use super::m20250115_101000_create_gym::Gym;
+use super::m20250115_110424_create_workout::Workout;
 use super::m20250115_175632_create_exercise::Exercise;
 use sea_orm_migration::{prelude::*, schema::*};
-
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
@@ -14,6 +16,36 @@ impl MigrationTrait for Migration {
                     .table(Session::Table)
                     .if_not_exists()
                     .col(pk_auto(Session::Id))
+                    // do not cascade
+                    .col(integer_null(Session::WorkoutId))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_set_session")
+                            .from(Session::Table, Session::WorkoutId)
+                            .to(Workout::Table, Workout::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::SetNull),
+                    )
+                    // do not cascade
+                    .col(integer_null(Session::ProfileId))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_set_session")
+                            .from(Session::Table, Session::ProfileId)
+                            .to(Profile::Table, Profile::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::SetNull),
+                    )
+                    // do not cascade
+                    .col(integer_null(Session::GymId))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk_set_session")
+                            .from(Session::Table, Session::GymId)
+                            .to(Gym::Table, Gym::Id)
+                            .on_delete(ForeignKeyAction::SetNull)
+                            .on_update(ForeignKeyAction::SetNull),
+                    )
                     .add_timestamps()
                     .to_owned(),
             )
@@ -73,6 +105,9 @@ impl MigrationTrait for Migration {
 enum Session {
     Table,
     Id,
+    WorkoutId,
+    ProfileId,
+    GymId,
 }
 
 #[derive(DeriveIden)]

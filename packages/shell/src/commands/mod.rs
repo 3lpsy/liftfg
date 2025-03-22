@@ -118,6 +118,7 @@ pub fn generate<R: tauri::Runtime>() -> impl Fn(Invoke<R>) -> bool + Send + Sync
         profile::profile_update::profile_update,
         profile::profile_delete::profile_delete,
         workout::workout_index,
+        profile_workout::profile_workout_index,
         profile_workout::profile_workout_store,
         profile_workout::profile_workout_delete
     ]

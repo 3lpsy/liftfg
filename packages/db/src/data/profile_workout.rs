@@ -4,8 +4,44 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use validator::{Validate, ValidationError};
 
-use super::{ResponsableData, ResponseData};
+use super::{
+    profile::ProfileData, workout::WorkoutData, HasIncludes, HasOrder, HasPagination, Includable,
+    Order, Pagination, ResponsableData, ResponseData,
+};
+
 // Requests
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub enum ProfileWorkoutInclude {
+    Profile,
+    Workout,
+}
+impl Includable for ProfileWorkoutInclude {}
+
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct ProfileWorkoutIndexParams {
+    #[validate(range(min = 1, max = 256, message = "Profile ID must be between 1 and 256"))]
+    pub profile_id: Option<i32>,
+    #[validate(range(min = 1, max = 256, message = "Workout ID must be between 1 and 256"))]
+    pub workout_id: Option<i32>,
+    #[validate(nested)]
+    pub pagination: Option<Pagination>,
+    #[validate(nested)]
+    pub order: Option<Order>,
+    #[validate(length(max = 2, message = "Max length of array is 3."))]
+    pub includes: Option<Vec<ProfileWorkoutInclude>>,
+}
+
+impl ProfileWorkoutIndexParams {
+    pub fn with_profile_id(mut self, id: i32) -> Self {
+        self.profile_id = Some(id);
+        self
+    }
+    // fn with_workout_id(mut self, id: i32) -> Self {
+    //     self.workout_id = Some(id);
+    //     self
+    // }
+}
+
 #[derive(Debug, Validate, Serialize, Deserialize, Default, Clone)]
 pub struct ProfileWorkoutStoreData {
     #[validate(range(min = 1, message = "Workout ID must be greater than 1"))]
@@ -29,6 +65,7 @@ fn validate_delete_data(data: &ProfileWorkoutDeleteData) -> Result<(), Validatio
     }
     Ok(())
 }
+
 #[derive(Debug, Validate, Serialize, Deserialize, Default, Clone)]
 #[validate(schema(function = "validate_delete_data", skip_on_field_errors = true))]
 pub struct ProfileWorkoutDeleteData {
@@ -45,7 +82,9 @@ pub struct ProfileWorkoutDeleteData {
 pub struct ProfileWorkoutData {
     pub id: i32,
     pub workout_id: i32,
+    pub workout: Option<WorkoutData>,
     pub profile_id: i32,
+    pub profile: Option<ProfileData>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
 }
@@ -57,7 +96,9 @@ impl From<entity::Model> for ProfileWorkoutData {
         Self {
             id: model.id,
             workout_id: model.workout_id,
+            workout: None,
             profile_id: model.profile_id,
+            profile: None,
             created_at: model.created_at,
             updated_at: model.updated_at,
         }
@@ -76,3 +117,21 @@ impl From<ProfileWorkoutData> for ResponseData<ProfileWorkoutData> {
 
 impl ResponsableData for ProfileWorkoutData {}
 impl ResponsableData for Vec<ProfileWorkoutData> {}
+
+impl HasIncludes<ProfileWorkoutInclude> for ProfileWorkoutIndexParams {
+    fn includes(&mut self) -> &mut Option<Vec<ProfileWorkoutInclude>> {
+        &mut self.includes
+    }
+}
+
+impl HasPagination for ProfileWorkoutIndexParams {
+    fn pagination(&mut self) -> &mut Option<Pagination> {
+        &mut self.pagination
+    }
+}
+
+impl HasOrder for ProfileWorkoutIndexParams {
+    fn order(&mut self) -> &mut Option<Order> {
+        &mut self.order
+    }
+}

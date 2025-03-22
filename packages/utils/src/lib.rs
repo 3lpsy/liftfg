@@ -9,6 +9,10 @@ use validator::{ValidationError, ValidationErrors};
 pub mod constants;
 pub mod patterns;
 
+pub fn codify(value: &str) -> String {
+    value.to_owned().replace(" ", "_").to_ascii_uppercase()
+}
+
 pub fn dt_human(timestamp: DateTime<Utc>, timezone: &Tz) -> String {
     let dt_local = timestamp.with_timezone(timezone);
     dt_local.format("%B %d, %Y at %I:%M %p").to_string() // Ad

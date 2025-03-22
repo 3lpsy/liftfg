@@ -3,7 +3,7 @@
 use crate::views::{
     Container, Empty, Home, NotFoundFallback, OnboardIndexView, OnboardProfileCreateView,
     OnboardTermsIndexView, ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileShowView,
-    ProfileWorkoutCreateView, WorkoutCreateView, WorkoutIndexView,
+    ProfileWorkoutCreateView, ProfileWorkoutIndexView, WorkoutCreateView,
 };
 use dioxus::prelude::*;
 
@@ -28,6 +28,8 @@ pub enum Route {
         OnboardProfileCreateView {},
         #[route("/onboard/terminology")]
         OnboardTermsIndexView {},
+        #[route("/current/profile-workout")]
+        ProfileWorkoutIndexView {},
         #[route("/profile")]
         ProfileIndexView {},
         #[route("/profile/create")]
@@ -36,18 +38,14 @@ pub enum Route {
         ProfileShowView {profile_id: usize},
         #[route("/profile/:profile_id/edit")]
         ProfileEditView {profile_id: usize},
+        // part of create workout flow
+        // should be route param because it may not be default
         #[route("/profile/:profile_id/profile-workout/create")]
         ProfileWorkoutCreateView {
             profile_id: usize
         },
-        #[route("/profile/:profile_id/workout/create")]
-        WorkoutCreateView {
-            profile_id: usize
-        },
-        #[route("/profile/:profile_id/workout")]
-        WorkoutIndexView {
-            profile_id: usize
-        },
+        #[route("/workout/create")]
+        WorkoutCreateView {},
 
         #[route("/:..route")]
         NotFoundFallback { route: Vec<String> },

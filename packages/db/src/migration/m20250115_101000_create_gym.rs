@@ -79,7 +79,7 @@ impl MigrationTrait for Migration {
 }
 
 #[derive(DeriveIden)]
-enum Gym {
+pub enum Gym {
     Table,
     Id,
     Name,

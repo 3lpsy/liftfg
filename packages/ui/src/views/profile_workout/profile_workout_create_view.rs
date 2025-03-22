@@ -124,7 +124,7 @@ pub fn ProfileWorkoutCreateView(profile_id: usize) -> Element {
             h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Add Workout" },
             Link {
                 class: "btn btn-outline",
-                to: router::Route::Home  {},
+                to: router::Route::WorkoutCreateView  {},
                 "Create Workout"
             }
         }
