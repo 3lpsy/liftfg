@@ -5,7 +5,7 @@ use fgdb::{
         muscle::MuscleData,
         profile::ProfileData,
         profile_workout::ProfileWorkoutData,
-        workout::{WorkoutData, WorkoutInclude, WorkoutIndexParams},
+        workout::{WorkoutData, WorkoutInclude, WorkoutIndexParams, WorkoutStoreData},
         workout_muscle::{WorkoutMuscleData, WorkoutMuscleInclude},
         DbValidationErrors, Paginator, ResponseData,
     },
@@ -13,11 +13,22 @@ use fgdb::{
 };
 use fgutils::{constants::VALIDATION_GENERAL_VALIDATION_CODE, verrors};
 use sea_orm::{
-    ColumnTrait, DatabaseConnection, EntityTrait, JoinType, LoaderTrait, PaginatorTrait,
-    QueryFilter, QueryOrder, QuerySelect, RelationTrait,
+    ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, JoinType, LoaderTrait,
+    PaginatorTrait, QueryFilter, QueryOrder, QuerySelect, RelationTrait,
 };
 use validator::{Validate, ValidationErrors};
 
+pub async fn store(
+    data: WorkoutStoreData,
+    dbc: &DatabaseConnection,
+) -> Result<ResponseData<WorkoutData>, ValidationErrors> {
+    data.validate()?;
+    let insert = workout::ActiveModel::from(data)
+        .insert(dbc)
+        .await
+        .map_err(DbValidationErrors::from)?;
+    Ok(ResponseData::from_data(insert.into()))
+}
 pub async fn index(
     params: WorkoutIndexParams,
     dbc: &DatabaseConnection,

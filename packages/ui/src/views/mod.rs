@@ -14,4 +14,4 @@ pub use profile::{ProfileCreateView, ProfileEditView, ProfileIndexView, ProfileS
 pub mod profile_workout;
 pub use profile_workout::{ProfileWorkoutCreateView, ProfileWorkoutIndexView};
 pub mod workout;
-pub use workout::WorkoutCreateView;
+pub use workout::{WorkoutCreateView, WorkoutEditView};

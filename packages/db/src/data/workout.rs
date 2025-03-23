@@ -2,6 +2,8 @@
 use crate::entity::workout as entity;
 use chrono::{DateTime, Utc};
 use fgutils::patterns::ALPHA_DASH;
+#[cfg(feature = "db")]
+use sea_orm::ActiveValue;
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
@@ -72,6 +74,25 @@ impl Default for WorkoutStoreData {
             exercise_split_strategy: Some(ExerciseSplitStrategy::default()),
             exercise_prompt_strategy: Some(ExercisePromptStrategy::default()),
             exercise_set_split: Some(3),
+        }
+    }
+}
+
+#[cfg(feature = "db")]
+impl From<WorkoutStoreData> for entity::ActiveModel {
+    fn from(data: WorkoutStoreData) -> Self {
+        entity::ActiveModel {
+            id: ActiveValue::NotSet,
+            name: ActiveValue::Set(data.name),
+            code: ActiveValue::Set(data.code),
+            muscle_order_strategy: ActiveValue::Set(data.muscle_order_strategy.unwrap_or_default()),
+            exercise_split_strategy: ActiveValue::Set(
+                data.exercise_split_strategy.unwrap_or_default(),
+            ),
+            exercise_prompt_strategy: ActiveValue::Set(
+                data.exercise_prompt_strategy.unwrap_or_default(),
+            ),
+            ..Default::default()
         }
     }
 }

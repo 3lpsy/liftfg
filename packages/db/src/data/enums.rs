@@ -3,11 +3,8 @@ use sea_orm::prelude::StringLen;
 #[cfg(feature = "db")]
 use sea_orm::{DeriveActiveEnum, EnumIter};
 use serde::{Deserialize, Serialize};
-#[cfg(not(feature = "db"))]
-use strum::EnumIter as StrumEnumIter;
 
 #[cfg_attr(feature = "db", derive(EnumIter, DeriveActiveEnum))]
-#[cfg_attr(not(feature = "db"), derive(StrumEnumIter))]
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(
     feature = "db",
@@ -45,10 +42,18 @@ impl MuscleOrderStrategy {
             Self::Rotating => "ROTATING".to_string(),
         }
     }
+
+    pub fn iter() -> impl Iterator<Item = MuscleOrderStrategy> {
+        vec![
+            MuscleOrderStrategy::Deterministic,
+            MuscleOrderStrategy::LeastWorked,
+            MuscleOrderStrategy::Rotating,
+        ]
+        .into_iter()
+    }
 }
 
 #[cfg_attr(feature = "db", derive(EnumIter, DeriveActiveEnum))]
-#[cfg_attr(not(feature = "db"), derive(StrumEnumIter))]
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(
     feature = "db",
@@ -80,10 +85,17 @@ impl ExerciseSplitStrategy {
             Self::NoAdjust => "NO_ADJUST".to_string(),
         }
     }
+
+    pub fn iter() -> impl Iterator<Item = ExerciseSplitStrategy> {
+        vec![
+            ExerciseSplitStrategy::Simple,
+            ExerciseSplitStrategy::NoAdjust,
+        ]
+        .into_iter()
+    }
 }
 
 #[cfg_attr(feature = "db", derive(EnumIter, DeriveActiveEnum))]
-#[cfg_attr(not(feature = "db"), derive(StrumEnumIter))]
 #[derive(Default, Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(
     feature = "db",
@@ -132,5 +144,16 @@ impl ExercisePromptStrategy {
             Self::CommonPrevious => "COMMON_PREVIOUS".to_string(),
             Self::Chaotic => "CHAOTIC".to_string(),
         }
+    }
+
+    pub fn iter() -> impl Iterator<Item = ExercisePromptStrategy> {
+        vec![
+            ExercisePromptStrategy::CommonCompound,
+            ExercisePromptStrategy::CommonIsolation,
+            ExercisePromptStrategy::CommonCompoundRotate,
+            ExercisePromptStrategy::CommonPrevious,
+            ExercisePromptStrategy::Chaotic,
+        ]
+        .into_iter()
     }
 }

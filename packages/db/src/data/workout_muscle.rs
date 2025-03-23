@@ -23,7 +23,7 @@ pub struct WorkoutMuscleData {
     pub exercise_set_split: Option<i32>,
     pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
 
-    // timesamps
+    // timestamps
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
     // relationships
