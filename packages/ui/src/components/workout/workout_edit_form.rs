@@ -1,33 +1,24 @@
 use dioxus::prelude::*;
 use fgdb::data::{
     enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy},
-    workout::{WorkoutData, WorkoutStoreData},
+    workout::{WorkoutData, WorkoutUpdateData},
 };
 use fgutils::codify;
 use validator::{Validate, ValidationErrors};
 
 use crate::{router, services::post};
 
-// TODO
-// - Let's just create the workout row first and navigate to edit
-// - In it's own component will probably be the add WorkoutMuscle rows which are complex
-// - Will maybe need to handle defaults better in that component as None will more likely be valid (in UI say it's a override of workout)
-//
-// pub struct WorkoutMuscleData {
-// pub id: i32,
-// pub workout_id: i32,
-// pub muscle_id: i32,
-// pub priority: i32,
-// pub volume: i32,
-// pub exercise_set_split: Option<i32>,
-// pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
-
 #[component]
-pub fn WorkoutCreateForm() -> Element {
-    let mut form_data = use_signal(|| WorkoutStoreData::default());
+pub fn WorkoutEditForm(workout: WorkoutData) -> Element {
+    let mut form_data = use_signal(|| WorkoutUpdateData::from(workout.clone()));
     let form_data_full = use_memo(move || {
         let mut fd = form_data();
-        fd.code = codify(&fd.name);
+        let fd_name = fd.name.clone().unwrap_or_default();
+        let w_name = workout.clone().name;
+        if w_name != fd_name {
+            // changed
+            fd.code = Some(codify(&fd_name));
+        }
         return fd;
     });
     let local_form_errors = use_memo(move || {
@@ -80,18 +71,23 @@ pub fn WorkoutCreateForm() -> Element {
             .collect::<Vec<_>>()
     };
 
-    let nav = navigator();
     rsx! {
         form {
             onsubmit: move |e| async move {
                 e.prevent_default();
+                tracing::info!("Form submit");
                 let form_data = form_data_full();
-                match post::<WorkoutStoreData, WorkoutData>("workout_store", form_data).await {
+                match post::<WorkoutUpdateData, WorkoutData>("workout_update", form_data).await {
                     Ok(workout) => {
-                        nav.push(router::Route::WorkoutEditView { workout_id: workout.id as usize });
+                        tracing::info!("workout updated {:?}", workout);
                     },
-                    Err(e) => server_form_errors.set(e)
+                    Err(e) => {
+                        tracing::info!("workout errr {:?}", &e);
+                        server_form_errors.set(e)
+                    }
                 }
+                tracing::info!("Form submit comp");
+
                 Ok(())
             },
             div {
@@ -105,22 +101,22 @@ pub fn WorkoutCreateForm() -> Element {
                             "Name"
                         }
                         input {
-                            class: if form_data().name.len() > 0 && has_error("name") {
+                            class: if has_error("name") {
                                 "input w-full input-error"
                             } else {
                                 "input w-full"
                             },
                             r#type: "text",
                             placeholder: "Enter Workout Name",
-                            value: "{form_data().name}",
+                            value: "{form_data().name.map_or_else(String::new, |v|v.clone())}",
                             name: "name",
                             oninput: move |evt| {
                                 form_data.with_mut(|data| {
-                                    data.name = evt.value().clone();
+                                    data.name = Some(evt.value().clone());
                                 });
                             }
                         }
-                        if form_data().name.len() > 0 && has_error("name")  {
+                        if has_error("name")  {
                             for (code, message) in get_errors("name") {
                                 li {
                                     span { class: "font-semibold", "{code}: " }
@@ -228,15 +224,16 @@ pub fn WorkoutCreateForm() -> Element {
                     }
                 }
                 button {
+                    r#type: "submit",
                     class: "mt-2 btn w-full",
                     disabled: !local_form_errors().is_empty(),
-                    "Create Workout and add Muscle Targets"
+                    "Save Changes"
                 }
-                p{"{form_data:?}"}
+                p{"{form_data_full:?}"}
                 p {"{local_form_errors:?}"}
+                p {"{server_form_errors:?}"}
 
             }
-
-        }
+        } // form
     }
 }

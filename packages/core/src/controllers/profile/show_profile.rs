@@ -6,7 +6,7 @@ use fgdb::{
     },
     entity::profile::{self},
 };
-use fgutils::verrors;
+use fgutils::{constants::VALIDATION_EXISTS_CODE, verrors};
 use sea_orm::{DatabaseConnection, EntityTrait};
 use validator::{Validate, ValidationErrors};
 
@@ -25,7 +25,7 @@ pub async fn show(
             None => {
                 return Err(verrors(
                     "name",
-                    "exists",
+                    VALIDATION_EXISTS_CODE,
                     format!("No user with name exists: {name}"),
                 ));
             }
@@ -40,7 +40,7 @@ pub async fn show(
             None => {
                 return Err(verrors(
                     "id",
-                    "exists",
+                    VALIDATION_EXISTS_CODE,
                     format!("No user with name exists: {id}"),
                 ));
             }
@@ -54,7 +54,7 @@ pub async fn show(
             None => {
                 return Err(verrors(
                     "is_default",
-                    "exists",
+                    VALIDATION_EXISTS_CODE,
                     format!("No default user exists: false"),
                 ));
             }

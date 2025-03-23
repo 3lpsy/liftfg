@@ -6,7 +6,7 @@ use fgdb::data::{
     HasIncludes,
 };
 
-use crate::{hooks::profile_workout::use_profile_workout_resource, router};
+use crate::{hooks::profile_workout::use_profile_workout_resource, icons::ArrowRight, router};
 
 #[component]
 pub fn ProfileWorkoutIndexView() -> Element {
@@ -37,11 +37,11 @@ pub fn ProfileWorkoutIndexView() -> Element {
     rsx! {
         div {
             class: "flex justify-between items-center",
-            h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Workouts" },
+            h1 { class: "text-2xl sm:text-3xl font-bold text-base-content", "Selected Workouts" },
             Link {
                 class: "btn btn-outline",
                 to: router::Route::ProfileWorkoutCreateView  {profile_id: current_profile_id_memo() as usize},
-                "Edit Workouts"
+                "Add/Remove Workouts"
             }
         }
         div {
@@ -55,7 +55,16 @@ pub fn ProfileWorkoutIndexView() -> Element {
                         class: "flex-1 text-lg sm:text-xl font-semibold opacity-80 text-center uppercase self-center",
                             "{workout.name}"
                     }
-
+                    div {}
+                    Link {
+                        class: "btn",
+                        to: router::Route::WorkoutEditView { workout_id: workout.id as usize },
+                        "Edit Workout"
+                    }
+                    a {
+                        class: "btn",
+                        "Start Session"
+                    }
                 }
             }
         }

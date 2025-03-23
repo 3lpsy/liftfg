@@ -5,11 +5,14 @@ use fgdb::{
         muscle::MuscleData,
         profile::ProfileData,
         profile_workout::ProfileWorkoutData,
-        workout::{WorkoutData, WorkoutInclude, WorkoutIndexParams, WorkoutStoreData},
+        workout::{
+            WorkoutData, WorkoutInclude, WorkoutIndexParams, WorkoutShowParams, WorkoutStoreData,
+            WorkoutUpdateData,
+        },
         workout_muscle::{WorkoutMuscleData, WorkoutMuscleInclude},
         DbValidationErrors, Paginator, ResponseData,
     },
-    entity::{muscle, profile, profile_workout, workout, workout_muscle},
+    entity::{common::EntityHelpers, muscle, profile, profile_workout, workout, workout_muscle},
 };
 use fgutils::{constants::VALIDATION_GENERAL_VALIDATION_CODE, verrors};
 use sea_orm::{
@@ -29,6 +32,29 @@ pub async fn store(
         .map_err(DbValidationErrors::from)?;
     Ok(ResponseData::from_data(insert.into()))
 }
+
+pub async fn update(
+    data: WorkoutUpdateData,
+    dbc: &DatabaseConnection,
+) -> Result<ResponseData<WorkoutData>, ValidationErrors> {
+    data.validate()?;
+    workout::Entity::exists_or_err(dbc, data.id).await?;
+    let update = workout::ActiveModel::from(data)
+        .update(dbc)
+        .await
+        .map_err(DbValidationErrors::from)?;
+    Ok(ResponseData::from_data(update.into()))
+}
+
+pub async fn show(
+    params: WorkoutShowParams,
+    dbc: &DatabaseConnection,
+) -> Result<ResponseData<WorkoutData>, ValidationErrors> {
+    params.validate()?;
+    let row = workout::Entity::by_id_or_err(dbc, params.id).await?;
+    Ok(ResponseData::from_data(row.into()))
+}
+
 pub async fn index(
     params: WorkoutIndexParams,
     dbc: &DatabaseConnection,

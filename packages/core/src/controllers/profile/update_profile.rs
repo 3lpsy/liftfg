@@ -6,7 +6,10 @@ use fgdb::{
     },
     entity::profile::{self},
 };
-use fgutils::{constants::VALIDATION_REQUEST_FIELD, verrors};
+use fgutils::{
+    constants::{VALIDATION_EXISTS_CODE, VALIDATION_REQUEST_FIELD},
+    verrors,
+};
 use sea_orm::{ActiveModelTrait, DatabaseConnection, DbErr, EntityTrait, Set, TransactionTrait};
 use tracing::warn;
 use validator::{Validate, ValidationErrors};
@@ -68,7 +71,7 @@ pub async fn update(
             let id = data.id;
             return Err(verrors(
                 "id",
-                "exists",
+                VALIDATION_EXISTS_CODE,
                 format!("No profile with name exists: {id}"),
             ));
         }

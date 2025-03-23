@@ -37,6 +37,12 @@ pub struct WorkoutIndexParams {
     pub includes: Option<Vec<WorkoutInclude>>,
 }
 
+#[derive(Default, Clone, Debug, Validate, Serialize, Deserialize)]
+pub struct WorkoutShowParams {
+    #[validate(range(min = 1, max = 1024, message = "Workout ID must be between 1 and 256"))]
+    pub id: i32,
+}
+
 #[derive(Debug, Validate, Serialize, Deserialize, Clone, PartialEq)]
 pub struct WorkoutStoreData {
     #[validate(length(
@@ -97,6 +103,82 @@ impl From<WorkoutStoreData> for entity::ActiveModel {
     }
 }
 
+#[derive(Debug, Validate, Serialize, Deserialize, Clone, PartialEq)]
+pub struct WorkoutUpdateData {
+    #[validate(range(min = 1, max = 1024, message = "ID must be between 1 and 1024"))]
+    pub id: i32,
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Name must be between 1 and 127 characters long"
+    ))]
+    pub name: Option<String>,
+    #[validate(length(
+        min = 1,
+        max = 127,
+        message = "Code must be between 1 and 127 characters long"
+    ), regex(
+        path = *ALPHA_DASH,
+        message="Field must only contain alphanumeric or -, ., _ characters")
+    )]
+    pub code: Option<String>,
+    pub muscle_order_strategy: Option<MuscleOrderStrategy>,
+    pub exercise_split_strategy: Option<ExerciseSplitStrategy>,
+    pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
+    #[validate(range(
+        min = 1,
+        max = 32,
+        message = "Default exercise set split must be between 1 and 32"
+    ))]
+    pub exercise_set_split: Option<i32>,
+}
+impl From<WorkoutData> for WorkoutUpdateData {
+    fn from(data: WorkoutData) -> Self {
+        Self {
+            id: data.id,
+            name: Some(data.name),
+            code: Some(data.code),
+            muscle_order_strategy: Some(data.muscle_order_strategy),
+            exercise_split_strategy: Some(data.exercise_split_strategy),
+            exercise_prompt_strategy: Some(data.exercise_prompt_strategy),
+            exercise_set_split: Some(data.exercise_set_split),
+        }
+    }
+}
+#[cfg(feature = "db")]
+impl From<WorkoutUpdateData> for entity::ActiveModel {
+    fn from(data: WorkoutUpdateData) -> Self {
+        entity::ActiveModel {
+            // panic if not set
+            id: ActiveValue::Set(data.id),
+            name: match data.name {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            code: match data.code {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            muscle_order_strategy: match data.muscle_order_strategy {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            exercise_split_strategy: match data.exercise_split_strategy {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            exercise_prompt_strategy: match data.exercise_prompt_strategy {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            exercise_set_split: match data.exercise_set_split {
+                Some(v) => ActiveValue::Set(v),
+                None => ActiveValue::NotSet,
+            },
+            ..Default::default()
+        }
+    }
+}
 // Responses
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct WorkoutData {
@@ -106,6 +188,7 @@ pub struct WorkoutData {
     pub muscle_order_strategy: MuscleOrderStrategy,
     pub exercise_prompt_strategy: ExercisePromptStrategy,
     pub exercise_split_strategy: ExerciseSplitStrategy,
+    pub exercise_set_split: i32,
     pub workout_muscle: Option<Vec<WorkoutMuscleData>>,
     pub profile_workout: Option<Vec<ProfileWorkoutData>>,
     pub profiles: Option<Vec<ProfileData>>,
@@ -123,6 +206,7 @@ impl From<entity::Model> for WorkoutData {
             muscle_order_strategy: model.muscle_order_strategy,
             exercise_prompt_strategy: model.exercise_prompt_strategy,
             exercise_split_strategy: model.exercise_split_strategy,
+            exercise_set_split: model.exercise_set_split,
             workout_muscle: None,
             profile_workout: None,
             profiles: None,

@@ -46,7 +46,7 @@ pub enum Route {
         },
         #[route("/workout/create")]
         WorkoutCreateView {},
-        #[route("/workout/:workout_id")]
+        #[route("/workout/:workout_id/edit")]
         WorkoutEditView {workout_id: usize},
         #[route("/:..route")]
         NotFoundFallback { route: Vec<String> },

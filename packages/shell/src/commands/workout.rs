@@ -1,6 +1,8 @@
 use fgcore::controllers;
 use fgdb::data::{
-    workout::{WorkoutData, WorkoutIndexParams, WorkoutStoreData},
+    workout::{
+        WorkoutData, WorkoutIndexParams, WorkoutShowParams, WorkoutStoreData, WorkoutUpdateData,
+    },
     ResponseData,
 };
 use tauri::{ipc::Request, State};
@@ -32,6 +34,30 @@ pub async fn workout_store(
     // parse and pass to controller
     match parse_data::<WorkoutStoreData>(request.body().to_owned()) {
         Ok(data) => Ok(controllers::workout::store(data, &state.dbc).await?.into()),
+        Err(err) => return Ok(ResponseData::from_errors(err)),
+    }
+}
+
+#[tauri::command]
+pub async fn workout_show(
+    request: Request<'_>,
+    state: State<'_, AppState>,
+) -> Result<ResponseData<WorkoutData>, ResponseData<ValidationErrors>> {
+    // parse and pass to controller
+    match parse_params::<WorkoutShowParams>(request.body().to_owned()) {
+        Ok(params) => Ok(controllers::workout::show(params, &state.dbc).await?.into()),
+        Err(err) => return Ok(ResponseData::from_errors(err)),
+    }
+}
+
+#[tauri::command]
+pub async fn workout_update(
+    request: Request<'_>,
+    state: State<'_, AppState>,
+) -> Result<ResponseData<WorkoutData>, ResponseData<ValidationErrors>> {
+    // parse and pass to controller
+    match parse_data::<WorkoutUpdateData>(request.body().to_owned()) {
+        Ok(data) => Ok(controllers::workout::update(data, &state.dbc).await?.into()),
         Err(err) => return Ok(ResponseData::from_errors(err)),
     }
 }

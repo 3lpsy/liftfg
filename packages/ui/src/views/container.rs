@@ -6,6 +6,7 @@ use crate::services::get;
 use crate::{router::Route, views::Loading};
 use dioxus::prelude::*;
 use fgdb::data::profile::{ProfileData, ProfileShowParams};
+use fgutils::constants::VALIDATION_EXISTS_CODE;
 use validator::ValidationErrors;
 
 #[component]
@@ -38,7 +39,7 @@ pub fn Container() -> Element {
         }
         Err(e) => {
             let should_create_profile = e.field_errors().iter().any(|(field, errors)| {
-                field == "is_default" && errors.iter().any(|err| err.code == "exists")
+                field == "is_default" && errors.iter().any(|err| err.code == VALIDATION_EXISTS_CODE)
             });
             if should_create_profile {
                 // no default profile exists, we're onboarding

@@ -15,8 +15,8 @@ use fgdb::{
 };
 use fgutils::{
     constants::{
-        VALIDATION_DATABASE_FIELD, VALIDATION_GENERAL_VALIDATION_CODE, VALIDATION_PANIC_CODE,
-        VALIDATION_REQUEST_FIELD,
+        VALIDATION_DATABASE_FIELD, VALIDATION_EXISTS_CODE, VALIDATION_GENERAL_VALIDATION_CODE,
+        VALIDATION_PANIC_CODE, VALIDATION_REQUEST_FIELD,
     },
     verrors,
 };
@@ -130,14 +130,14 @@ pub async fn store(
     if !profile::Entity::exists(dbc, data.profile_id).await? {
         return Err(verrors(
             "profile_id",
-            "exists",
+            VALIDATION_EXISTS_CODE,
             format!("No profile with id exists: {}", data.profile_id),
         ));
     }
     if !workout::Entity::exists(dbc, data.workout_id).await? {
         return Err(verrors(
             "workout_id",
-            "exists",
+            VALIDATION_EXISTS_CODE,
             format!("No workout with id exists: {}", data.workout_id),
         ));
     }
@@ -173,7 +173,7 @@ pub async fn delete(
         if row.is_none() {
             return Err(verrors(
                 "id",
-                "exists",
+                VALIDATION_EXISTS_CODE,
                 format!("No profile_workout with id exists: {}", id),
             ));
         }

@@ -6,7 +6,7 @@ use fgdb::{
     },
     entity::profile::{self},
 };
-use fgutils::verrors;
+use fgutils::{constants::VALIDATION_EXISTS_CODE, verrors};
 use sea_orm::{DatabaseConnection, EntityTrait, ModelTrait};
 use validator::{Validate, ValidationErrors};
 
@@ -33,7 +33,7 @@ pub async fn delete(
             let id = params.id;
             return Err(verrors(
                 "id",
-                "exists",
+                VALIDATION_EXISTS_CODE,
                 format!("No profile with name exists: {id}"),
             ));
         }
