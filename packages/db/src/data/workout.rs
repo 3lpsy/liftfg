@@ -41,6 +41,7 @@ pub struct WorkoutIndexParams {
 pub struct WorkoutShowParams {
     #[validate(range(min = 1, max = 1024, message = "Workout ID must be between 1 and 256"))]
     pub id: i32,
+    pub includes: Option<Vec<WorkoutInclude>>,
 }
 
 #[derive(Debug, Validate, Serialize, Deserialize, Clone, PartialEq)]
@@ -230,6 +231,11 @@ impl ResponsableData for WorkoutData {}
 impl ResponsableData for Vec<WorkoutData> {}
 
 impl HasIncludes<WorkoutInclude> for WorkoutIndexParams {
+    fn includes(&mut self) -> &mut Option<Vec<WorkoutInclude>> {
+        &mut self.includes
+    }
+}
+impl HasIncludes<WorkoutInclude> for WorkoutShowParams {
     fn includes(&mut self) -> &mut Option<Vec<WorkoutInclude>> {
         &mut self.includes
     }

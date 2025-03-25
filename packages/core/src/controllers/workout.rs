@@ -14,7 +14,10 @@ use fgdb::{
     },
     entity::{common::EntityHelpers, muscle, profile, profile_workout, workout, workout_muscle},
 };
-use fgutils::{constants::VALIDATION_GENERAL_VALIDATION_CODE, verrors};
+use fgutils::{
+    constants::{VALIDATION_GENERAL_VALIDATION_CODE, VALIDATION_REQUEST_FIELD},
+    verrors,
+};
 use sea_orm::{
     ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, JoinType, LoaderTrait,
     PaginatorTrait, QueryFilter, QueryOrder, QuerySelect, RelationTrait,
@@ -51,8 +54,89 @@ pub async fn show(
     dbc: &DatabaseConnection,
 ) -> Result<ResponseData<WorkoutData>, ValidationErrors> {
     params.validate()?;
-    let row = workout::Entity::by_id_or_err(dbc, params.id).await?;
-    Ok(ResponseData::from_data(row.into()))
+    let includes = params.includes.unwrap_or_default();
+
+    let row: workout::Model = workout::Entity::by_id_or_err(dbc, params.id).await?;
+    let mut item: WorkoutData = row.into();
+    for include in includes {
+        match include {
+            WorkoutInclude::WorkoutMuscle(nested_includes) => {
+                // no load_many on single model
+                // this could also be a single query on the nested case.
+                let mut child_items = workout_muscle::Entity::find()
+                    .filter(workout_muscle::Column::WorkoutId.eq(params.id))
+                    .all(dbc)
+                    .await
+                    .map_err(DbValidationErrors::from)?
+                    .into_iter()
+                    .map(WorkoutMuscleData::from)
+                    .collect::<Vec<WorkoutMuscleData>>();
+
+                if let Some(nested_includes) = nested_includes {
+                    for nested_include in nested_includes {
+                        match nested_include {
+                            WorkoutMuscleInclude::Muscle => {
+                                let nested_ids: Vec<i32> =
+                                    child_items.iter().map(|x| x.id).collect();
+                                let nested_rows = muscle::Entity::find()
+                                    .filter(muscle::Column::Id.is_in(nested_ids))
+                                    .all(dbc)
+                                    .await
+                                    .map_err(DbValidationErrors::from)?;
+                                let nested_map: HashMap<i32, MuscleData> = nested_rows
+                                    .into_iter()
+                                    .map(|r| (r.id, MuscleData::from(r)))
+                                    .collect();
+                                child_items.iter_mut().for_each(|c| {
+                                    c.muscle = nested_map.get(&c.muscle_id).cloned();
+                                });
+                            }
+                            WorkoutMuscleInclude::Workout => {
+                                return Err(verrors(
+                                    VALIDATION_REQUEST_FIELD,
+                                    VALIDATION_GENERAL_VALIDATION_CODE,
+                                    "Cannot recursively include workout".to_string(),
+                                ))
+                            }
+                        }
+                    }
+                }
+                item.workout_muscle = Some(child_items);
+            }
+            //TODO same path, via pivot as profile, cache?
+            WorkoutInclude::ProfileWorkout => {
+                item.profile_workout = Some(
+                    profile_workout::Entity::find()
+                        .filter(profile_workout::Column::WorkoutId.eq(params.id))
+                        .all(dbc)
+                        .await
+                        .map_err(DbValidationErrors::from)?
+                        .into_iter()
+                        .map(ProfileWorkoutData::from)
+                        .collect::<Vec<ProfileWorkoutData>>(),
+                );
+            }
+            WorkoutInclude::Profile => {
+                let pivot = profile_workout::Entity::find()
+                    .filter(profile_workout::Column::WorkoutId.eq(params.id))
+                    .all(dbc)
+                    .await
+                    .map_err(DbValidationErrors::from)?;
+
+                item.profiles = Some(
+                    pivot
+                        .load_one(profile::Entity, dbc)
+                        .await
+                        .map_err(DbValidationErrors::from)?
+                        .into_iter()
+                        .filter_map(|x| x.map(ProfileData::from))
+                        .collect::<Vec<ProfileData>>(),
+                )
+            }
+        }
+    }
+
+    Ok(ResponseData::from_data(item))
 }
 
 pub async fn index(
@@ -143,7 +227,7 @@ pub async fn index(
                             }
                             // in reality, you can't query a nested workout on a muscle so
                             // this should val error
-                            _ => unimplemented!(),
+                            _ => todo!(),
                         }
                     }
                 }

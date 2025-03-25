@@ -2,14 +2,29 @@
 
 A cross-platform weight lifting applicaiton written in Rust and with `Tauri` and `Dioxus`.
 
-# Status
+# State
 This project is a WIP. Very little of the UI has been built out but a lot of the backend foundation and tests now exists to focus on the actual application and IPC calls.
+
+## Milestones
+- [x] Connect Tauri with Dioxus UI
+- [x] Create data model
+- [x] Popualte DB with exercises and standard workouts
+- [x] Setup/manage a profile
+- [x] Add workouts to their profile
+- [] Create custom workouts
+- [] Location (Gym) management
+- [] Session tracking
+- [] Session history
+- [] Mobile compilation
+- [] Many more features
 
 # Purpose
 I needed a reason to get better at `Rust` and was bored. `Dioxus` seemed fun but I wasn't confident about its cross-platform capabilities so I wrapped it in `Tauri`.
 
 # Idea
-While many applications exist to track sessions, most are proscriptive in the specific exercises you do for any given session. This can make tracking difficult if you workout in different locations where your options of exercises may differ or if the equipment is taken. Therefore, FGLift focuses on which muscles you wish to target for each lift and the desired volume. Instead of having a program that says do `X` number of sets for `Y` exercise, workouts simply have target muscle groups with a desired number of sets for each. When you start a session, you enter your location, and it prompts you for an exercise targeting a given muscle group that you can either skip, for example if the machine is taken and you wish to do an alternative one, or let the application know that the exercise is not available at that location. As you do more sessions, the application will prompt you less and less for exercises that you can't do, but also still allow you to introduce variance by doing alternative exercises.
+While many applications exist to track sessions, most are proscriptive in the specific exercises you do for any given session. This can make tracking difficult if you workout in different locations where your options of exercises may differ or if the equipment is taken. Therefore, FGLift focuses on which muscles you wish to target for each lift and the desired volume.
+
+Instead of having a program that says do `X` number of sets for `Y` exercise, workouts simply have target muscle groups with a desired number of sets for each. When you start a session, you enter your location, and it prompts you for an exercise targeting a given muscle group that you can either skip, for example if the machine is taken and you wish to do an alternative one, or let the application know that the exercise is not available at that location. As you do more sessions, the application will prompt you less and less for exercises that you can't do, but also still allow you to introduce variance by doing alternative exercises.
 
 # Crates
 - `fgshell`
@@ -26,3 +41,18 @@ While many applications exist to track sessions, most are proscriptive in the sp
   - A crate that holds utility logic that does not depend on any other crate.
 - `fgcli`
   - A devlopment only crate with few features which will most likely be deleted or not built out for some time.
+
+# Building for Development
+
+Note: The application relies on local versions of `validator` at the moment so can't be built until `PR368` is merged.
+
+```
+# start tauri shell
+$ make shell
+
+# start dioxus UI dev server and watch for changes
+$ make ui
+
+# watch tailwind file for changes
+$ make tailwind
+```
