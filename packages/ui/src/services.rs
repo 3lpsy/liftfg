@@ -17,6 +17,7 @@ where
     T: RequestableParams + Default,
     R: ResponsableData,
 {
+    tracing::info!("Get: {}", command);
     let params = args.unwrap_or_default().as_params();
     let args = to_value(&params).expect("Failed to convert RequestParams to JsValue");
     call::<R>(command, args).await
@@ -28,6 +29,7 @@ where
     T: RequestableData,
     R: ResponsableData,
 {
+    tracing::info!("Post: {}", command);
     let req = args.as_request();
     let args = to_value(&req).expect("Failed to convert RequestParams to JsValue");
     call::<R>(command, args).await

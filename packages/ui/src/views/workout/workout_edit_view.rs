@@ -1,7 +1,7 @@
 use crate::{
     components::workout::{
         workout_edit_form::WorkoutEditForm,
-        workout_muscles_for_workout_edit_form::WorkoutMusclesForWorkoutEditForm,
+        workout_muscles_batch_edit_forms::WorkoutMuclesBatchEditForms,
     },
     hooks::workout::use_workout_resource,
     views::Loading,
@@ -19,10 +19,9 @@ pub fn WorkoutEditView(workout_id: usize) -> Element {
             id: workout_id as i32,
             ..Default::default()
         }
-        .with_include(WorkoutInclude::WorkoutMuscle(None))
+        .with_include(WorkoutInclude::WorkoutMuscle(vec![]))
     });
     // if workout_res returns None (workout does not exist), throwing will prop up to
-    // error boundary
     let (workout_sig, workout_res) = use_workout_resource(params_sig);
     workout_res.suspend()?;
 
@@ -38,7 +37,7 @@ pub fn WorkoutEditView(workout_id: usize) -> Element {
                         },
                         h2 { class: "text-xl sm:text-2xl font-bold text-base-content", "Edit Muscles" },
 
-                        WorkoutMusclesForWorkoutEditForm{ workout: workout.clone()}
+                        WorkoutMuclesBatchEditForms{ workout: workout.clone()}
                         div {
                             class: "divider"
                         },

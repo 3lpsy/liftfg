@@ -32,9 +32,9 @@ pub fn ProfileWorkoutCreateView(profile_id: usize) -> Element {
     let mut workouts_params_sig = use_signal(|| {
         WorkoutIndexParams::default()
             .with_include(WorkoutInclude::ProfileWorkout)
-            .with_include(WorkoutInclude::WorkoutMuscle(Some(vec![
+            .with_include(WorkoutInclude::WorkoutMuscle(vec![
                 WorkoutMuscleInclude::Muscle,
-            ])))
+            ]))
     });
     let (workouts_sig, workouts_res) = use_workouts_resource(workouts_params_sig);
     workouts_res.suspend()?;

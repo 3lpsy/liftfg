@@ -22,33 +22,26 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
     rsx! {
         // doesn't close outside but maybe daisyui bug
         Modal {
+            id: "profile-list-item-modal-id-{profile_id}",
             title: "Do you really want to delete the profile?",
             description: "This action will delete the profile and all related data forever.",
             modal_ref: modal_ref,
-            body: Some(rsx! {
-                div {
-                    class: "modal-action flex justify-between w-full",
-                    button {
-                        class: "btn btn-warning btn-outline",
-                        onclick: move |_| async move {
-                            let current_profile = current_profile_ctx();
-                            match post::<ProfileDeleteParams, ProfileData>("profile_delete", ProfileDeleteParams {id: profile_id as i32}).await {
-                                Ok(deleted) => {
-                                    if let Some(p) = current_profile {
-                                        if p.id == deleted.id {
-                                            // shouldn't happen but just in case
-                                            current_profile_ctx.set(None);
-                                            if let Some(r) = modal_ref() {
-                                                r.close();
-                                            }
-                                            nav.replace(router::Route::OnboardProfileCreateView  {  });
-                                        } else {
-                                            if let Some(r) = modal_ref() {
-                                                r.close();
-                                            }
-                                            profiles_reload_trigger.set(profiles_reload_trigger() + 1);
-                                            nav.replace(router::Route::ProfileIndexView {  });
+            div {
+                class: "modal-action flex justify-between w-full",
+                button {
+                    class: "btn btn-warning btn-outline",
+                    onclick: move |_| async move {
+                        let current_profile = current_profile_ctx();
+                        match post::<ProfileDeleteParams, ProfileData>("profile_delete", ProfileDeleteParams {id: profile_id as i32}).await {
+                            Ok(deleted) => {
+                                if let Some(p) = current_profile {
+                                    if p.id == deleted.id {
+                                        // shouldn't happen but just in case
+                                        current_profile_ctx.set(None);
+                                        if let Some(r) = modal_ref() {
+                                            r.close();
                                         }
+                                        nav.replace(router::Route::OnboardProfileCreateView  {  });
                                     } else {
                                         if let Some(r) = modal_ref() {
                                             r.close();
@@ -56,21 +49,28 @@ pub fn ProfileListItem(profile: ProfileData, profiles_reload_trigger: Signal<i32
                                         profiles_reload_trigger.set(profiles_reload_trigger() + 1);
                                         nav.replace(router::Route::ProfileIndexView {  });
                                     }
-                                },
-                                Err(e) => {
+                                } else {
                                     if let Some(r) = modal_ref() {
                                         r.close();
                                     }
-                                    let mut app_errors = use_context::<Signal<ValidationErrors>>();
-                                    app_errors.set(e.clone());
-                                    // nav.push(router::Route::Errors { });
+                                    profiles_reload_trigger.set(profiles_reload_trigger() + 1);
+                                    nav.replace(router::Route::ProfileIndexView {  });
                                 }
+                            },
+                            Err(e) => {
+                                if let Some(r) = modal_ref() {
+                                    r.close();
+                                }
+                                let mut app_errors = use_context::<Signal<ValidationErrors>>();
+                                app_errors.set(e.clone());
+                                // nav.push(router::Route::Errors { });
                             }
-                        },
-                        "Delete!"
+                        }
                     },
-                }
-            })
+                    "Delete!"
+                },
+            }
+
         },
         li {
             class: "list-row",

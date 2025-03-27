@@ -75,19 +75,15 @@ pub fn WorkoutEditForm(workout: WorkoutData) -> Element {
         form {
             onsubmit: move |e| async move {
                 e.prevent_default();
-                tracing::info!("Form submit");
                 let form_data = form_data_full();
                 match post::<WorkoutUpdateData, WorkoutData>("workout_update", form_data).await {
                     Ok(workout) => {
                         tracing::info!("workout updated {:?}", workout);
                     },
                     Err(e) => {
-                        tracing::info!("workout errr {:?}", &e);
                         server_form_errors.set(e)
                     }
                 }
-                tracing::info!("Form submit comp");
-
                 Ok(())
             },
             div {

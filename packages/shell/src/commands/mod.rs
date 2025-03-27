@@ -57,8 +57,10 @@ where
     T: RequestableData,
     P: RequestableParams,
 {
+    //TODO better mem management / debug messages
     match body {
-        InvokeBody::Json(json) => serde_json::from_value(json).map_err(serde_to_validator_errors),
+        InvokeBody::Json(json) => serde_json::from_value(json.clone())
+            .map_err(|e| serde_to_validator_errors(e, json.to_string())),
         InvokeBody::Raw(bytes) => {
             let s = String::from_utf8(bytes).map_err(|_e| {
                 let mut errors = ValidationErrors::new();
@@ -69,12 +71,12 @@ where
                 );
                 errors
             })?;
-            serde_json::from_str(&s).map_err(serde_to_validator_errors)
+            serde_json::from_str(&s).map_err(|e| serde_to_validator_errors(e, s.clone()))
         }
     }
 }
 
-fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
+fn serde_to_validator_errors(e: serde_json::Error, json: String) -> ValidationErrors {
     let msg = e.to_string();
 
     let (field, message) = match msg {
@@ -96,7 +98,7 @@ fn serde_to_validator_errors(e: serde_json::Error) -> ValidationErrors {
         }
         _ => (
             "request".to_string(),
-            "Unknown JSON parsing error".to_string(),
+            format!("Error: {} | Data: {}", msg, json),
         ),
     };
     let mut errors = ValidationErrors::new();

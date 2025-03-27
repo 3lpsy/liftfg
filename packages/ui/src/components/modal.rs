@@ -5,12 +5,12 @@ use web_sys::HtmlDialogElement;
 
 #[derive(Props, Clone, PartialEq)]
 pub struct ModalProps {
-    #[props(optional)]
     id: String,
     title: Option<String>,
     description: Option<String>,
     modal_ref: Signal<Option<HtmlDialogElement>>,
-    body: Option<Element>,
+    on_close: Option<EventHandler<()>>,
+    children: Element,
 }
 
 #[component]
@@ -25,7 +25,6 @@ pub fn Modal(props: ModalProps) -> Element {
         None => rsx! {},
     };
     rsx! {
-        // doesn't close outside but maybe daisyui bug
         dialog {
             onmounted: move |event| {
                 let mut modal_ref = props.modal_ref;
@@ -37,21 +36,31 @@ pub fn Modal(props: ModalProps) -> Element {
                 class: "modal-box",
                 {title_ele},
                 {description_ele}
-
                 form {
                     method:"dialog",
                     button {
-                        class:"btn btn-sm btn-circle btn-ghost absolute right-2 top-2", "x"
+                        class:"btn btn-sm btn-circle btn-ghost absolute right-2 top-2",
+                        onclick: move |_| {
+                            if let Some(on_close) = props.on_close {
+                                on_close(())
+                            }
+                            let modal_ref = props.modal_ref;
+                            if let Some(r) = modal_ref() {
+                                r.close();
+                            }
+                        },
+                        "x"
                     }
                 }
-                if let Some(body) = props.body {
-                    {body}
-                }
+                {props.children}
             }
             form {
                 method:"dialog",
                 class: "modal-backdrop",
                 onclick: move |_| {
+                    if let Some(on_close) = props.on_close {
+                        on_close(())
+                    }
                     let modal_ref = props.modal_ref;
                     if let Some(r) = modal_ref() {
                         r.close();

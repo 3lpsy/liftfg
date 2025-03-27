@@ -7,9 +7,10 @@ use crate::{
 
 use anyhow::Result;
 use chrono::Utc;
-use fgcore::{environment::Environment, logging};
+use fgcore::logging;
 use fgdb::{db, seed};
 use fgutils;
+use fgutils::environment::Environment;
 use tauri::{App, Manager, Runtime};
 use tracing::{debug, error, info, warn};
 

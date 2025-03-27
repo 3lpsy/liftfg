@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 use tracing::info;
 use validator::{ValidationError, ValidationErrors};
 pub mod constants;
+pub mod environment;
 pub mod patterns;
 
 pub fn codify(value: &str) -> String {

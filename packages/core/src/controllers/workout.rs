@@ -72,32 +72,29 @@ pub async fn show(
                     .map(WorkoutMuscleData::from)
                     .collect::<Vec<WorkoutMuscleData>>();
 
-                if let Some(nested_includes) = nested_includes {
-                    for nested_include in nested_includes {
-                        match nested_include {
-                            WorkoutMuscleInclude::Muscle => {
-                                let nested_ids: Vec<i32> =
-                                    child_items.iter().map(|x| x.id).collect();
-                                let nested_rows = muscle::Entity::find()
-                                    .filter(muscle::Column::Id.is_in(nested_ids))
-                                    .all(dbc)
-                                    .await
-                                    .map_err(DbValidationErrors::from)?;
-                                let nested_map: HashMap<i32, MuscleData> = nested_rows
-                                    .into_iter()
-                                    .map(|r| (r.id, MuscleData::from(r)))
-                                    .collect();
-                                child_items.iter_mut().for_each(|c| {
-                                    c.muscle = nested_map.get(&c.muscle_id).cloned();
-                                });
-                            }
-                            WorkoutMuscleInclude::Workout => {
-                                return Err(verrors(
-                                    VALIDATION_REQUEST_FIELD,
-                                    VALIDATION_GENERAL_VALIDATION_CODE,
-                                    "Cannot recursively include workout".to_string(),
-                                ))
-                            }
+                for nested_include in nested_includes {
+                    match nested_include {
+                        WorkoutMuscleInclude::Muscle => {
+                            let nested_ids: Vec<i32> = child_items.iter().map(|x| x.id).collect();
+                            let nested_rows = muscle::Entity::find()
+                                .filter(muscle::Column::Id.is_in(nested_ids))
+                                .all(dbc)
+                                .await
+                                .map_err(DbValidationErrors::from)?;
+                            let nested_map: HashMap<i32, MuscleData> = nested_rows
+                                .into_iter()
+                                .map(|r| (r.id, MuscleData::from(r)))
+                                .collect();
+                            child_items.iter_mut().for_each(|c| {
+                                c.muscle = nested_map.get(&c.muscle_id).cloned();
+                            });
+                        }
+                        WorkoutMuscleInclude::Workout => {
+                            return Err(verrors(
+                                VALIDATION_REQUEST_FIELD,
+                                VALIDATION_GENERAL_VALIDATION_CODE,
+                                "Cannot recursively include workout".to_string(),
+                            ))
                         }
                     }
                 }
@@ -197,38 +194,36 @@ pub async fn index(
                     .map(|x| x.into_iter().map(WorkoutMuscleData::from).collect())
                     .collect();
 
-                if let Some(nested_includes) = nested_includes {
-                    for nested_include in nested_includes {
-                        match nested_include {
-                            WorkoutMuscleInclude::Muscle => {
-                                let nested_ids: Vec<i32> = child_items_comp
-                                    .clone()
-                                    .into_iter()
-                                    .flat_map(|inner| inner.into_iter().map(|item| item.muscle_id))
-                                    .collect();
+                for nested_include in nested_includes {
+                    match nested_include {
+                        WorkoutMuscleInclude::Muscle => {
+                            let nested_ids: Vec<i32> = child_items_comp
+                                .clone()
+                                .into_iter()
+                                .flat_map(|inner| inner.into_iter().map(|item| item.muscle_id))
+                                .collect();
 
-                                let nested_rows = muscle::Entity::find()
-                                    .filter(muscle::Column::Id.is_in(nested_ids))
-                                    .all(dbc)
-                                    .await
-                                    .map_err(DbValidationErrors::from)?;
+                            let nested_rows = muscle::Entity::find()
+                                .filter(muscle::Column::Id.is_in(nested_ids))
+                                .all(dbc)
+                                .await
+                                .map_err(DbValidationErrors::from)?;
 
-                                let nested_map: HashMap<i32, MuscleData> = nested_rows
-                                    .into_iter()
-                                    .map(|r| (r.id, MuscleData::from(r)))
-                                    .collect();
+                            let nested_map: HashMap<i32, MuscleData> = nested_rows
+                                .into_iter()
+                                .map(|r| (r.id, MuscleData::from(r)))
+                                .collect();
 
-                                child_items_comp.iter_mut().for_each(|child_comp_items| {
-                                    child_comp_items.iter_mut().for_each(|child_item| {
-                                        child_item.muscle =
-                                            nested_map.get(&child_item.muscle_id).cloned();
-                                    });
+                            child_items_comp.iter_mut().for_each(|child_comp_items| {
+                                child_comp_items.iter_mut().for_each(|child_item| {
+                                    child_item.muscle =
+                                        nested_map.get(&child_item.muscle_id).cloned();
                                 });
-                            }
-                            // in reality, you can't query a nested workout on a muscle so
-                            // this should val error
-                            _ => todo!(),
+                            });
                         }
+                        // in reality, you can't query a nested workout on a muscle so
+                        // this should val error
+                        _ => todo!(),
                     }
                 }
 
@@ -274,6 +269,7 @@ pub async fn index(
     Ok(ResponseData::from_paginator(items, paginator))
 }
 
+// TODO: does not capture ser/deser issues (optional in nested includes), need tests in data crate
 #[cfg(test)]
 mod tests {
 
@@ -335,7 +331,7 @@ mod tests {
         assert!(all.len() > 1);
         let req = WorkoutIndexParams::default()
             .with_page(0)
-            .with_include(WorkoutInclude::WorkoutMuscle(None));
+            .with_include(WorkoutInclude::WorkoutMuscle(vec![]));
         let page_size = req.pagination.as_ref().unwrap().size;
         let res = index(req, &dbc).await.unwrap();
         assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);
@@ -356,9 +352,9 @@ mod tests {
         let req =
             WorkoutIndexParams::default()
                 .with_page(0)
-                .with_include(WorkoutInclude::WorkoutMuscle(Some(vec![
+                .with_include(WorkoutInclude::WorkoutMuscle(vec![
                     WorkoutMuscleInclude::Muscle,
-                ])));
+                ]));
         let page_size = req.pagination.as_ref().unwrap().size;
         let res = index(req, &dbc).await.unwrap();
         assert!(res.data.as_ref().unwrap().len() as i32 <= page_size);

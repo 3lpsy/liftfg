@@ -10,4 +10,5 @@ dotenvy = "0.15.7"
 validator = { workspace = true }
 chrono = { workspace = true }
 chrono-tz = { workspace = true }
+serde = { workspace = true }
 regex = "1.11.1"

@@ -20,8 +20,61 @@ use super::{
 pub enum WorkoutInclude {
     ProfileWorkout,
     Profile,
-    WorkoutMuscle(Option<Vec<WorkoutMuscleInclude>>),
+    // does not handle well if Optional and reqs custom ser/deser
+    WorkoutMuscle(Vec<WorkoutMuscleInclude>),
 }
+// use serde::{Deserializer, Serializer};
+
+// use serde::ser::SerializeMap;
+
+// impl Serialize for WorkoutInclude {
+//     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+//     where
+//         S: Serializer,
+//     {
+//         match self {
+//             WorkoutInclude::ProfileWorkout => serializer.serialize_str("profile_workout"),
+//             WorkoutInclude::Profile => serializer.serialize_str("profile"),
+//             WorkoutInclude::WorkoutMuscle(includes) => {
+//                 if includes.is_none() {
+//                     serializer.serialize_str("workout_muscle") // None case
+//                 } else {
+//                     let mut map = serializer.serialize_map(Some(1))?; // kv {"workout_muscle": []}
+//                     map.serialize_entry("workout_muscle", includes)?;
+//                     map.end()
+//                 }
+//             }
+//         }
+//     }
+// }
+// impl<'de> Deserialize<'de> for WorkoutInclude {
+//     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+//     where
+//         D: Deserializer<'de>,
+//     {
+//         use serde::de::Error;
+
+//         let value = serde_json::Value::deserialize(deserializer)?;
+//         if let Some(s) = value.as_str() {
+//             match s {
+//                 "profile_workout" => return Ok(WorkoutInclude::ProfileWorkout),
+//                 "profile" => return Ok(WorkoutInclude::Profile),
+//                 "workout_muscle" => return Ok(WorkoutInclude::WorkoutMuscle(None)), // None case
+//                 _ => return Err(Error::custom(format!("unknown string value: {}", s))),
+//             }
+//         }
+
+//         if let Some(obj) = value.as_object() {
+//             if let Some(workout_muscle) = obj.get("workout_muscle") {
+//                 let includes = serde_json::from_value(workout_muscle.clone())
+//                     .map_err(|e| Error::custom(format!("invalid workout_muscle: {}", e)))?;
+//                 return Ok(WorkoutInclude::WorkoutMuscle(includes));
+//             }
+//         }
+
+//         Err(Error::custom("invalid WorkoutInclude value"))
+//     }
+// }
 
 impl Includable for WorkoutInclude {}
 

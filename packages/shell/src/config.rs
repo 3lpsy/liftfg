@@ -1,6 +1,6 @@
 use anyhow::{Error, Result};
 
-use fgcore::environment::Environment;
+use fgutils::environment::Environment;
 use fgutils::resolve_path;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;

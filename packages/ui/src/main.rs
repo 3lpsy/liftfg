@@ -10,11 +10,12 @@ mod logging;
 mod router;
 mod services;
 mod views;
-use std::str::FromStr;
 
 use chrono_tz::Tz;
 use dioxus::prelude::*;
 use fgdb::data::profile::ProfileData;
+use fgutils::environment::Platform;
+use std::str::FromStr;
 use views::Loading;
 // use state::AppState;
 
@@ -52,6 +53,13 @@ fn App() -> Element {
             .expect("no document element");
         let _ = html.set_attribute("data-theme", "light");
     });
+    let ua = match web_sys::window() {
+        Some(window) => window.navigator().user_agent().unwrap_or_default(),
+        None => "Unknown".to_string(),
+    };
+    tracing::info!("{ua}");
+    let platform = Platform::from_ua(&ua);
+    use_context_provider(move || platform);
 
     let mut timezone: Signal<Tz> = use_signal(|| Tz::America__Chicago);
     use_context_provider(|| timezone.clone());
