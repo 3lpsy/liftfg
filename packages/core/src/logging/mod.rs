@@ -4,14 +4,12 @@ use std::path::PathBuf;
 use tracing::level_filters::LevelFilter;
 use tracing::{debug, warn, Subscriber};
 use tracing_appender::rolling::{RollingFileAppender, Rotation};
-use tracing_log;
 use tracing_subscriber::fmt::time::UtcTime;
 use tracing_subscriber::layer::Layered;
 use tracing_subscriber::registry::LookupSpan;
 use tracing_subscriber::reload::Handle;
 use tracing_subscriber::{fmt, layer::SubscriberExt, EnvFilter};
 use tracing_subscriber::{reload, Layer, Registry};
-
 pub type LayersHandle = Handle<
     Vec<Box<dyn Layer<Layered<reload::Layer<EnvFilter, Registry>, Registry>> + Send + Sync>>,
     Layered<reload::Layer<EnvFilter, Registry>, Registry>,
@@ -19,8 +17,14 @@ pub type LayersHandle = Handle<
 
 pub type FilterHandle = Handle<EnvFilter, Registry>;
 
+// ISSUES
+// without LogTracer in IOS, log messages will not be sent to trace layers
+// Can use OsLogger to at least get logs output
+//
+// In Prod, logs should be sent to files anyways so console logging should be disabled
 pub fn init() -> Result<(LayersHandle, FilterHandle)> {
     let (layers, layers_handle) = reload::Layer::new(vec![console_layer()?]);
+
     let mut bad_filter = false;
     let filter = match EnvFilter::try_from_default_env() {
         Ok(f) => f,
@@ -34,10 +38,34 @@ pub fn init() -> Result<(LayersHandle, FilterHandle)> {
         .with(filter_layer)
         .with(layers);
 
+    // output layer
+    // probably only useful for dev
+    #[cfg(target_os = "ios")]
+    let ios_tracer_layer = tracing_oslog::OsLogger::new("org.liftfg.app", "default");
+    #[cfg(target_os = "ios")]
+    let subscriber = subscriber.with(ios_tracer_layer);
+
     let registry = match tracing::subscriber::set_global_default(subscriber) {
         Ok(_) => {
-            debug!("Default logging layer initialized... ");
-            tracing_log::LogTracer::init()?;
+            // unrecoverable on ios sijmulator
+            #[cfg(not(target_os = "ios"))]
+            {
+                if let Err(e) = tracing_log::LogTracer::init() {
+                    warn!("Log tracer connection failed: {:?}", e);
+                } else {
+                    debug!("Log tracer connected... ");
+                }
+            }
+            // Logging not used in main app so maybe remove in prod
+            #[cfg(target_os = "ios")]
+            {
+                use oslog::OsLogger;
+                OsLogger::new("org.liftfg.app")
+                    .level_filter(log::LevelFilter::Trace)
+                    .category_level_filter("Settings", log::LevelFilter::Trace)
+                    .init()
+                    .unwrap();
+            }
             Ok((layers_handle, filter_handle))
         }
         Err(_e) => Err(Error::msg("Tracing subscriber already registered.")),
@@ -91,8 +119,11 @@ where
     S: Subscriber,
     for<'a> S: LookupSpan<'a>,
 {
-    // let timer = UtcTime::rfc_3339();
-    Ok(fmt::layer()
+    let layer = fmt::layer();
+    #[cfg(target_os = "ios")]
+    let layer = layer.with_ansi(false); // no color in console on ios
+                                        // let timer = UtcTime::rfc_3339();
+    Ok(layer
         // .with_timer(timer)
         .with_thread_ids(true)
         .with_target(true)

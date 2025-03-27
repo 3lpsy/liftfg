@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "identifier": "org.liftfg.app",
   "build": {
-    "beforeDevCommand": "whoami",
+    "beforeDevCommand": "/usr/bin/whoami",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "dx build --release",
     "frontendDist": "../dist"

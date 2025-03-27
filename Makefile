@@ -55,8 +55,14 @@ emulator:
 ios: ios-dev
 
 ios-dev:
-	@echo "Running: cd packages/shell && tauri ios dev --no-dev-server-wait"
-	@cd packages/shell && tauri ios dev --no-dev-server-wait
+	@echo "Running: cd packages/shell && cargo tauri ios dev -e 'iPhone 16'"
+	@cd packages/shell && cargo tauri ios dev -e 'iPhone 16'
+
+xcode: ios-xcode
+
+ios-xcode:
+	@echo "Running: cd packages/shell && cargo tauri ios dev --open"
+	@cd packages/shell && cargo tauri ios dev -e --open
 
 
 android: android-dev

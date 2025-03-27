@@ -18,6 +18,9 @@ serde_json = { workspace = true }
 sea-orm = { workspace = true }
 validator = { workspace = true }
 tokio = { workspace = true }
+log = { workspace = true }
+oslog = "0.2.0"
+tracing-oslog = "0.2.0"
 
 [dev-dependencies]
 uuid = { workspace = true }
