@@ -54,16 +54,22 @@ emulator:
 
 ios: ios-dev
 
+
+
 ios-dev:
 	@echo "Running: cd packages/shell && cargo tauri ios dev -e 'iPhone 16'"
 	@cd packages/shell && cargo tauri ios dev -e 'iPhone 16'
+
+
+ios-host:
+	@echo "Running: cd packages/shell && cargo tauri ios dev --host"
+	@cd packages/shell && cargo tauri ios dev --host
 
 xcode: ios-xcode
 
 ios-xcode:
 	@echo "Running: cd packages/shell && cargo tauri ios dev --open"
 	@cd packages/shell && cargo tauri ios dev -e --open
-
 
 android: android-dev
 

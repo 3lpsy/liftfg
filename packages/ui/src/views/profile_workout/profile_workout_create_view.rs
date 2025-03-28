@@ -4,6 +4,7 @@ use crate::filters::use_workouts_searched;
 use crate::hooks::profile::use_profile_resource;
 use crate::hooks::workout::use_workouts_resource;
 use crate::icons;
+use crate::logging;
 use crate::router;
 
 use crate::services::post;

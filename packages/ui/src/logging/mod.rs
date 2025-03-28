@@ -1,17 +1,31 @@
 #![allow(dead_code)]
-use crate::bindings;
-use dioxus_logger::tracing;
-use wasm_bindgen::prelude::JsValue;
-pub fn info(msg: &str) {
-    tracing::info!(msg); // logs to console via dioxus
-    bindings::info(JsValue::from_str(msg)); // logs to stdout via IPC
+
+#[macro_export]
+macro_rules! info {
+    ($($arg:tt)*) => {{
+        let msg = format!($($arg)*);
+        dioxus_logger::tracing::info!("{}", msg); // logs to console via dioxus
+        crate::bindings::info(wasm_bindgen::prelude::JsValue::from_str(&msg)); // logs to stdout via IPC
+    }};
 }
 
-pub fn warn(msg: &str) {
-    tracing::warn!(msg); // logs to console via dioxus
-    bindings::warn(JsValue::from_str(msg)); // logs to stdout via IPC
+#[macro_export]
+macro_rules! warn {
+    ($($arg:tt)*) => {{
+        let msg = format!($($arg)*);
+        dioxus_logger::tracing::warn!("{}", msg); // logs to console via dioxus
+        crate::bindings::warn(wasm_bindgen::prelude::JsValue::from_str(&msg)); // logs to stdout via IPC
+    }};
 }
-pub fn error(msg: &str) {
-    tracing::error!(msg); // logs to console via dioxus
-    bindings::error(JsValue::from_str(msg)); // logs to stdout via IPC
+
+#[macro_export]
+macro_rules! error {
+    ($($arg:tt)*) => {{
+        let msg = format!($($arg)*);
+        dioxus_logger::tracing::error!("{}", msg); // logs to console via dioxus
+        crate::bindings::error(wasm_bindgen::prelude::JsValue::from_str(&msg)); // logs to stdout via IPC
+    }};
 }
+
+// Re-export the macros for easier access
+pub use crate::{error, info, warn};

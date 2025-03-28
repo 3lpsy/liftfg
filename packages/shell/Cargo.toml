@@ -35,7 +35,11 @@ tracing-log = { workspace = true }
 validator = { workspace = true }
 chrono = { workspace = true }
 
-tauri-plugin-log = { version = "2.3.1" }
+# tauri-plugin-log = { version = "2.3.1" }
+tauri-plugin-log = { path = "../../../../community/plugins-workspace/plugins/log", features = [
+    "tracing",
+] }
+
 log = { workspace = true }
 
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]

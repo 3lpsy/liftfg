@@ -1,7 +1,4 @@
-use crate::{
-    bindings::invoke,
-    logging::{info, warn},
-};
+use crate::{bindings::invoke, logging};
 use fgdb::data::{RequestableData, RequestableParams, ResponsableData, ResponseData};
 use fgutils::{
     constants::{VALIDATION_PARSING_CODE, VALIDATION_REQUEST_FIELD},
@@ -17,7 +14,7 @@ where
     T: RequestableParams + Default,
     R: ResponsableData,
 {
-    tracing::info!("Get: {}", command);
+    logging::info!("Get: {}", command);
     let params = args.unwrap_or_default().as_params();
     let args = to_value(&params).expect("Failed to convert RequestParams to JsValue");
     call::<R>(command, args).await
@@ -29,7 +26,7 @@ where
     T: RequestableData,
     R: ResponsableData,
 {
-    tracing::info!("Post: {}", command);
+    logging::info!("Post: {}", command);
     let req = args.as_request();
     let args = to_value(&req).expect("Failed to convert RequestParams to JsValue");
     call::<R>(command, args).await
@@ -51,7 +48,7 @@ where
                 )),
             },
             Err(e) => {
-                info(&format!("{:?}", &result));
+                logging::info!("{:?}", &result);
                 let e = verrors(
                     VALIDATION_REQUEST_FIELD,
                     VALIDATION_PARSING_CODE,
@@ -61,7 +58,7 @@ where
             }
         },
         Err(e) => {
-            warn(&format!("Error: {:?}", &e));
+            logging::error!("{:?}", &e);
             let re = from_value::<ResponseData<ValidationErrors>>(e.clone()).unwrap_or(
                 ResponseData::from_errors(verrors(
                     VALIDATION_REQUEST_FIELD,

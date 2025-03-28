@@ -22,7 +22,7 @@ use views::Loading;
 // dx serve --platform desktop: Target is not wasm32 and tauri.core does not exist
 
 fn main() {
-    logging::info("Launching App");
+    logging::info!("Launching App");
     dioxus::launch(App);
 }
 
@@ -38,7 +38,7 @@ const MAIN_CSS: Asset = asset!("/assets/main.css");
 
 #[component]
 fn App() -> Element {
-    logging::info("Rendering App");
+    logging::info!("Rendering App");
     let current_profile: Signal<Option<ProfileData>> = use_signal(|| None);
     use_context_provider(|| current_profile.clone());
 
@@ -57,7 +57,6 @@ fn App() -> Element {
         Some(window) => window.navigator().user_agent().unwrap_or_default(),
         None => "Unknown".to_string(),
     };
-    tracing::info!("{ua}");
     let platform = Platform::from_ua(&ua);
     use_context_provider(move || platform);
 
@@ -75,14 +74,14 @@ fn App() -> Element {
                         // Extract &str from serde_json::Value
                         match Tz::from_str(tz_str) {
                             Ok(valid_tz) => timezone.set(valid_tz),
-                            Err(_) => logging::info(&format!("Invalid timezone: {}", tz_str)),
+                            Err(_) => logging::info!("Invalid timezone: {}", tz_str),
                         }
                     } else {
-                        logging::info("Failed to extract timezone string");
+                        logging::info!("Failed to extract timezone string");
                     }
                 }
                 Err(e) => {
-                    logging::info(&format!("Error fetching timezone: {:?}", e));
+                    logging::info!("Error fetching timezone: {:?}", e);
                 }
             }
         });

@@ -1,3 +1,5 @@
+use crate::logging;
+use crate::{router, services::post};
 use dioxus::prelude::*;
 use fgdb::data::{
     enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy},
@@ -5,8 +7,6 @@ use fgdb::data::{
 };
 use fgutils::codify;
 use validator::{Validate, ValidationErrors};
-
-use crate::{router, services::post};
 
 #[component]
 pub fn WorkoutEditForm(workout: WorkoutData) -> Element {
@@ -78,7 +78,7 @@ pub fn WorkoutEditForm(workout: WorkoutData) -> Element {
                 let form_data = form_data_full();
                 match post::<WorkoutUpdateData, WorkoutData>("workout_update", form_data).await {
                     Ok(workout) => {
-                        tracing::info!("workout updated {:?}", workout);
+                        logging::info!("workout updated {:?}", workout);
                     },
                     Err(e) => {
                         server_form_errors.set(e)
