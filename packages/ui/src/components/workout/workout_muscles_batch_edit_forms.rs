@@ -1,8 +1,5 @@
 use crate::{
-    components::{
-        modal::Modal,
-        modal_select::{ModalSelect, SelectOption},
-    },
+    components::modal_select::{ModalSelect, SelectOption},
     hooks::muscle::use_muscles_resource,
 };
 
@@ -12,7 +9,6 @@ use fgdb::data::{
     workout::WorkoutData,
 };
 use fgutils::environment::Platform;
-use web_sys::HtmlDialogElement;
 
 #[component]
 pub fn WorkoutMuclesBatchEditForms(workout: WorkoutData) -> Element {
@@ -80,7 +76,6 @@ pub fn WorkoutMuclesBatchEditForms(workout: WorkoutData) -> Element {
                             class: "flex-1 text-lg sm:text-xl font-semibold opacity-80 text-center uppercase self-center",
                             "{muscle.name}"
                         }
-
                     }
 
                 }

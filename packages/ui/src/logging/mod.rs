@@ -1,4 +1,7 @@
 #![allow(dead_code)]
+#![allow(unused_imports)]
+
+// Log to both Dioxus (Console) and Tauri (via Plugin)
 
 #[macro_export]
 macro_rules! info {

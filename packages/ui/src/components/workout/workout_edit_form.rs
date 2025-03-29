@@ -1,5 +1,5 @@
 use crate::logging;
-use crate::{router, services::post};
+use crate::services::post;
 use dioxus::prelude::*;
 use fgdb::data::{
     enums::{ExercisePromptStrategy, ExerciseSplitStrategy, MuscleOrderStrategy},

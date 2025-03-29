@@ -47,37 +47,13 @@ pub fn init() -> Result<(LayersHandle, FilterHandle)> {
 
     // output layer
     // probably only useful for dev
-    #[cfg(target_os = "ios")]
+    #[cfg(all(target_os = "ios", feature = "ios"))]
     let ios_tracer_layer = tracing_oslog::OsLogger::new("org.liftfg.app", "default");
-    #[cfg(target_os = "ios")]
+    #[cfg(all(target_os = "ios", feature = "ios"))]
     let subscriber = subscriber.with(ios_tracer_layer);
 
     let registry = match tracing::subscriber::set_global_default(subscriber) {
-        Ok(_) => {
-            // unrecoverable on ios sijmulator
-
-            // #[cfg(not(target_os = "ios"))]
-            // {
-            //     if let Err(e) = tracing_log::LogTracer::init() {
-            //         warn!("Log tracer connection failed: {:?}", e);
-            //     } else {
-            //         debug!("Log tracer connected... ");
-            //     }
-            // }
-
-            // Will not capture frontend errors in prod
-            // Need to still adapt tracing
-            // #[cfg(all(target_os = "ios", debug_assertions))]
-            // {
-            //     use oslog::OsLogger;
-            //     OsLogger::new("org.liftfg.app")
-            //         .level_filter(DEFAULT_LOG_LEVEL_FILTER)
-            //         .category_level_filter("Settings", log::LevelFilter::Trace)
-            //         .init()
-            //         .unwrap();
-            // }
-            Ok((layers_handle, filter_handle))
-        }
+        Ok(_) => Ok((layers_handle, filter_handle)),
         Err(_e) => Err(Error::msg("Tracing subscriber already registered.")),
     };
     if bad_filter {

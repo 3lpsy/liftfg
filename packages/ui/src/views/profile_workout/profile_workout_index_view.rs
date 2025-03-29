@@ -6,7 +6,7 @@ use fgdb::data::{
     HasIncludes,
 };
 
-use crate::{hooks::profile_workout::use_profile_workout_resource, icons::ArrowRight, router};
+use crate::{hooks::profile_workout::use_profile_workout_resource, router};
 
 #[component]
 pub fn ProfileWorkoutIndexView() -> Element {
