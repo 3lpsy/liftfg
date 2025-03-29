@@ -19,7 +19,7 @@ pub fn NavBar() -> Element {
         _ => nav.can_go_back(),
     };
     rsx! {
-        div { class: "navbar sticky top-0 bg-base-300",
+        div { class: "navbar sticky top-0 bg-base-300 pb-0 px-0 pt-[env(safe-area-inset-top)]",
             div { class: "navbar-start",
                 if can_go_back {
                     a {

@@ -52,6 +52,9 @@ pub fn Container() -> Element {
     });
 
     rsx! {
+        div {
+            class: "fixed top-0 left-0 right-0 h-[env(safe-area-inset-top)] bg-black z-[9999]",
+        },
         NavBar {},
         div {
             // bootleg container with padding

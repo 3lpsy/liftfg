@@ -1089,6 +1089,9 @@
   .absolute {
     position: absolute;
   }
+  .fixed {
+    position: fixed;
+  }
   .relative {
     position: relative;
   }
@@ -1107,8 +1110,14 @@
   .top-2 {
     top: calc(var(--spacing) * 2);
   }
+  .right-0 {
+    right: calc(var(--spacing) * 0);
+  }
   .right-2 {
     right: calc(var(--spacing) * 2);
+  }
+  .left-0 {
+    left: calc(var(--spacing) * 0);
   }
   .left-1\/2 {
     left: calc(1/2 * 100%);
@@ -1124,6 +1133,9 @@
     button {
       cursor: pointer;
     }
+  }
+  .z-\[9999\] {
+    z-index: 9999;
   }
   .hero {
     display: grid;
@@ -1506,6 +1518,9 @@
   .h-16 {
     height: calc(var(--spacing) * 16);
   }
+  .h-\[env\(safe-area-inset-top\)\] {
+    height: env(safe-area-inset-top);
+  }
   .h-full {
     height: 100%;
   }
@@ -1642,6 +1657,9 @@
   .bg-base-300 {
     background-color: var(--color-base-300);
   }
+  .bg-black {
+    background-color: var(--color-black);
+  }
   .bg-gray-300 {
     background-color: var(--color-gray-300);
   }
@@ -1650,6 +1668,9 @@
   }
   .p-6 {
     padding: calc(var(--spacing) * 6);
+  }
+  .px-0 {
+    padding-inline: calc(var(--spacing) * 0);
   }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
@@ -1665,6 +1686,12 @@
   }
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
+  }
+  .pt-\[env\(safe-area-inset-top\)\] {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-0 {
+    padding-bottom: calc(var(--spacing) * 0);
   }
   .pb-6 {
     padding-bottom: calc(var(--spacing) * 6);
@@ -1889,7 +1916,7 @@
 :root {
   --navbar-height: 4rem;
   --dock-height: calc(4rem + env(safe-area-inset-bottom));
-  --full-viewport: 100vh;
+  --full-viewport: 100dvh;
 }
 html, body {
   margin: calc(var(--spacing) * 0);
@@ -1897,6 +1924,7 @@ html, body {
   min-height: 100vh;
   background-color: var(--color-base-200);
   padding: calc(var(--spacing) * 0);
+  -webkit-text-size-adjust: 100%;
 }
 #main {
   height: 100%;

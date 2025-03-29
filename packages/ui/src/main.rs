@@ -91,7 +91,19 @@ fn App() -> Element {
         document::Stylesheet { href: MAIN_CSS },
         document::Meta {
             name: "viewport",
-            content: "viewport-fit=cover"
+            content: "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        },
+        document::Meta {
+             name: "apple-mobile-web-app-capable",
+             content: "yes"
+        },
+        // document::Meta {
+        //     name: "theme-color",
+        //     content: "#000000" //
+        // },
+        document::Meta {
+            name: "apple-mobile-web-app-status-bar-style",
+            content: "black"  // should maybe be light-content for black?
         },
         SuspenseBoundary {
             fallback: |_| rsx!{
