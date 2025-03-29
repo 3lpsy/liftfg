@@ -17,6 +17,9 @@ pub type LayersHandle = Handle<
 
 pub type FilterHandle = Handle<EnvFilter, Registry>;
 
+#[cfg(all(target_os = "ios", feature = "ios"))]
+static APP_IDENTIFIER: &str = "org.liftfg.app";
+
 #[cfg(debug_assertions)]
 static DEFAULT_TRACING_LEVEL_FILTER: LevelFilter = LevelFilter::INFO;
 #[cfg(not(debug_assertions))]
@@ -48,7 +51,7 @@ pub fn init() -> Result<(LayersHandle, FilterHandle)> {
     // output layer
     // probably only useful for dev
     #[cfg(all(target_os = "ios", feature = "ios"))]
-    let ios_tracer_layer = tracing_oslog::OsLogger::new("org.liftfg.app", "default");
+    let ios_tracer_layer = tracing_oslog::OsLogger::new(APP_IDENTIFIER, "default");
     #[cfg(all(target_os = "ios", feature = "ios"))]
     let subscriber = subscriber.with(ios_tracer_layer);
 
