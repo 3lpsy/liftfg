@@ -2,8 +2,6 @@ use tauri::{Builder, Runtime};
 // use tauri_plugin_log::{Target, TargetKind};
 #[cfg(all(debug_assertions, feature = "devtools"))]
 use tauri_plugin_devtools;
-#[cfg(all(debug_assertions, feature = "devtools"))]
-use tauri_plugin_devtools_app;
 use tracing::debug;
 
 pub fn load<R: Runtime>(mut builder: Builder<R>) -> Builder<R> {
