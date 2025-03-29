@@ -97,14 +97,15 @@ fn App() -> Element {
              name: "apple-mobile-web-app-capable",
              content: "yes"
         },
+        // should maybe be light-content for black? Current implemented via div/css to push navbar down
+        document::Meta {
+            name: "apple-mobile-web-app-status-bar-style",
+            content: "black"
+        },
         // document::Meta {
         //     name: "theme-color",
         //     content: "#000000" //
         // },
-        document::Meta {
-            name: "apple-mobile-web-app-status-bar-style",
-            content: "black"  // should maybe be light-content for black?
-        },
         SuspenseBoundary {
             fallback: |_| rsx!{
                 div {

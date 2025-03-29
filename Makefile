@@ -62,6 +62,11 @@ ios-dev:
 	@echo "Running: cd packages/shell && cargo tauri ios dev -e 'iPhone 16'"
 	@cd packages/shell && cargo tauri ios dev -e 'iPhone 16'
 
+ios-devtools:
+	@echo "Running: cd packages/shell && cargo tauri ios dev -e 'iPhone 16'"
+	@cd packages/shell && cargo tauri ios dev --features devtools -e 'iPhone 16'
+
+
 
 ios-host:
 	@echo "Running: cd packages/shell && cargo tauri ios dev --host"
