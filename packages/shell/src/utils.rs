@@ -117,7 +117,7 @@ pub mod testutils {
         let (mut app, webview) = create_app_and_webview().unwrap();
         setup::setup_async(
             &mut app,
-            LOGGING_HANDLES.get().unwrap().to_owned(),
+            Some(LOGGING_HANDLES.get().unwrap().to_owned()),
             Some(create_config(test_id)),
         )
         .await
@@ -132,7 +132,7 @@ pub mod testutils {
         let (mut app, webview) = create_app_and_webview().unwrap();
         setup::setup_async(
             &mut app,
-            LOGGING_HANDLES.get().unwrap().to_owned(),
+            Some(LOGGING_HANDLES.get().unwrap().to_owned()),
             Some(config),
         )
         .await

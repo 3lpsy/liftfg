@@ -40,6 +40,10 @@ shell-dev:
 	@echo "Running: cargo  run -p fgshell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)"
 	@cargo run -p fgshell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)
 
+shell-devtools:
+	@echo "Running: cargo  run -p fgshell --no-default-features --features tauri/native-tls --color always -- -d test.db $(ARGS)"
+	@cargo run -p fgshell --no-default-features --features tauri/native-tls --features devtools --color always -- -d test.db $(ARGS)
+
 shell-prod:
 	@echo "Running: cargo build"
 	@cargo build
@@ -53,8 +57,6 @@ emulator:
 	@QT_QPA_PLATFORM=xcb DISPLAY=:0 $(ANDROID_HOME)/emulator/emulator -avd Pixel_7a_API_34_Default -netdelay none -netspeed full -no-snapshot-load -no-snapshot-save
 
 ios: ios-dev
-
-
 
 ios-dev:
 	@echo "Running: cd packages/shell && cargo tauri ios dev -e 'iPhone 16'"

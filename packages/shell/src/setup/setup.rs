@@ -17,7 +17,7 @@ use tracing::{debug, error, info, warn};
 #[tracing::instrument(skip_all, parent = None, target = "setup_async")]
 pub async fn setup_async<R: Runtime>(
     app: &mut App<R>,
-    log_handles: (logging::LayersHandle, logging::FilterHandle),
+    log_handles: Option<(logging::LayersHandle, logging::FilterHandle)>,
     conf: Option<AppConfig>,
 ) -> Result<()> {
     let start_dt = Utc::now();
@@ -32,9 +32,16 @@ pub async fn setup_async<R: Runtime>(
 
     config::manage(app, conf).await?;
 
+    let (layer_handle, filter_handle) = log_handles
+        .map(|(layer, filter)| (Some(layer), Some(filter)))
+        .unwrap_or((None, None));
+
     let config = app.state::<AppConfig>();
     if !config.no_logging_filer_reload {
-        logging::reload_filter(log_handles.1)?;
+        if let Some(filter_handle) = filter_handle {
+            logging::reload_filter(filter_handle)?;
+            debug!("Filter reloaded");
+        }
     }
     // At this point the environment, logging, and config should all be setup
     // config should be the source of truth for everything
@@ -45,13 +52,17 @@ pub async fn setup_async<R: Runtime>(
     }
 
     if !config.no_fs_logging {
-        logging::setup_fs(&config.logs_dir, log_handles.0)?;
-        info!("File tracing initialized");
+        if let Some(layer_handle) = layer_handle {
+            logging::setup_fs(&config.logs_dir, layer_handle)?;
+            info!("File tracing initialized");
+        }
     }
 
     if !config.no_migrate {
+        info!("Migrating...");
         db::migrate(&config.db_path).await?;
     }
+
     if config.should_seed_dev {
         if config.app_env == Environment::Prod {
             error!("Cannot seed dev data in prod environment!");
@@ -78,7 +89,7 @@ pub async fn setup_async<R: Runtime>(
 
 pub fn setup<R: Runtime>(
     app: &mut App<R>,
-    log_handles: (logging::LayersHandle, logging::FilterHandle),
+    log_handles: Option<(logging::LayersHandle, logging::FilterHandle)>,
     conf: Option<AppConfig>,
 ) -> Result<()> {
     tauri::async_runtime::block_on(async { Ok(setup_async(app, log_handles, conf).await?) })

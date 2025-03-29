@@ -15,15 +15,22 @@ name = "fgshell_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.1.0", features = [] }
 
 [dependencies]
 fgdb = { path = "../db", features = ["db"] }
 fgcore = { path = "../core" }
 fgutils = { path = "../utils" }
 tauri = { version = "2", features = ["tracing"] }
-tauri-plugin-opener = "2"
-tauri-plugin-fs = "2"
+tauri-plugin-opener = "2.2.6"
+tauri-plugin-fs = "2.2.0"
+# tauri-plugin-log = { version = "2.3.1" }
+tauri-plugin-log = { path = "../../../../community/plugins-workspace/plugins/log", features = [
+    "tracing",
+] }
+tauri-plugin-devtools = { version = "2.0.0", optional = true }
+# requires cloud signing
+# tauri-plugin-devtools-app = { version = "2.0.0", optional = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
@@ -34,23 +41,21 @@ tracing = { workspace = true }
 tracing-log = { workspace = true }
 validator = { workspace = true }
 chrono = { workspace = true }
-
-# tauri-plugin-log = { version = "2.3.1" }
-tauri-plugin-log = { path = "../../../../community/plugins-workspace/plugins/log", features = [
-    "tracing",
-] }
-
 log = { workspace = true }
 
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
-tauri-plugin-cli = "2"
+tauri-plugin-cli = "2.2.0"
 
 # Enable ios feature in logging
 [target.'cfg(target_os = "ios")'.dependencies]
 fgcore = { path = "../core", features = ["ios"] }
 
+# Dev-dependencies are not used when compiling a package for building, but are used for compiling tests, examples, and benchmarks.
 [dev-dependencies]
 tauri = { version = "2", features = ["test"] }
-tempfile = "3.8"
 ctor = "0.2.9"
 uuid = { version = "1.0", features = ["v4"] }
+
+[features]
+default = []
+devtools = ["tauri-plugin-devtools"]

@@ -23,6 +23,7 @@ pub async fn rollback(db_path: &PathBuf) -> Result<()> {
 }
 
 pub async fn get_dbc(db_path: &PathBuf) -> Result<DatabaseConnection> {
+    // TODO: Okay, the parent directory might not exist. Probably just create
     touch(db_path)?;
     let db_url = get_db_url(db_path);
     debug!("Connecting: {}", db_url);

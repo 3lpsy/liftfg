@@ -13,15 +13,25 @@ mod utils;
 pub fn run() {
     // Only env that should be read before setup is RUST_LOG
     // Revisit if there are tauri runtime variables needed
-    let log_handles = match logging::init() {
-        Ok(handles) => {
-            info!("Console tracing initialized");
-            handles
-        }
-        Err(e) => {
-            panic!("Error setting up logging: {:?}", e);
-        }
-    };
+    let log_handles: Option<(logging::LayersHandle, logging::FilterHandle)>;
+    #[cfg(not(feature = "devtools"))]
+    {
+        log_handles = match logging::init() {
+            Ok(handles) => {
+                info!("Console tracing initialized");
+                Some(handles)
+            }
+            Err(e) => {
+                panic!("Error setting up logging: {:?}", e);
+            }
+        };
+    }
+    #[cfg(all(debug_assertions, feature = "devtools"))]
+    {
+        log_handles = None;
+    }
+    // panic on not dev + devtools
+
     let mut builder = tauri::Builder::default();
     builder = plugins::load(builder);
 
