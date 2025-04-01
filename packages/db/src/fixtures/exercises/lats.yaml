@@ -264,7 +264,7 @@ exercises:
         effectiveness: 2
 
   # hammer multi grip
-  - name: Row (Hammer, Chest Supported)
+  - name: Row (Hammer Machine, Chest Supported)
     code: ROW_HAMMER_MACHINE_CHEST_SUPPORTED
     movement_code: ROW
     equipment_type: HAMMER_MACHINE
@@ -275,7 +275,7 @@ exercises:
       - code: BICEPS
         effectiveness: 2
 
-  - name: Row (One Arm, Hammer, Chest Supported)
+  - name: Row (One Arm, Hammer Machine, Chest Supported)
     code: ROW_ONE_ARM_HAMMER_MACHINE_CHEST_SUPPORTED
     movement_code: ROW
     equipment_type: HAMMER_MACHINE
@@ -319,7 +319,7 @@ exercises:
       - code: BICEPS
         effectiveness: 2
 
-  - name: High Row (One Arm, Hammer)
+  - name: High Row (One Arm, Hammer Machine)
     code: ROW_HIGH_ONE_ARM_HAMMER_MACHINE
     movement_code: ROW
     equipment_type: HAMMER_MACHINE
@@ -363,7 +363,7 @@ exercises:
       - code: BICEPS
         effectiveness: 2
 
-  - name: Low Row (One Arm, Hammer)
+  - name: Low Row (One Arm, Hammer Machine)
     code: ROW_LOW_ONE_ARM_HAMMER_MACHINE
     movement_code: ROW
     equipment_type: HAMMER_MACHINE

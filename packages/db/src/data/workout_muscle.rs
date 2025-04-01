@@ -3,13 +3,33 @@ use crate::data::enums::ExercisePromptStrategy;
 use crate::entity::workout_muscle as entity;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
+use validator::Validate;
 
 use super::{muscle::MuscleData, profile::ProfileData, ResponsableData, ResponseData};
-
+// requests
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum WorkoutMuscleInclude {
     Workout,
     Muscle,
+}
+
+#[derive(Debug, Default, Validate, Serialize, Deserialize, Clone, PartialEq)]
+pub struct WorkoutMuscleStoreData {
+    #[validate(range(min = 1, max = 4096, message = "Workout ID must be greater than 1"))]
+    pub workout_id: i32,
+    #[validate(range(min = 1, max = 4096, message = "Muscle ID must be greater than 1"))]
+    pub muscle_id: i32,
+    #[validate(range(min = 1, max = 64, message = "Volume must be between 1 and 64"))]
+    pub volume: i32,
+    #[validate(range(min = 1, max = 10, message = "Priority must be between 1 and 10"))]
+    pub priority: i32,
+    #[validate(range(
+        min = 1,
+        max = 64,
+        message = "Exercise set split must be between 1 and 64"
+    ))]
+    pub exercise_set_split: Option<i32>,
+    pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
 }
 
 // Responses
@@ -18,8 +38,8 @@ pub struct WorkoutMuscleData {
     pub id: i32,
     pub workout_id: i32,
     pub muscle_id: i32,
-    pub priority: i32,
     pub volume: i32,
+    pub priority: i32,
     pub exercise_set_split: Option<i32>,
     pub exercise_prompt_strategy: Option<ExercisePromptStrategy>,
 

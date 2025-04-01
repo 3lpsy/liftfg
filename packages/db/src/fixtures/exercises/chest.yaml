@@ -26,7 +26,7 @@ exercises:
       - code: TRICEPS
         effectiveness: 2
 
-  - name: Bench Press (Hammer)
+  - name: Bench Press (Hammer Machine)
     code: BENCH_PRESS_HAMMER
     movement_code: BENCH_PRESS
     equipment_type: HAMMER_MACHINE
@@ -92,7 +92,7 @@ exercises:
       - code: FRONT_DELTS
         effectiveness: 3
 
-  - name: Bench Press (Hammer, Incline)
+  - name: Bench Press (Hammer Machine, Incline)
     code: BENCH_PRESS_HAMMER_MACHINE_INCLINE
     movement_code: BENCH_PRESS
     equipment_type: HAMMER_MACHINE
@@ -158,7 +158,7 @@ exercises:
       - code: FRONT_DELTS
         effectiveness: 1
 
-  - name: Bench Press (Hammer, Decline)
+  - name: Bench Press (Hammer Machine, Decline)
     code: BENCH_PRESS_HAMMER_MACHINE_DECLINE
     movement_code: BENCH_PRESS
     equipment_type: HAMMER_MACHINE
@@ -173,6 +173,32 @@ exercises:
 
   - name: Bench Press (Machine, Decline)
     code: BENCH_PRESS_GENERAL_MACHINE_DECLINE
+    movement_code: BENCH_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+
+  - name: Bench Press (Supine Press)
+    code: BENCH_PRESS_GENERAL_MACHINE_SUPINE
+    movement_code: BENCH_PRESS
+    equipment_type: GENERAL_MACHINE
+    fatigue_score: 3
+    muscles:
+      - code: PECS
+        effectiveness: 3
+      - code: FRONT_DELTS
+        effectiveness: 1
+      - code: TRICEPS
+        effectiveness: 1
+
+  - name: Bench Press (Supine Press, Hammer Grip)
+    code: BENCH_PRESS_GENERAL_MACHINE_SUPINE_HAMMER_GRIP
     movement_code: BENCH_PRESS
     equipment_type: GENERAL_MACHINE
     fatigue_score: 3

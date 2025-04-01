@@ -187,7 +187,7 @@ pub fn ModalSelect(props: ModalSelectProps) -> Element {
                         }
 
                         button {
-                            class: "btn btn-primary",
+                            class: "btn",
                             onclick: apply_selections,
                             "Done"
                         }
